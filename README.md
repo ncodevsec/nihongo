@@ -1,29 +1,37 @@
-# N5 漢字研究室 — কাঞ্জি স্টাডি রুম
+# কাঞ্জি স্টাডি রুম
 
-A static, dependency-free web app for studying the 110 basic N5 kanji.
+A static, dependency-free web app for studying JLPT N5 and N4 kanji.
 React and Tailwind are already compiled into `assets/index-*.js` and
 `assets/index-*.css` — this is plain HTML, CSS, and JavaScript. No
 Node.js, npm, or build step required to run or deploy it.
 
 ## What's in this version
 
-**Design** — a formal, document-like Japanese reference aesthetic: indigo
-(藍) and vermillion seal-red (朱) on a warm washi-paper background,
-Shippori Mincho for kanji display, hairline rules instead of heavy
-shadows, and a recurring hanko (印, seal stamp) motif used for scores
-and mastery counts.
+**Design** — a calmer, formal Japanese reference-book look: warm
+off-white paper background, soft charcoal text (not harsh black),
+indigo and vermillion used as accents rather than large color blocks,
+and a hanko (印, seal stamp) motif — styled like a real red ink stamp
+on paper — used for scores and mastery counts. Labels are Bengali-first
+with small Japanese alongside, since the app is for beginners.
+
+**Sections** — an N5 / N4 switcher in the header. N5 is the default
+(110 kanji); switching to N4 loads a separate ~150-kanji set with the
+same tools. Progress is tracked separately per level.
 
 **Features for a Japanese-language student:**
 
 | Tab | Purpose |
 |---|---|
-| 学習 (Study) | Flip-card flashcards, filterable by category, self-marked 覚えた (learned) / もう一度 (review again). Keyboard: Space=flip, ←/→=navigate, L/R=mark. |
-| テスト (Quiz) | Multiple-choice reading quiz. Includes a **weak-kanji review mode** that pulls only kanji you've previously gotten wrong. Keyboard: A/B/C/D=answer, Enter=next. |
-| 一覧 (Reference) | Full searchable/filterable table of all 110 kanji with readings, meanings, and category tags — a quick lookup reference. |
-| 進捗 (Progress) | Overall accuracy, mastered-kanji count, and a per-category breakdown bar chart. |
+| ফ্ল্যাশকার্ড (Study) | Flip-card flashcards, filterable by category, self-marked "শিখে ফেলেছি" (learned) / "আবার দেখব" (review again). Keyboard: Space=flip, ←/→=navigate, L/R=mark. |
+| পরীক্ষা (Quiz) | Multiple-choice reading quiz. Includes a **weak-kanji review mode** that pulls only kanji you've previously gotten wrong. Keyboard: A/B/C/D=answer, Enter=next. |
+| কাঞ্জি তালিকা (Reference) | Full searchable/filterable table of every kanji in the current level, with readings, meanings, and category tags. |
+| অগ্রগতি (Progress) | Overall accuracy, mastered-kanji count, and a per-category breakdown bar chart. |
 
-Every kanji also has a 🔊 speaker button that reads the reading aloud
-using the browser's built-in Japanese text-to-speech (no external API).
+Every kanji has a 🔊 button that reads the reading aloud using the
+browser's built-in Japanese text-to-speech (no external API). It waits
+for the browser's voice list to finish loading and tells you plainly if
+your device has no Japanese voice installed, instead of silently doing
+nothing.
 
 **Progress is saved automatically** in the browser's local storage, so
 it persists between visits on the same device/browser.
@@ -67,8 +75,16 @@ then visit `http://localhost:8000`.
    https://<your-username>.github.io/<your-repo-name>/
    ```
 
+## A note on the 🔊 speaker button
+
+It uses the browser's built-in speech engine (`speechSynthesis`), so it
+needs no server or API key — but it depends on what's installed on the
+visitor's device/OS. Most desktop browsers and modern phones ship a
+Japanese voice by default. If a visitor's device genuinely has none,
+the app will say so directly rather than staying silent.
+
 ## Editing content
 
-The JS here is compiled/minified, so to edit the kanji list, categories,
-or styling you'll need the original React source project rather than
-these files — ask if you'd like that version to make further changes.
+The JS here is compiled/minified, so to edit the kanji lists,
+categories, or styling you'll need the original React source project
+rather than these files — ask if you'd like that version.
