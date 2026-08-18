@@ -7,7 +7,7 @@ Node.js, npm, or build step required to run or deploy it.
 
 ## Structure
 
-**Modules** — Kanji and Vocabulary (শব্দভাণ্ডার), switchable from the header.
+**Modules** — Kanji and Vocabulary, switchable from the header.
 
 **Levels** — N5 and N4, switchable independently within each module.
 Progress is tracked separately per module + level.
@@ -16,11 +16,16 @@ Progress is tracked separately per module + level.
 
 | Tab | Purpose |
 |---|---|
-| ফ্ল্যাশকার্ড (Study) | Flip-card flashcards, filterable by category, self-marked learned/review. |
-| পরীক্ষা (Quiz) | Multiple-choice quiz, with a weak-item review mode. In Vocabulary, the question shows the reading (kana) and you pick the meaning. |
-| তালিকা (Reference) | Full searchable/filterable, paginated list, in original textbook order. |
-| অগ্রগতি (Progress) | Accuracy, mastered-item count, per-category breakdown. |
-| সেটিংস (Settings) | Theme, display toggles, quiz length, timed exam mode, data reset. |
+| Flashcards | Flip-card study, filterable by category/lesson, self-marked learned/review. |
+| Quiz | Multiple-choice quiz with the same category/lesson filter as Flashcards, plus a weak-item review mode. In Vocabulary, the question shows the reading (kana) and you pick the meaning. |
+| List | Full searchable/filterable, paginated reference list, in original textbook order. Long words wrap cleanly instead of being cut off. |
+| Progress | Accuracy, mastered-item count, per-category breakdown. |
+| Settings | Site language, theme, display toggles, quiz length, timed exam mode, data reset. |
+
+**Site language** — the whole interface (menus, buttons, labels) can be
+switched between Bangla and English from Settings. Defaults to English.
+This is separate from the "meaning language" setting, which only affects
+what language vocabulary meanings are shown/tested in.
 
 **Progress and settings are saved automatically** in the browser's local
 storage.
