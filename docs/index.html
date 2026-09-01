@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NihonGo — জাপানি ভাষা শেখার প্ল্যাটফর্ম</title>
+    <meta name="description" content="JLPT ও NAT পরীক্ষার প্রস্তুতির জন্য কাঞ্জি ও শব্দভাণ্ডার শেখা, পরীক্ষা দেওয়া এবং রেফারেন্স দেখার টুল।" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#bd2828" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="NihonGo" />
+    <link rel="icon" href="./icons/icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Apply theme before paint to avoid a light-mode flash on load.
+      (function () {
+        try {
+          var raw = localStorage.getItem("nihongo-settings-v1");
+          var saved = raw ? (JSON.parse(raw).theme || "system") : "system";
+          var isDark =
+            saved === "dark" ||
+            (saved === "system" &&
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (isDark) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
+    <script>
+      // Register the service worker for offline support + installability.
+      // Registered relative to this document so it works correctly both
+      // at the domain root and under a GitHub Pages repo subpath.
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {
+            // Offline PWA features are a progressive enhancement — if
+            // registration fails (e.g. unsupported context) the app
+            // still works normally online.
+          });
+        });
+      }
+    </script>
+    <script type="module" crossorigin src="./assets/index-D2XXpYvQ.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-XpYlGkzP.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
