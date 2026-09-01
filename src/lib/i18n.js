@@ -48,8 +48,8 @@ const UI = {
   meaningHidden: { bn: "(অর্থ লুকানো আছে — সেটিংসে চালু করুন)", en: "(meaning hidden — enable it in Settings)" },
   reviewAgain: { bn: "রিভাইজ", en: "Revise" },
   markLearned: { bn: "মুখস্থ হয়েছে", en: "Memorized" },
-  prevCard: { bn: "← আগেরটা", en: "← Previous" },
-  nextCard: { bn: "পরেরটা →", en: "Next →" },
+  prevCard: { bn: "আগেরটা", en: "Previous" },
+  nextCard: { bn: "পরেরটা", en: "Next" },
   studyHotkeys: {
     bn: "কীবোর্ড শর্টকাট: Space = উল্টান, ← → = নেভিগেট, L = শিখেছি, R = আবার দেখব",
     en: "Keyboard: Space = flip, ← → = navigate, L = learned, R = review again",
