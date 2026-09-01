@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { t } from "../../lib/i18n.js";
 import Hanko from "../Hanko.jsx";
-import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
 import { flattenGrammarPoints, grammarCategories, grammarParticleCategories, buildGrammarQuestions, shuffle } from "../../lib/grammarUtils.js";
 
 const LETTERS = ["A", "B", "C", "D"];
@@ -23,7 +22,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
 
   const [phase, setPhase] = useState("setup");
   const [setupGroupBy, setSetupGroupBy] = useState("lesson"); // 'lesson' | 'particle'
-  const [setupFilters, setSetupFilters] = useState([]); // [] = all
+  const [setupLessonFilter, setSetupLessonFilter] = useState("all");
   const [setupLength, setSetupLength] = useState(settings.quizLength);
   const [setupTimed, setSetupTimed] = useState(settings.timedQuiz);
   const [setupMinutes, setSetupMinutes] = useState(settings.timedMinutes);
@@ -31,22 +30,22 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
   useEffect(() => {
     setPhase("setup");
     setSetupGroupBy("lesson");
-    setSetupFilters([]);
+    setSetupLessonFilter("all");
   }, [allPoints]);
 
   useEffect(() => {
-    setSetupFilters([]);
+    setSetupLessonFilter("all");
   }, [setupGroupBy]);
 
   const setupPool = useMemo(() => {
-    if (setupFilters.length === 0) return allPoints;
-    if (setupGroupBy === "particle") return allPoints.filter((p) => setupFilters.includes(p.particle || "other"));
-    return allPoints.filter((p) => setupFilters.includes(p.category));
-  }, [allPoints, setupFilters, setupGroupBy]);
+    if (setupLessonFilter === "all") return allPoints;
+    if (setupGroupBy === "particle") return allPoints.filter((p) => (p.particle || "other") === setupLessonFilter);
+    return allPoints.filter((p) => p.category === setupLessonFilter);
+  }, [allPoints, setupLessonFilter, setupGroupBy]);
   const setupAvailableCount =
     setupLength === "all" ? setupPool.length : Math.min(Number(setupLength), setupPool.length);
 
-  const [activeFilters, setActiveFilters] = useState([]); // [] = all
+  const [lessonFilter, setLessonFilter] = useState("all");
   const [runId, setRunId] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
@@ -59,8 +58,8 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
   const timerRef = useRef(null);
 
   const pool = useMemo(
-    () => (activeFilters.length === 0 ? allPoints : allPoints.filter((p) => activeFilters.includes(p.category))),
-    [allPoints, activeFilters]
+    () => (lessonFilter === "all" ? allPoints : allPoints.filter((p) => p.category === lessonFilter)),
+    [allPoints, lessonFilter]
   );
 
   const applyLength = (list, len) => {
@@ -70,7 +69,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
   };
 
   const startRun = useCallback((lf, len, isTimed, minutes, source) => {
-    setActiveFilters(lf);
+    setLessonFilter(lf);
     setQuestions(applyLength(shuffle(buildGrammarQuestions(source)), len));
     setCurrent(0);
     setResults({});
@@ -87,7 +86,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
     updateSetting("quizLength", setupLength);
     updateSetting("timedQuiz", setupTimed);
     updateSetting("timedMinutes", setupMinutes);
-    startRun(setupFilters, setupLength, setupTimed, setupMinutes, setupPool);
+    startRun(setupLessonFilter, setupLength, setupTimed, setupMinutes, setupPool);
   };
 
   const goToSetup = () => {
@@ -138,16 +137,19 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
     setAnswered(false);
   };
 
-  const activeFilterLabel =
-    activeFilters.length === 0
-      ? T("allCategories")
-      : activeFilters.length === 1
-      ? (categories.find((c) => c.key === activeFilters[0]) || { en: activeFilters[0] }).en
-      : `${activeFilters.length} ${T("allCategories")}`;
-  const lessonBadge = (
-    <span className="font-bengali text-xs border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted truncate">
-      {activeFilterLabel}
-    </span>
+  const lessonSelector = (value, onChange) => (
+    <select
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className="font-bengali border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink dark:text-night-ink text-xs"
+    >
+      <option value="all">{T("allCategories")}</option>
+      {categories.map((c) => (
+        <option key={c.key} value={c.key}>
+          {c.en}
+        </option>
+      ))}
+    </select>
   );
 
   const restartButton = (
@@ -208,13 +210,18 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
                   {T("groupByParticle")}
                 </button>
               </div>
-              <CategoryMultiSelect
-                categories={setupGroupBy === "particle" ? particleCategories : categories}
-                selected={setupFilters}
-                onChange={setSetupFilters}
-                lang={lang}
-                allLabel={T("allCategories")}
-              />
+              <select
+                value={setupLessonFilter}
+                onChange={(e) => setSetupLessonFilter(e.target.value)}
+                className="font-mincho w-full border border-ai-line dark:border-night-line rounded-md px-3 py-2 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
+              >
+                <option value="all">{T("allCategories")}</option>
+                {(setupGroupBy === "particle" ? particleCategories : categories).map((c) => (
+                  <option key={c.key} value={c.key}>
+                    {c.en}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -297,7 +304,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
     return (
       <div className="max-w-lg mx-auto text-center">
         <div className="mb-3 flex items-center gap-2">
-          {lessonBadge}
+          {lessonSelector(lessonFilter, () => {})}
           {restartButton}
         </div>
         <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-6">
@@ -325,7 +332,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
     return (
       <div className="max-w-lg mx-auto">
         <div className="mb-3 flex items-center gap-2">
-          {lessonBadge}
+          {lessonSelector(lessonFilter, () => {})}
           {restartButton}
         </div>
         <div className="text-center py-12 font-bengali text-ink-muted dark:text-night-ink-muted">
@@ -338,7 +345,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
   return (
     <div className="max-w-lg mx-auto">
       <div className="mb-3 flex items-center gap-2">
-        {lessonBadge}
+        {lessonSelector(lessonFilter, () => {})}
         {restartButton}
       </div>
 

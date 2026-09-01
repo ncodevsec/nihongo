@@ -3,7 +3,6 @@ import { shuffle } from "../lib/utils.js";
 import { useHotkeys } from "../hooks/useHotkeys.js";
 import { t, pickLang } from "../lib/i18n.js";
 import Hanko from "./Hanko.jsx";
-import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
 import { classifyPartOfSpeech, POS_CATEGORIES, classifyCounting, COUNTING_CATEGORIES } from "../lib/vocabClassify.js";
 
 const LETTERS = ["A", "B", "C", "D", "E"];
@@ -82,7 +81,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
   // once the quiz is actually started) ----
   const [phase, setPhase] = useState("setup");
   const [setupGroupBy, setSetupGroupBy] = useState("lesson"); // 'lesson' | 'pos' (vocab only)
-  const [setupCategories, setSetupCategories] = useState([]); // [] = all
+  const [setupCategory, setSetupCategory] = useState("all");
   const [setupLength, setSetupLength] = useState(settings.quizLength);
   const [setupOptionCount, setSetupOptionCount] = useState(settings.quizOptionCount);
   const [setupTimed, setSetupTimed] = useState(settings.timedQuiz);
@@ -93,25 +92,25 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
   useEffect(() => {
     setPhase("setup");
     setSetupGroupBy("lesson");
-    setSetupCategories([]);
+    setSetupCategory("all");
   }, [kanjiData]);
 
   useEffect(() => {
-    setSetupCategories([]);
+    setSetupCategory("all");
   }, [setupGroupBy]);
 
   const setupCategoryFiltered = useMemo(() => {
-    if (setupCategories.length === 0) return kanjiData;
-    if (setupGroupBy === "pos") return kanjiData.filter((k) => setupCategories.includes(classifyPartOfSpeech(k)));
-    if (setupGroupBy === "count") return kanjiData.filter((k) => setupCategories.includes(classifyCounting(k)));
-    return kanjiData.filter((k) => setupCategories.includes(k.category));
-  }, [kanjiData, setupCategories, setupGroupBy]);
+    if (setupCategory === "all") return kanjiData;
+    if (setupGroupBy === "pos") return kanjiData.filter((k) => classifyPartOfSpeech(k) === setupCategory);
+    if (setupGroupBy === "count") return kanjiData.filter((k) => classifyCounting(k) === setupCategory);
+    return kanjiData.filter((k) => k.category === setupCategory);
+  }, [kanjiData, setupCategory, setupGroupBy]);
 
   const setupAvailableCount =
     setupLength === "all" ? setupCategoryFiltered.length : Math.min(Number(setupLength), setupCategoryFiltered.length);
 
   // ---- Active quiz state ----
-  const [selectedCategories, setSelectedCategories] = useState([]); // [] = all
+  const [category, setCategory] = useState("all");
   const [optionCount, setOptionCount] = useState(4);
   const [mode, setMode] = useState("all");
   const [runId, setRunId] = useState(0);
@@ -125,8 +124,8 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
   const timerRef = useRef(null);
 
   const categoryFiltered = useMemo(() => {
-    return selectedCategories.length === 0 ? kanjiData : kanjiData.filter((k) => selectedCategories.includes(k.category));
-  }, [kanjiData, selectedCategories]);
+    return category === "all" ? kanjiData : kanjiData.filter((k) => k.category === category);
+  }, [kanjiData, category]);
 
   const applyLength = useCallback((list, len) => {
     if (len === "all") return list;
@@ -145,7 +144,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
 
   const startQuizRun = useCallback(
     ({ cat, len, opts, timed, minutes, nextMode, source }) => {
-      setSelectedCategories(cat);
+      setCategory(cat);
       setOptionCount(opts);
       setMode(nextMode);
       const buildOpts = { isVocab, vocabLang: settings.vocabLang, optionCount: opts };
@@ -169,7 +168,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
     updateSetting("timedQuiz", setupTimed);
     updateSetting("timedMinutes", setupMinutes);
     startQuizRun({
-      cat: setupCategories,
+      cat: setupCategory,
       len: setupLength,
       opts: setupOptionCount,
       timed: setupTimed,
@@ -183,7 +182,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
     const m = nextMode ?? mode;
     const source = m === "weak" && weakPool.length >= 4 ? weakPool : categoryFiltered;
     startQuizRun({
-      cat: selectedCategories,
+      cat: category,
       len: settings.quizLength,
       opts: optionCount,
       timed: settings.timedQuiz,
@@ -299,15 +298,23 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
                   ))}
                 </div>
               )}
-              <CategoryMultiSelect
-                categories={
-                  setupGroupBy === "pos" ? availablePosCategories : setupGroupBy === "count" ? availableCountingCategories : availableCategories
-                }
-                selected={setupCategories}
-                onChange={setSetupCategories}
-                lang={lang}
-                allLabel={T("allCategories")}
-              />
+              <select
+                value={setupCategory}
+                onChange={(e) => setSetupCategory(e.target.value)}
+                className="font-bengali w-full border border-ai-line dark:border-night-line rounded-md px-3 py-2 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
+              >
+                <option value="all">{T("allCategories")}</option>
+                {(setupGroupBy === "pos"
+                  ? availablePosCategories
+                  : setupGroupBy === "count"
+                  ? availableCountingCategories
+                  : availableCategories
+                ).map((c) => (
+                  <option key={c.key} value={c.key}>
+                    {pickLang(c, lang)}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -406,17 +413,19 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
     );
   }
 
-  const categoryBadgeText =
-    selectedCategories.length === 0
-      ? T("allCategories")
-      : selectedCategories.length === 1
-      ? pickLang(availableCategories.find((c) => c.key === selectedCategories[0]) || { en: selectedCategories[0], bn: selectedCategories[0] }, lang)
-      : `${selectedCategories.length} ${T("allCategories")}`;
-
   const categorySelector = (
-    <span className="font-bengali text-xs border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted truncate">
-      {categoryBadgeText}
-    </span>
+    <select
+      value={category}
+      onChange={(e) => setCategory(e.target.value)}
+      className="font-bengali border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink dark:text-night-ink text-xs"
+    >
+      <option value="all">{T("allCategories")}</option>
+      {availableCategories.map((c) => (
+        <option key={c.key} value={c.key}>
+          {pickLang(c, lang)}
+        </option>
+      ))}
+    </select>
   );
 
   const restartButton = (
