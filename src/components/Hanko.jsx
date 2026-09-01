@@ -6,6 +6,7 @@ export default function Hanko({ label, sub, tone = "shu", size = "md" }) {
     shu: "border-shu text-shu dark:border-shu-glow dark:text-shu-glow",
     ai: "border-ai text-ai dark:border-ai-glow dark:text-ai-glow",
     take: "border-take text-take dark:border-take-glow dark:text-take-glow",
+    sakura: "border-sakura-deep text-sakura-deep dark:border-sakura dark:text-sakura",
   }[tone];
 
   const sizeClasses = {

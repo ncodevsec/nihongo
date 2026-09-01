@@ -1,5 +1,12 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { t } from "../lib/i18n.js";
+
+const DATA_KEYS = [
+  "nihongo-settings-v1",
+  "nihongo-progress-v2",
+  "nihongo-activity-v1",
+  "nihongo-favorites-v1",
+];
 
 function Toggle({ checked, onChange }) {
   return (
@@ -9,7 +16,7 @@ function Toggle({ checked, onChange }) {
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={`tap-quiet w-11 h-6 shrink-0 rounded-full relative transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-shu ${
-        checked ? "bg-ai dark:bg-ai-glow" : "bg-ai-line dark:bg-night-line"
+        checked ? "bg-shu dark:bg-shu-glow" : "bg-ai-line dark:bg-night-line"
       }`}
     >
       <span
@@ -43,6 +50,8 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
 
   const [confirmReset, setConfirmReset] = useState(false);
   const [confirmSettingsReset, setConfirmSettingsReset] = useState(false);
+  const [importStatus, setImportStatus] = useState(null); // null | "success" | "error"
+  const fileInputRef = useRef(null);
 
   const THEME_OPTIONS = [
     { key: "light", label: T("themeLight") },
@@ -50,18 +59,16 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
     { key: "system", label: T("themeSystem") },
   ];
 
-  const QUIZ_LENGTH_OPTIONS = [
-    { key: "all", label: T("quizLenAll") },
-    { key: "10", label: T("quizLen10") },
-    { key: "20", label: T("quizLen20") },
-    { key: "50", label: T("quizLen50") },
-  ];
-
   const SectionLabel = ({ children }) => (
-    <h2 className="font-bengali text-xs font-bold text-ai dark:text-ai-glow uppercase tracking-wide mb-2 mt-6 first:mt-0">
+    <h2 className="font-bengali text-xs font-bold text-shu dark:text-shu-glow uppercase tracking-wide mb-2 mt-6 first:mt-0">
       {children}
     </h2>
   );
+
+  const activePillClass =
+    "bg-shu text-washi dark:bg-shu-glow dark:text-night";
+  const inactivePillClass =
+    "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line";
 
   const handleResetProgress = () => {
     if (!confirmReset) {
@@ -81,6 +88,61 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
     setConfirmSettingsReset(false);
   };
 
+  const handleExport = () => {
+    const payload = {};
+    for (const key of DATA_KEYS) {
+      const raw = localStorage.getItem(key);
+      if (raw != null) {
+        try {
+          payload[key] = JSON.parse(raw);
+        } catch {
+          payload[key] = raw;
+        }
+      }
+    }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const date = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `nihongo-backup-${date}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportClick = () => {
+    setImportStatus(null);
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        let wroteAny = false;
+        for (const key of DATA_KEYS) {
+          if (key in data) {
+            localStorage.setItem(key, JSON.stringify(data[key]));
+            wroteAny = true;
+          }
+        }
+        if (!wroteAny) throw new Error("no recognized keys");
+        setImportStatus("success");
+        setTimeout(() => window.location.reload(), 900);
+      } catch {
+        setImportStatus("error");
+      }
+    };
+    reader.onerror = () => setImportStatus("error");
+    reader.readAsText(file);
+    e.target.value = "";
+  };
+
   return (
     <div className="max-w-2xl mx-auto">
       <SectionLabel>{T("sectionLanguage")}</SectionLabel>
@@ -95,9 +157,7 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
                 key={l.key}
                 onClick={() => updateSetting("uiLang", l.key)}
                 className={`px-3 py-1.5 text-[11px] font-medium transition-colors ${
-                  settings.uiLang === l.key
-                    ? "bg-ai text-washi dark:bg-ai-glow dark:text-night"
-                    : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                  settings.uiLang === l.key ? activePillClass : inactivePillClass
                 }`}
               >
                 {l.label}
@@ -116,9 +176,7 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
                 key={th.key}
                 onClick={() => updateSetting("theme", th.key)}
                 className={`px-2.5 py-1.5 text-[11px] font-bengali font-medium transition-colors ${
-                  settings.theme === th.key
-                    ? "bg-ai text-washi dark:bg-ai-glow dark:text-night"
-                    : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                  settings.theme === th.key ? activePillClass : inactivePillClass
                 }`}
               >
                 {th.label}
@@ -134,6 +192,12 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
           <Toggle
             checked={settings.showKanjiBn}
             onChange={(v) => updateSetting("showKanjiBn", v)}
+          />
+        </Row>
+        <Row title={T("showJukugo")} subtitle={T("showJukugoSub")}>
+          <Toggle
+            checked={settings.showJukugo}
+            onChange={(v) => updateSetting("showJukugo", v)}
           />
         </Row>
       </div>
@@ -156,9 +220,7 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
                 key={l.key}
                 onClick={() => updateSetting("vocabLang", l.key)}
                 className={`px-3 py-1.5 text-[11px] font-medium transition-colors ${
-                  settings.vocabLang === l.key
-                    ? "bg-ai text-washi dark:bg-ai-glow dark:text-night"
-                    : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                  settings.vocabLang === l.key ? activePillClass : inactivePillClass
                 }`}
               >
                 {l.label}
@@ -168,41 +230,42 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
         </Row>
       </div>
 
-      <SectionLabel>{T("sectionQuiz")}</SectionLabel>
+      <SectionLabel>{T("sectionData")}</SectionLabel>
       <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden divide-y divide-ai-line dark:divide-night-line">
-        <Row title={T("quizLengthLabel")} subtitle={T("quizLengthSub")}>
-          <select
-            value={settings.quizLength}
-            onChange={(e) => updateSetting("quizLength", e.target.value)}
-            className="font-bengali text-xs border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
+        <Row title={T("exportDataLabel")} subtitle={T("exportDataSub")}>
+          <button
+            onClick={handleExport}
+            className="font-bengali text-xs rounded-md px-3 py-1.5 border border-ai-line dark:border-night-line text-shu dark:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10 transition-colors shrink-0"
           >
-            {QUIZ_LENGTH_OPTIONS.map((o) => (
-              <option key={o.key} value={o.key}>
-                {o.label}
-              </option>
-            ))}
-          </select>
+            {T("exportDataButton")}
+          </button>
         </Row>
-        <Row title={T("timedQuiz")} subtitle={T("timedQuizSub")}>
-          <Toggle checked={settings.timedQuiz} onChange={(v) => updateSetting("timedQuiz", v)} />
-        </Row>
-        {settings.timedQuiz && (
-          <Row title={T("timedMinutes")}>
+        <Row title={T("importDataLabel")} subtitle={T("importDataSub")}>
+          <div className="flex items-center gap-2">
+            {importStatus === "success" && (
+              <span className="font-bengali text-[11px] text-take dark:text-take-glow">{T("importSuccess")}</span>
+            )}
+            {importStatus === "error" && (
+              <span className="font-bengali text-[11px] text-shu dark:text-shu-glow">{T("importError")}</span>
+            )}
+            <button
+              onClick={handleImportClick}
+              className="font-bengali text-xs rounded-md px-3 py-1.5 border border-ai-line dark:border-night-line text-shu dark:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10 transition-colors shrink-0"
+            >
+              {T("importDataButton")}
+            </button>
             <input
-              type="number"
-              min={1}
-              max={120}
-              value={settings.timedMinutes}
-              onChange={(e) =>
-                updateSetting("timedMinutes", Math.max(1, Number(e.target.value) || 1))
-              }
-              className="font-mono text-sm border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 w-20 bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
+              ref={fileInputRef}
+              type="file"
+              accept="application/json"
+              onChange={handleFileChange}
+              className="hidden"
             />
-          </Row>
-        )}
+          </div>
+        </Row>
       </div>
 
-      <SectionLabel>{T("sectionData")}</SectionLabel>
+      <SectionLabel>{T("sectionReset")}</SectionLabel>
       <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden divide-y divide-ai-line dark:divide-night-line mb-8">
         <Row title={T("resetSettingsLabel")}>
           <button
