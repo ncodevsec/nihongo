@@ -5,6 +5,8 @@ import { t, pickLang } from "../lib/i18n.js";
 import { ToggleChip, StarFilterButton, ShuffleButton } from "./FilterControls.jsx";
 import { classifyPartOfSpeech, POS_CATEGORIES, classifyCounting, COUNTING_CATEGORIES } from "../lib/vocabClassify.js";
 
+import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
+
 export default function Study({ moduleKey, kanjiData, categories, progress, setLearned, settings, isActive = true, favorites = {}, toggleFavorite = () => {} }) {
   const lang = settings.uiLang;
   const T = (k) => t(lang, k);
@@ -16,9 +18,10 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
     isVocab && settings.vocabLang === "en" ? item.meaningEn || item.meaning : item.meaning;
 
   const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'pos' (vocab only)
-  const [category, setCategory] = useState("all");
+  const [selectedCategories, setSelectedCategories] = useState([]); // [] = all
   const [onlyUnlearned, setOnlyUnlearned] = useState(false);
   const [onlyStarred, setOnlyStarred] = useState(false);
+  const [reverse, setReverse] = useState(false);
   const [order, setOrder] = useState(() => shuffle(kanjiData.map((k) => k.id)));
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -28,7 +31,7 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
     setIndex(0);
     setFlipped(false);
     setGroupBy("lesson");
-    setCategory("all");
+    setSelectedCategories([]);
     setOnlyUnlearned(false);
     setOnlyStarred(false);
   }, [kanjiData]);
@@ -61,11 +64,11 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
 
   const pool = useMemo(() => {
     let list = kanjiData;
-    if (category !== "all") list = list.filter((k) => categoryOf(k) === category);
+    if (selectedCategories.length > 0) list = list.filter((k) => selectedCategories.includes(categoryOf(k)));
     if (onlyUnlearned) list = list.filter((k) => !progress[k.id]?.learned);
     if (onlyStarred) list = list.filter((k) => favorites[k.id]);
     return list;
-  }, [kanjiData, category, categoryOf, onlyUnlearned, onlyStarred, progress, favorites]);
+  }, [kanjiData, selectedCategories, categoryOf, onlyUnlearned, onlyStarred, progress, favorites]);
 
   const deck = useMemo(() => {
     const poolIds = new Set(pool.map((k) => k.id));
@@ -84,10 +87,10 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
   useEffect(() => {
     setIndex(0);
     setFlipped(false);
-  }, [category, onlyUnlearned, onlyStarred]);
+  }, [selectedCategories, onlyUnlearned, onlyStarred]);
 
   useEffect(() => {
-    setCategory("all");
+    setSelectedCategories([]);
   }, [groupBy]);
 
   useEffect(() => {
@@ -172,23 +175,17 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
         </div>
       )}
 
-      <select
-        value={category}
-        onChange={(e) => setCategory(e.target.value)}
-        className="font-bengali border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
-      >
-        <option value="all">{T("allCategories")}</option>
-        {(groupBy === "pos"
-          ? availablePosCategories
-          : groupBy === "count"
-          ? availableCountingCategories
-          : availableCategories
-        ).map((c) => (
-          <option key={c.key} value={c.key}>
-            {pickLang(c, lang)}
-          </option>
-        ))}
-      </select>
+      <div className="w-40 shrink-0">
+        <CategoryMultiSelect
+          categories={
+            groupBy === "pos" ? availablePosCategories : groupBy === "count" ? availableCountingCategories : availableCategories
+          }
+          selected={selectedCategories}
+          onChange={setSelectedCategories}
+          lang={lang}
+          allLabel={T("allCategories")}
+        />
+      </div>
 
       <ToggleChip active={onlyUnlearned} onClick={() => setOnlyUnlearned((v) => !v)} title={T("onlyUnlearned")}>
         {T("onlyUnlearned")}
@@ -200,6 +197,28 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
         labelOn={T("onlyStarred")}
         labelOff={T("onlyStarred")}
       />
+
+      <button
+        onClick={() => {
+          setReverse((v) => !v);
+          setFlipped(false);
+        }}
+        aria-pressed={reverse}
+        title={T("reverseRecall")}
+        className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 border font-bengali font-medium transition-colors ${
+          reverse
+            ? "bg-shu text-washi border-shu"
+            : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted border-ai-line dark:border-night-line hover:border-shu/50"
+        }`}
+      >
+        <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polyline points="17 1 21 5 17 9" />
+          <path d="M3 11V9a4 4 0 014-4h14" />
+          <polyline points="7 23 3 19 7 15" />
+          <path d="M21 13v2a4 4 0 01-4 4H3" />
+        </svg>
+        {T("reverseRecall")}
+      </button>
 
       <div className="ml-auto">
         <ShuffleButton onClick={reshuffle} label={T("shuffle")} />
@@ -264,10 +283,11 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
         <button
           onClick={() => setFlipped((f) => !f)}
           className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
-          style={{ minHeight: 260 }}
         >
-          {!flipped ? (
-            <div className="h-[260px] flex flex-col items-center justify-center gap-3">
+          {(!flipped) !== reverse ? (
+            // Word side: shows the Japanese word (kanji/reading).
+            // Normal mode shows this first; reverse mode shows it after flip.
+            <div className="min-h-[260px] flex flex-col items-center justify-center gap-3 py-8">
               <div
                 className={`font-mincho text-ink dark:text-night-ink text-center px-4 break-words ${
                   isVocab && !showWord ? "text-4xl sm:text-5xl" : "text-6xl sm:text-7xl"
@@ -278,13 +298,25 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
               {showWord && isVocab && (
                 <div className="font-mincho text-lg text-ai dark:text-ai-glow">{card.reading}</div>
               )}
-              <span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
-                {T("tapToRevealMeaning")}
-              </span>
+              {!isVocab && reverse && (
+                <div className="font-mincho text-2xl text-ai dark:text-ai-glow">{card.reading}</div>
+              )}
+              {!reverse && (
+                <span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+                  {T("tapToRevealMeaning")}
+                </span>
+              )}
+              {reverse && (
+                <span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-0.5">
+                  {pickLang(cat, lang)}
+                </span>
+              )}
             </div>
           ) : (
-            <div className="h-[260px] flex flex-col items-center justify-center gap-3 px-6">
-              {!isVocab && (
+            // Meaning side: shows the Bengali/English meaning.
+            // Reverse mode shows this first; normal mode shows it after flip.
+            <div className="min-h-[260px] flex flex-col items-center justify-center gap-3 px-6 py-8">
+              {!isVocab && !reverse && (
                 <div className="font-mincho text-3xl sm:text-4xl text-ai dark:text-ai-glow text-center">
                   {card.reading}
                 </div>
@@ -302,9 +334,53 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
                   {T("meaningHidden")}
                 </div>
               )}
-              <span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-0.5">
-                {pickLang(cat, lang)}
-              </span>
+              {!isVocab && !reverse && ((card.onyomi && card.onyomi.length > 0) || (card.kunyomi && card.kunyomi.length > 0)) && (
+                <div className="w-full max-w-xs mt-1 pt-3 border-t border-ai-line dark:border-night-line space-y-2">
+                  {card.onyomi && card.onyomi.length > 0 && (
+                    <div className="flex items-start gap-2">
+                      <span className="shrink-0 font-bengali text-[10px] font-bold text-shu dark:text-shu-glow bg-shu-soft dark:bg-shu/10 rounded px-1.5 py-0.5 mt-0.5">
+                        {T("onyomi")}
+                      </span>
+                      <div className="flex-1 text-left">
+                        {card.onyomi.map((r, i) => (
+                          <div key={i} className="font-mincho text-sm text-ink dark:text-night-ink">
+                            {r.reading}
+                            <span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted ml-2">
+                              （{r.word} {r.wordReading} — {r.meaningBn}）
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {card.kunyomi && card.kunyomi.length > 0 && (
+                    <div className="flex items-start gap-2">
+                      <span className="shrink-0 font-bengali text-[10px] font-bold text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded px-1.5 py-0.5 mt-0.5">
+                        {T("kunyomi")}
+                      </span>
+                      <div className="flex-1 text-left">
+                        {card.kunyomi.map((r, i) => (
+                          <div key={i} className="font-mincho text-sm text-ink dark:text-night-ink">
+                            {r.reading}
+                            <span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted ml-2">
+                              （{r.word} {r.wordReading} — {r.meaningBn}）
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              {reverse ? (
+                <span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+                  {T("tapToRevealWord")}
+                </span>
+              ) : (
+                <span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-0.5">
+                  {pickLang(cat, lang)}
+                </span>
+              )}
             </div>
           )}
         </button>
@@ -328,17 +404,15 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
       <div className="flex gap-2.5 mt-3">
         <button
           onClick={goPrev}
-          className="flex-1 flex items-center justify-center gap-1.5 font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-2.5 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+          className="flex-1 flex items-center justify-center font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-2.5 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
         >
-          <span className="font-mono text-base leading-none" aria-hidden="true">‹</span>
           {T("prevCard")}
         </button>
         <button
           onClick={goNext}
-          className="flex-1 flex items-center justify-center gap-1.5 font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-2.5 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+          className="flex-1 flex items-center justify-center font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-2.5 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
         >
           {T("nextCard")}
-          <span className="font-mono text-base leading-none" aria-hidden="true">›</span>
         </button>
       </div>
 

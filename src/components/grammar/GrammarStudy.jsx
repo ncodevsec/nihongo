@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { t } from "../../lib/i18n.js";
-import { grammarItemId, flattenGrammarPoints, grammarParticleCategories } from "../../lib/grammarUtils.js";
+import { t, pickLang } from "../../lib/i18n.js";
+import { grammarItemId, flattenGrammarPoints, grammarCategories, grammarParticleCategories } from "../../lib/grammarUtils.js";
 import { StarFilterButton } from "../FilterControls.jsx";
+import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
 
 // Renders a rule's Bengali explanation with light structure: sub-points
 // (১, ২, ৩...) get their own indented line, bracketed notes get an
@@ -61,17 +62,22 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
   const T = (k) => t(lang, k);
 
   const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'particle'
-  const [selected, setSelected] = useState(lessons[0]?.lesson ?? null);
+  const lessonCategories = useMemo(() => grammarCategories(lessons), [lessons]);
   const particleCategories = useMemo(() => grammarParticleCategories(lessons), [lessons]);
-  const [selectedParticle, setSelectedParticle] = useState(particleCategories[0]?.key ?? null);
+  const [selectedLessons, setSelectedLessons] = useState([]); // [] = all
+  const [selectedParticles, setSelectedParticles] = useState([]); // [] = all
   const [onlyStarred, setOnlyStarred] = useState(false);
   const allPoints = useMemo(() => flattenGrammarPoints(lessons, level), [lessons, level]);
 
   useEffect(() => {
-    setSelected(lessons[0]?.lesson ?? null);
-    const cats = grammarParticleCategories(lessons);
-    setSelectedParticle(cats[0]?.key ?? null);
+    setSelectedLessons([]);
+    setSelectedParticles([]);
   }, [lessons]);
+
+  useEffect(() => {
+    setSelectedLessons([]);
+    setSelectedParticles([]);
+  }, [groupBy]);
 
   if (!lessons || lessons.length === 0) {
     return (
@@ -82,13 +88,17 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
   }
 
   let visiblePoints;
-  let showLessonBadgePerPoint = false;
+  const showLessonBadgePerPoint = true;
   if (groupBy === "particle") {
-    showLessonBadgePerPoint = true;
-    visiblePoints = allPoints.filter((p) => (p.particle || "other") === selectedParticle);
+    visiblePoints =
+      selectedParticles.length === 0
+        ? allPoints
+        : allPoints.filter((p) => selectedParticles.includes(p.particle || "other"));
   } else {
-    const current = lessons.find((l) => l.lesson === selected) ?? lessons[0];
-    visiblePoints = current.points.map((p) => ({ ...p, id: grammarItemId(level, p.id), lesson: current.lesson }));
+    visiblePoints =
+      selectedLessons.length === 0
+        ? allPoints
+        : allPoints.filter((p) => selectedLessons.includes(p.category));
   }
   if (onlyStarred) visiblePoints = visiblePoints.filter((p) => favorites[p.id]);
 
@@ -125,29 +135,21 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
             {groupBy === "particle" ? T("grammarSelectParticle") : T("grammarSelectLesson")}
           </label>
           {groupBy === "particle" ? (
-            <select
-              value={selectedParticle ?? ""}
-              onChange={(e) => setSelectedParticle(e.target.value)}
-              className="font-mincho w-full border border-ai-line dark:border-night-line rounded-md px-3 py-2 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
-            >
-              {particleCategories.map((c) => (
-                <option key={c.key} value={c.key}>
-                  {c.en}
-                </option>
-              ))}
-            </select>
+            <CategoryMultiSelect
+              categories={particleCategories}
+              selected={selectedParticles}
+              onChange={setSelectedParticles}
+              lang={lang}
+              allLabel={T("allCategories")}
+            />
           ) : (
-            <select
-              value={selected}
-              onChange={(e) => setSelected(Number(e.target.value))}
-              className="font-bengali w-full border border-ai-line dark:border-night-line rounded-md px-3 py-2 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
-            >
-              {lessons.map((l) => (
-                <option key={l.lesson} value={l.lesson}>
-                  Lesson {l.lesson}
-                </option>
-              ))}
-            </select>
+            <CategoryMultiSelect
+              categories={lessonCategories}
+              selected={selectedLessons}
+              onChange={setSelectedLessons}
+              lang={lang}
+              allLabel={T("allCategories")}
+            />
           )}
         </div>
         <div className="self-end sm:self-auto sm:mt-[22px]">
