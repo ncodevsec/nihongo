@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { t } from "../../lib/i18n.js";
 import { flattenGrammarPoints, grammarCategories, grammarParticleCategories } from "../../lib/grammarUtils.js";
 import { StarFilterButton } from "../FilterControls.jsx";
-import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
 
 const PAGE_SIZE = 40;
 
@@ -34,7 +33,7 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'particle'
-  const [selectedFilters, setSelectedFilters] = useState([]); // [] = all
+  const [lessonFilter, setLessonFilter] = useState("all");
   const [onlyStarred, setOnlyStarred] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [expanded, setExpanded] = useState(null);
@@ -45,15 +44,15 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
   }, [query]);
 
   useEffect(() => {
-    setSelectedFilters([]);
+    setLessonFilter("all");
   }, [groupBy]);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
     return allPoints.filter((p) => {
-      if (selectedFilters.length > 0) {
+      if (lessonFilter !== "all") {
         const key = groupBy === "particle" ? p.particle || "other" : p.category;
-        if (!selectedFilters.includes(key)) return false;
+        if (key !== lessonFilter) return false;
       }
       if (onlyStarred && !favorites[p.id]) return false;
       if (!q) return true;
@@ -65,11 +64,11 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
         p.examples.map((e) => e.jp + " " + (e.meaningBn || "")).join(" ").toLowerCase();
       return haystack.includes(q);
     });
-  }, [allPoints, debouncedQuery, selectedFilters, groupBy, onlyStarred, favorites]);
+  }, [allPoints, debouncedQuery, lessonFilter, groupBy, onlyStarred, favorites]);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [debouncedQuery, selectedFilters, onlyStarred]);
+  }, [debouncedQuery, lessonFilter, onlyStarred]);
 
   const visible = filtered.slice(0, visibleCount);
 
@@ -113,15 +112,18 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
             {T("groupByParticle")}
           </button>
         </div>
-        <div className="sm:w-44 shrink-0">
-          <CategoryMultiSelect
-            categories={groupBy === "particle" ? particleCategories : categories}
-            selected={selectedFilters}
-            onChange={setSelectedFilters}
-            lang={lang}
-            allLabel={`${T("allCategories")} (${allPoints.length})`}
-          />
-        </div>
+        <select
+          value={lessonFilter}
+          onChange={(e) => setLessonFilter(e.target.value)}
+          className="font-mincho border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
+        >
+          <option value="all">{T("allCategories")} ({allPoints.length})</option>
+          {(groupBy === "particle" ? particleCategories : categories).map((c) => (
+            <option key={c.key} value={c.key}>
+              {c.en}
+            </option>
+          ))}
+        </select>
         <StarFilterButton
           active={onlyStarred}
           onClick={() => setOnlyStarred((v) => !v)}
