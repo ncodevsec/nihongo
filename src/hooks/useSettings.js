@@ -9,8 +9,10 @@ const DEFAULTS = {
   showVocabKanji: false, // show kanji script in the Vocabulary module
   vocabLang: "bn", // 'bn' | 'en' — language for vocabulary meanings
   quizLength: "all", // 'all' | 10 | 20 | 50
+  quizOptionCount: 4, // 2-5 choices per quiz question
   timedQuiz: false,
   timedMinutes: 10,
+  showJukugo: true, // include 2-kanji compound words (熟語) in the Kanji module
 };
 
 function loadSettings() {

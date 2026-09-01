@@ -3,21 +3,24 @@ import { shuffle } from "../lib/utils.js";
 import { useHotkeys } from "../hooks/useHotkeys.js";
 import { t, pickLang } from "../lib/i18n.js";
 import Hanko from "./Hanko.jsx";
+import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
+import { classifyPartOfSpeech, POS_CATEGORIES, classifyCounting, COUNTING_CATEGORIES } from "../lib/vocabClassify.js";
 
-const LETTERS = ["A", "B", "C", "D"];
+const LETTERS = ["A", "B", "C", "D", "E"];
 
-function buildQuestions(pool, allData, { isVocab, vocabLang }) {
+function buildQuestions(pool, allData, { isVocab, vocabLang, optionCount }) {
   const textOf = (d) => (isVocab && vocabLang === "en" ? d.meaningEn || d.meaning : d.meaning);
   const shuffledPool = shuffle(pool);
   const shuffledAll = shuffle(allData);
   const total = shuffledAll.length;
+  const distractorCount = Math.max(1, optionCount - 1);
   let cursor = 0;
 
   return shuffledPool.map((item) => {
     const correctKey = isVocab ? textOf(item) : item.reading;
     const distractors = [];
     let scanned = 0;
-    while (distractors.length < 3 && scanned < total) {
+    while (distractors.length < distractorCount && scanned < total) {
       const candidate = shuffledAll[cursor % total];
       cursor++;
       scanned++;
@@ -49,87 +52,87 @@ function formatTime(totalSeconds) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-export default function Quiz({ moduleKey, kanjiData, categories, progress, recordQuizResult, settings }) {
+const LENGTH_OPTIONS = ["all", "10", "20", "50"];
+
+export default function Quiz({ moduleKey, kanjiData, categories, progress, recordQuizResult, settings, updateSetting = () => {}, isActive = true }) {
   const lang = settings.uiLang;
   const T = (k) => t(lang, k);
 
   const isVocab = moduleKey === "vocabulary";
   const showMeaning = isVocab ? true : settings.showKanjiBn;
-  const buildOpts = { isVocab, vocabLang: settings.vocabLang };
-
-  const [category, setCategory] = useState("all");
 
   const availableCategories = useMemo(() => {
     const used = new Set(kanjiData.map((k) => k.category));
     return categories.filter((c) => used.has(c.key));
   }, [kanjiData, categories]);
 
-  const categoryFiltered = useMemo(() => {
-    return category === "all" ? kanjiData : kanjiData.filter((k) => k.category === category);
-  }, [kanjiData, category]);
+  const availablePosCategories = useMemo(() => {
+    if (!isVocab) return [];
+    const used = new Set(kanjiData.map((k) => classifyPartOfSpeech(k)));
+    return POS_CATEGORIES.filter((c) => used.has(c.key));
+  }, [kanjiData, isVocab]);
 
-  const applyLength = useCallback(
-    (list) => {
-      if (settings.quizLength === "all") return list;
-      const n = Number(settings.quizLength);
-      return list.slice(0, Math.min(n, list.length));
-    },
-    [settings.quizLength]
-  );
+  const availableCountingCategories = useMemo(() => {
+    if (!isVocab) return [];
+    const used = new Set(kanjiData.map((k) => classifyCounting(k)).filter(Boolean));
+    return COUNTING_CATEGORIES.filter((c) => used.has(c.key));
+  }, [kanjiData, isVocab]);
 
+  // ---- Setup phase state (persists as the new defaults via updateSetting
+  // once the quiz is actually started) ----
+  const [phase, setPhase] = useState("setup");
+  const [setupGroupBy, setSetupGroupBy] = useState("lesson"); // 'lesson' | 'pos' (vocab only)
+  const [setupCategories, setSetupCategories] = useState([]); // [] = all
+  const [setupLength, setSetupLength] = useState(settings.quizLength);
+  const [setupOptionCount, setSetupOptionCount] = useState(settings.quizOptionCount);
+  const [setupTimed, setSetupTimed] = useState(settings.timedQuiz);
+  const [setupMinutes, setSetupMinutes] = useState(settings.timedMinutes);
+
+  // Reset back to a fresh setup screen whenever the underlying dataset
+  // changes (switching level/module) so stale question state can't linger.
+  useEffect(() => {
+    setPhase("setup");
+    setSetupGroupBy("lesson");
+    setSetupCategories([]);
+  }, [kanjiData]);
+
+  useEffect(() => {
+    setSetupCategories([]);
+  }, [setupGroupBy]);
+
+  const setupCategoryFiltered = useMemo(() => {
+    if (setupCategories.length === 0) return kanjiData;
+    if (setupGroupBy === "pos") return kanjiData.filter((k) => setupCategories.includes(classifyPartOfSpeech(k)));
+    if (setupGroupBy === "count") return kanjiData.filter((k) => setupCategories.includes(classifyCounting(k)));
+    return kanjiData.filter((k) => setupCategories.includes(k.category));
+  }, [kanjiData, setupCategories, setupGroupBy]);
+
+  const setupAvailableCount =
+    setupLength === "all" ? setupCategoryFiltered.length : Math.min(Number(setupLength), setupCategoryFiltered.length);
+
+  // ---- Active quiz state ----
+  const [selectedCategories, setSelectedCategories] = useState([]); // [] = all
+  const [optionCount, setOptionCount] = useState(4);
   const [mode, setMode] = useState("all");
   const [runId, setRunId] = useState(0);
-  const [questions, setQuestions] = useState(() =>
-    applyLength(buildQuestions(kanjiData, kanjiData, buildOpts))
-  );
+  const [questions, setQuestions] = useState([]);
   const [current, setCurrent] = useState(0);
   const [results, setResults] = useState({});
   const [selected, setSelected] = useState(null);
   const [answered, setAnswered] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(settings.timedMinutes * 60);
+  const [timeLeft, setTimeLeft] = useState(0);
   const timerRef = useRef(null);
 
-  const resetRun = useCallback(
-    (nextMode, source) => {
-      setMode(nextMode);
-      setQuestions(applyLength(buildQuestions(source, kanjiData, buildOpts)));
-      setCurrent(0);
-      setResults({});
-      setSelected(null);
-      setAnswered(false);
-      setFinished(false);
-      setTimeLeft(settings.timedMinutes * 60);
-      setRunId((id) => id + 1);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [kanjiData, settings.vocabLang, settings.quizLength, settings.timedMinutes]
-  );
+  const categoryFiltered = useMemo(() => {
+    return selectedCategories.length === 0 ? kanjiData : kanjiData.filter((k) => selectedCategories.includes(k.category));
+  }, [kanjiData, selectedCategories]);
 
-  useEffect(() => {
-    resetRun("all", categoryFiltered);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kanjiData, category]);
-
-  // Timed exam mode: countdown, auto-finish at zero. Restarts cleanly on
-  // every new run via runId, rather than inferring restarts from state.
-  useEffect(() => {
-    if (!settings.timedQuiz || finished) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      return;
-    }
-    timerRef.current = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t <= 1) {
-          clearInterval(timerRef.current);
-          setFinished(true);
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, [settings.timedQuiz, finished, runId]);
+  const applyLength = useCallback((list, len) => {
+    if (len === "all") return list;
+    const n = Number(len);
+    return list.slice(0, Math.min(n, list.length));
+  }, []);
 
   const weakPool = useMemo(
     () =>
@@ -140,11 +143,80 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
     [categoryFiltered, progress]
   );
 
+  const startQuizRun = useCallback(
+    ({ cat, len, opts, timed, minutes, nextMode, source }) => {
+      setSelectedCategories(cat);
+      setOptionCount(opts);
+      setMode(nextMode);
+      const buildOpts = { isVocab, vocabLang: settings.vocabLang, optionCount: opts };
+      setQuestions(applyLength(shuffle(buildQuestions(source, kanjiData, buildOpts)), len));
+      setCurrent(0);
+      setResults({});
+      setSelected(null);
+      setAnswered(false);
+      setFinished(false);
+      setTimeLeft(timed ? minutes * 60 : 0);
+      setRunId((id) => id + 1);
+      setPhase("active");
+    },
+    [applyLength, isVocab, kanjiData, settings.vocabLang]
+  );
+
+  const handleStartFromSetup = () => {
+    // Persist the chosen configuration as the new defaults.
+    updateSetting("quizLength", setupLength);
+    updateSetting("quizOptionCount", setupOptionCount);
+    updateSetting("timedQuiz", setupTimed);
+    updateSetting("timedMinutes", setupMinutes);
+    startQuizRun({
+      cat: setupCategories,
+      len: setupLength,
+      opts: setupOptionCount,
+      timed: setupTimed,
+      minutes: setupMinutes,
+      nextMode: "all",
+      source: setupCategoryFiltered,
+    });
+  };
+
   const startNew = (nextMode) => {
     const m = nextMode ?? mode;
     const source = m === "weak" && weakPool.length >= 4 ? weakPool : categoryFiltered;
-    resetRun(m, source);
+    startQuizRun({
+      cat: selectedCategories,
+      len: settings.quizLength,
+      opts: optionCount,
+      timed: settings.timedQuiz,
+      minutes: settings.timedMinutes,
+      nextMode: m,
+      source,
+    });
   };
+
+  const goToSetup = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setPhase("setup");
+  };
+
+  // Timed exam mode: countdown, auto-finish at zero. Restarts cleanly on
+  // every new run via runId, rather than inferring restarts from state.
+  useEffect(() => {
+    if (phase !== "active" || !settings.timedQuiz || finished) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+    timerRef.current = setInterval(() => {
+      setTimeLeft((tl) => {
+        if (tl <= 1) {
+          clearInterval(timerRef.current);
+          setFinished(true);
+          return 0;
+        }
+        return tl - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timerRef.current);
+  }, [phase, settings.timedQuiz, finished, runId]);
 
   const total = questions.length;
   const q = questions[current];
@@ -179,7 +251,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
   useHotkeys(
     useCallback(
       (e) => {
-        if (finished || !q) return;
+        if (!isActive || phase !== "active" || finished || !q) return;
         if (!answered) {
           const i = LETTERS.indexOf(e.key.toUpperCase());
           if (i !== -1 && i < q.options.length) handleSelect(i);
@@ -188,34 +260,192 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
           goNext();
         }
       },
-      [finished, q, answered, handleSelect, goNext]
+      [isActive, phase, finished, q, answered, handleSelect, goNext]
     )
   );
 
+  // ---------------- SETUP SCREEN ----------------
+  if (phase === "setup") {
+    return (
+      <div className="max-w-lg mx-auto">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-5">
+          <h2 className="font-bengali text-lg font-bold text-ink dark:text-night-ink mb-4">
+            {T("quizSetupTitle")}
+          </h2>
+
+          <div className="space-y-4">
+            <div>
+              <label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
+                {T("quizSetupCategory")}
+              </label>
+              {isVocab && (
+                <div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden mb-2 w-fit">
+                  {[
+                    { key: "lesson", label: T("groupByLesson") },
+                    { key: "pos", label: T("groupByPos") },
+                    { key: "count", label: T("groupByCount") },
+                  ].map((g) => (
+                    <button
+                      key={g.key}
+                      onClick={() => setSetupGroupBy(g.key)}
+                      className={`px-2.5 py-1.5 text-xs font-bengali font-medium transition-colors ${
+                        setupGroupBy === g.key
+                          ? "bg-ai text-washi"
+                          : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                      }`}
+                    >
+                      {g.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <CategoryMultiSelect
+                categories={
+                  setupGroupBy === "pos" ? availablePosCategories : setupGroupBy === "count" ? availableCountingCategories : availableCategories
+                }
+                selected={setupCategories}
+                onChange={setSetupCategories}
+                lang={lang}
+                allLabel={T("allCategories")}
+              />
+            </div>
+
+            <div>
+              <label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
+                {T("quizSetupLength")}
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {LENGTH_OPTIONS.map((len) => (
+                  <button
+                    key={len}
+                    onClick={() => setSetupLength(len)}
+                    className={`px-3 py-1.5 rounded-md border text-sm font-bengali transition-colors ${
+                      setupLength === len
+                        ? "bg-shu text-washi border-shu"
+                        : "border-ai-line dark:border-night-line text-ink dark:text-night-ink hover:border-shu/50"
+                    }`}
+                  >
+                    {len === "all" ? T("quizLenAll") : len}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
+                {T("quizSetupOptions")}
+              </label>
+              <div className="flex gap-2">
+                {[2, 3, 4, 5].map((n) => (
+                  <button
+                    key={n}
+                    onClick={() => setSetupOptionCount(n)}
+                    className={`w-10 h-10 rounded-md border text-sm font-mono font-semibold transition-colors ${
+                      setupOptionCount === n
+                        ? "bg-ai text-washi border-ai"
+                        : "border-ai-line dark:border-night-line text-ink dark:text-night-ink hover:border-ai/50"
+                    }`}
+                  >
+                    {n}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+                {T("quizSetupTimed")}
+              </label>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={setupTimed}
+                onClick={() => setSetupTimed((v) => !v)}
+                className={`w-11 h-6 shrink-0 rounded-full relative transition-colors ${
+                  setupTimed ? "bg-ai dark:bg-ai-glow" : "bg-ai-line dark:bg-night-line"
+                }`}
+              >
+                <span
+                  className={`absolute left-0.5 top-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-150 ${
+                    setupTimed ? "translate-x-5" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+
+            {setupTimed && (
+              <div className="flex items-center justify-between">
+                <label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+                  {T("quizSetupMinutes")}
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  max={120}
+                  value={setupMinutes}
+                  onChange={(e) => setSetupMinutes(Math.max(1, Number(e.target.value) || 1))}
+                  className="font-mono text-sm border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 w-20 bg-paper dark:bg-night-paper text-ink dark:text-night-ink text-right"
+                />
+              </div>
+            )}
+          </div>
+
+          <p className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted text-center mt-5">
+            {setupAvailableCount} {T("quizSetupAvailable")}
+          </p>
+
+          <button
+            onClick={handleStartFromSetup}
+            disabled={setupAvailableCount < 2}
+            className="w-full mt-3 font-bengali text-base font-semibold bg-shu text-washi rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {T("quizSetupStart")}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const categoryBadgeText =
+    selectedCategories.length === 0
+      ? T("allCategories")
+      : selectedCategories.length === 1
+      ? pickLang(availableCategories.find((c) => c.key === selectedCategories[0]) || { en: selectedCategories[0], bn: selectedCategories[0] }, lang)
+      : `${selectedCategories.length} ${T("allCategories")}`;
+
   const categorySelector = (
-    <select
-      value={category}
-      onChange={(e) => setCategory(e.target.value)}
-      className="font-bengali border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink dark:text-night-ink text-xs"
-    >
-      <option value="all">{T("allCategories")}</option>
-      {availableCategories.map((c) => (
-        <option key={c.key} value={c.key}>
-          {pickLang(c, lang)}
-        </option>
-      ))}
-    </select>
+    <span className="font-bengali text-xs border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted truncate">
+      {categoryBadgeText}
+    </span>
   );
 
+  const restartButton = (
+    <button
+      onClick={goToSetup}
+      aria-label={T("quizRestart")}
+      title={T("quizRestart")}
+      className="w-8 h-8 shrink-0 flex items-center justify-center rounded-md border border-ai-line dark:border-night-line bg-paper dark:bg-night-paper text-shu dark:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10 transition-colors"
+    >
+      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <polyline points="1 4 1 10 7 10" />
+        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+      </svg>
+    </button>
+  );
+
+  // ---------------- FINISHED SCREEN ----------------
   if (finished) {
     const pct = total ? Math.round((score / total) * 100) : 0;
     const missed = questions.filter((_, i) => results[i] === "wrong");
     return (
       <div className="max-w-lg mx-auto text-center">
-        <div className="mb-3 text-left">{categorySelector}</div>
+        <div className="mb-3 flex items-center gap-2">
+          {categorySelector}
+          {restartButton}
+        </div>
         <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-6">
           <div className="flex justify-center mb-4">
-            <Hanko label={`${pct}%`} sub={T("quizFinishedTitle")} tone={pct >= 80 ? "take" : "shu"} size="lg" />
+            <Hanko label={`${pct}%`} tone={pct >= 80 ? "take" : "shu"} size="lg" />
           </div>
           <h2 className="font-bengali text-xl text-ink dark:text-night-ink font-bold mb-1">
             {T("quizFinishedTitle")}
@@ -244,7 +474,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 mb-2">
             <button
               onClick={() => startNew("all")}
               className="font-bengali text-sm border border-ai-line dark:border-night-line text-ai dark:text-ai-glow rounded-md py-2 hover:bg-ai-soft dark:hover:bg-night-line transition-colors"
@@ -259,6 +489,12 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
               {T("quizWeakOnly")} ({weakPool.length})
             </button>
           </div>
+          <button
+            onClick={goToSetup}
+            className="w-full font-bengali text-xs text-ink-muted dark:text-night-ink-muted hover:text-shu dark:hover:text-shu-glow py-2 transition-colors"
+          >
+            {T("quizSetupTitle")}
+          </button>
         </div>
       </div>
     );
@@ -267,7 +503,10 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
   if (!q) {
     return (
       <div className="max-w-lg mx-auto">
-        <div className="mb-3">{categorySelector}</div>
+        <div className="mb-3 flex items-center gap-2">
+          {categorySelector}
+          {restartButton}
+        </div>
         <div className="text-center py-12 font-bengali text-ink-muted dark:text-night-ink-muted">
           {T("quizNoQuestionsForFilter")}
         </div>
@@ -279,9 +518,13 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
   const questionMain = isVocab ? q.reading : q.kanji;
   const showWordAbove = isVocab && settings.showVocabKanji;
 
+  // ---------------- ACTIVE QUIZ SCREEN ----------------
   return (
     <div className="max-w-lg mx-auto">
-      <div className="mb-3">{categorySelector}</div>
+      <div className="mb-3 flex items-center gap-2">
+        {categorySelector}
+        {restartButton}
+      </div>
 
       <div className="flex items-center justify-between mb-3 text-xs font-mono text-ink-muted dark:text-night-ink-muted">
         <span>

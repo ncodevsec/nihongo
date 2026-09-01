@@ -9,4 +9,5 @@ export const KANJI_CATEGORIES = [
   { key: "verb", jp: "動詞", bn: "ক্রিয়াপদ", en: "Verbs" },
   { key: "thing", jp: "物", bn: "স্থান ও বস্তু", en: "Places & Things" },
   { key: "abstract", jp: "抽象", bn: "ভাব ও অনুভূতি", en: "Abstract & Feelings" },
+  { key: "jukugo", jp: "熟語", bn: "জুকুগো (দুই-কাঞ্জি শব্দ)", en: "Jukugo (compound words)" },
 ];

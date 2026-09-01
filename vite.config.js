@@ -1,9 +1,23 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
-// BASE_PATH is injected by the GitHub Actions workflow as "/<repo-name>/".
-// Locally (npm run dev / npm run build without the env var) it defaults to "/".
+// A relative base ("./") makes every built asset URL relative
+// (./assets/...) instead of root-absolute (/assets/...). Root-absolute
+// paths only work when the site is served from the domain root — on
+// GitHub Pages project sites the app actually lives under
+// https://<user>.github.io/<repo>/, so a root-absolute path 404s and the
+// page loads blank except for the <title>. A relative base works
+// correctly both locally and under any subpath, with no extra
+// configuration needed.
+//
+// PWA support (offline caching + installability) is implemented with a
+// small hand-written service worker in public/sw.js and a static
+// public/manifest.webmanifest instead of a build-plugin. An earlier
+// version used vite-plugin-pwa, but its workbox-build postbuild step can
+// hang for minutes (a known issue in some environments) — since public/
+// files are copied straight through by Vite with zero processing, this
+// approach is both simpler and cannot slow down or hang the build.
 export default defineConfig({
+  base: "./",
   plugins: [react()],
-  base: process.env.BASE_PATH || "/",
 });
