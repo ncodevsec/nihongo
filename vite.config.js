@@ -22,5 +22,21 @@ export default defineConfig({
   plugins: [react()],
   build: {
     outDir: 'docs',
+    rollupOptions: {
+      output: {
+        // Forces the entry file name to be index.js
+        entryFileNames: 'assets/index.js',
+        // Forces split chunks (if any) to use a predictable template
+        chunkFileNames: 'assets/[name].js',
+        // Forces CSS and other assets to use index.[ext]
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
+            return 'assets/index.css';
+          }
+          // Fallback for other assets (images, fonts, etc.)
+          return 'assets/[name].[ext]';
+        }
+      }
+    }
   },
 });
