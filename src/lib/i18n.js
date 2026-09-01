@@ -29,7 +29,7 @@ const UI = {
   grammarSelectLesson: { bn: "একটি পাঠ বেছে নিন", en: "Select a lesson" },
 
   // Study
-  onlyUnlearned: { bn: "শুধু যা এখনো শেখা হয়নি", en: "Only unlearned" },
+  onlyUnlearned: { bn: "যা শিখিনি", en: "Not Memorized" },
   shuffle: { bn: "এলোমেলো করুন ↻", en: "Shuffle ↻" },
   alreadyLearned: { bn: "শেখা হয়ে গেছে", en: "Learned" },
   tapToRevealMeaning: { bn: "অর্থ দেখতে এখানে চাপুন (বা স্পেসবার)", en: "Tap to reveal meaning (or press Space)" },
