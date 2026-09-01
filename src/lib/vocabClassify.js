@@ -22,8 +22,25 @@ const NON_ADJECTIVE_I_EXCEPTIONS = new Set([
   "はい", "いいえ", "だいたい", "たいてい", "せい", "きゅうり",
 ]);
 
+// Curated list of actual adverbs present in this word list — verified
+// against the real data rather than guessed from a suffix pattern, since
+// Japanese adverbs have no single reliable ending. Conjunctions (しかし,
+// でも, それから) and particles (だけ, など) are deliberately excluded —
+// they're a different part of speech even though they sit near adverbs.
+const ADVERB_WORDS = new Set([
+  "よく", "たくさん", "だいたい", "すこし", "あまり", "ぜんぜん", "とても",
+  "いつも", "ときどき", "たぶん", "もちろん", "ぜひ", "どうぞ", "どうも",
+  "なかなか", "もう", "まだ", "すぐ", "ちょっと", "きっと", "ずっと",
+  "だんだん", "はじめて", "いちばん", "ほんとうに", "いろいろ", "だいじょうぶ",
+  "ぐらい", "くらい", "いっしょに", "いつか", "どうして", "やっと", "たいてい",
+  "なぜ", "ほとんど", "とくに", "まず", "つぎに", "たいへん", "いくら",
+  "いくつ", "どのくらい", "ゆっくり", "これから", "たまに", "できるだけ",
+  "はっきり", "かなり", "ぜったいに", "さっき",
+]);
+
 export function classifyPartOfSpeech(item) {
   const w = item.kanji || "";
+  if (ADVERB_WORDS.has(w)) return "adverb";
   if (isNaAdjective(w)) return "adjective-na";
   if (/ます$/.test(w)) return "verb";
   if (/い$/.test(w) && !NON_ADJECTIVE_I_EXCEPTIONS.has(w)) return "adjective-i";
@@ -35,6 +52,7 @@ export const POS_CATEGORIES = [
   { key: "verb", bn: "ক্রিয়া (Verb)", en: "Verbs" },
   { key: "adjective-i", bn: "い-বিশেষণ", en: "い-Adjectives" },
   { key: "adjective-na", bn: "な-বিশেষণ", en: "な-Adjectives" },
+  { key: "adverb", bn: "ক্রিয়া বিশেষণ (Adverb)", en: "Adverbs" },
 ];
 
 // ---------------------------------------------------------------------

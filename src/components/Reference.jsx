@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { t, pickLang } from "../lib/i18n.js";
 import { StarFilterButton, SortDirectionButton } from "./FilterControls.jsx";
 import { classifyPartOfSpeech, POS_CATEGORIES, classifyCounting, COUNTING_CATEGORIES } from "../lib/vocabClassify.js";
+import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
 
 const PAGE_SIZE = 60;
 
@@ -60,7 +61,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'pos' (vocab only)
-  const [category, setCategory] = useState("all");
+  const [selectedCategories, setSelectedCategories] = useState([]); // [] = all
   const [onlyStarred, setOnlyStarred] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [sortBy, setSortBy] = useState("lesson");
@@ -72,7 +73,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
   }, [query]);
 
   useEffect(() => {
-    setCategory("all");
+    setSelectedCategories([]);
   }, [groupBy]);
 
   const availableCategories = useMemo(() => {
@@ -110,7 +111,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
     return kanjiData.filter((k) => {
-      if (category !== "all" && categoryOf(k) !== category) return false;
+      if (selectedCategories.length > 0 && !selectedCategories.includes(categoryOf(k))) return false;
       if (onlyStarred && !favorites[k.id]) return false;
       if (!q) return true;
       return (
@@ -121,7 +122,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
       );
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [kanjiData, debouncedQuery, category, groupBy, onlyStarred, favorites]);
+  }, [kanjiData, debouncedQuery, selectedCategories, groupBy, onlyStarred, favorites]);
 
   const sorted = useMemo(() => {
     const dir = sortDir === "asc" ? 1 : -1;
@@ -150,7 +151,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [debouncedQuery, category, onlyStarred, kanjiData, sortBy, sortDir]);
+  }, [debouncedQuery, selectedCategories, onlyStarred, kanjiData, sortBy, sortDir]);
 
   const visible = sorted.slice(0, visibleCount);
 
@@ -197,25 +198,17 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
             ))}
           </div>
         )}
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="font-bengali border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
-        >
-          <option value="all">
-            {T("allCategories")} ({kanjiData.length})
-          </option>
-          {(groupBy === "pos"
-            ? availablePosCategories
-            : groupBy === "count"
-            ? availableCountingCategories
-            : availableCategories
-          ).map((c) => (
-            <option key={c.key} value={c.key}>
-              {pickLang(c, lang)}
-            </option>
-          ))}
-        </select>
+        <div className="sm:w-44 shrink-0">
+          <CategoryMultiSelect
+            categories={
+              groupBy === "pos" ? availablePosCategories : groupBy === "count" ? availableCountingCategories : availableCategories
+            }
+            selected={selectedCategories}
+            onChange={setSelectedCategories}
+            lang={lang}
+            allLabel={`${T("allCategories")} (${kanjiData.length})`}
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-3">
