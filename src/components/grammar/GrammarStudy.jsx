@@ -130,7 +130,7 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2 mb-5">
-        <div className="flex-1">
+        <div className="">
           <label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
             {groupBy === "particle" ? T("grammarSelectParticle") : T("grammarSelectLesson")}
           </label>
