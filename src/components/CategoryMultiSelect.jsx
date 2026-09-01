@@ -43,7 +43,7 @@ export default function CategoryMultiSelect({ categories, selected, onChange, la
       </button>
 
       {open && (
-        <div className="absolute z-20 mt-1 w-full min-w-[12rem] max-h-64 overflow-y-auto bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-md shadow-lg py-1">
+        <div className="absolute z-20 mt-1 w-full min-w-[12rem] max-h-80 overflow-y-auto bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-md shadow-lg py-1">
           <button
             type="button"
             onClick={() => onChange([])}
