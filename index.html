@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nihongo — জাপানি ভাষা শেখার প্ল্যাটফর্ম</title>
+    <meta name="description" content="JLPT ও NAT পরীক্ষার প্রস্তুতির জন্য কাঞ্জি ও শব্দভাণ্ডার শেখা, পরীক্ষা দেওয়া এবং রেফারেন্স দেখার টুল।" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Apply theme before paint to avoid a light-mode flash on load.
+      (function () {
+        try {
+          var raw = localStorage.getItem("nihongo-settings-v1");
+          var saved = raw ? (JSON.parse(raw).theme || "system") : "system";
+          var isDark =
+            saved === "dark" ||
+            (saved === "system" &&
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (isDark) document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
