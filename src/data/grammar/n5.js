@@ -14,7 +14,7 @@ export const GRAMMAR_N5 = [
         "id": "1-1",
         "particle": "は",
         "headingBn": "Noun1/Subject + は + Noun2/Object + です",
-        "explanationBn": "হিরাগানাতে 'হা' লেখা হলেও এটি Particle হিসেবে ব্যবহৃত হলে উচ্চারণ হয় 'ওয়া'। জাপানি ভাষায় প্রতিটি বাক্যের Subject-এর সাথে は Particle বসে। は-এর অর্থ am/is/are (হয়/হই)। は Particle Subject-কে পৃথক বা আলাদা করার জন্য ব্যবহার করা হয়। です Noun যুক্ত হ্যাঁবোধক বাক্যের শেষে বসে বাক্যকে পোলাইট বা সম্মানসূচক করে।",
+        "explanationBn": "'は' এটাকে হিরাগানাতে 'হা' লেখা হলেও এটি Particle হিসেবে ব্যবহৃত হলে উচ্চারণ হয় 'ওয়া'। জাপানি ভাষায় প্রতিটি বাক্যের Subject-এর সাথে は Particle বসে। は-এর অর্থ am/is/are (হয়/হই)। は Particle Subject-কে পৃথক বা আলাদা করার জন্য ব্যবহার করা হয়। \nです - Noun যুক্ত হ্যাঁ বোধক বাক্য (affirmative sentence) এর শেষে です বসে বাক্যকে পোলাইট বা সম্মানসূচক করে।",
         "examples": [
           {
             "jp": "ミラーさんは いしゃです。",
@@ -34,7 +34,7 @@ export const GRAMMAR_N5 = [
         "id": "1-2",
         "particle": "じゃ",
         "headingBn": "Noun1/Subject + は + Noun2/Object + じゃ/では ありません",
-        "explanationBn": "Noun যুক্ত বাক্যকে নাবোধক/Negative Sentence করতে じゃありません। বা では(দেওয়া)ありません বসে। じゃありません/ではありません-এর অর্থ (না)।",
+        "explanationBn": "Noun যুক্ত বাক্যকে নাবোধক/Negative Sentence করতে じゃありません। বা では(দেওয়া)ありません বসে। \nじゃありません / ではありません-এর অর্থ (না)।",
         "examples": [
           {
             "jp": "ミラーさんは いしゃじゃありません。",
