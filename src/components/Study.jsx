@@ -205,7 +205,11 @@ export default function Study({
 						<button
 							key={g.key}
 							onClick={() => setGroupBy(g.key)}
+<<<<<<< HEAD
 							className={`px-2.5 py-1.5 font-bengali font-medium ${
+=======
+							className={`px-2.5 py-1.5 font-bengali font-medium transition-colors ${
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 								groupBy === g.key
 									? "bg-shu text-washi"
 									: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
@@ -255,7 +259,11 @@ export default function Study({
 				}}
 				aria-pressed={reverse}
 				title={T("reverseRecall")}
+<<<<<<< HEAD
 				className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 border font-bengali font-medium ${
+=======
+				className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 border font-bengali font-medium transition-colors ${
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 					reverse
 						? "bg-shu text-washi border-shu"
 						: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted border-ai-line dark:border-night-line hover:border-shu/50"
@@ -336,7 +344,11 @@ export default function Study({
 							? T("markAsUnstarred")
 							: T("markAsStarred")
 					}
+<<<<<<< HEAD
 					className={`absolute top-2.5 right-2.5 z-10 w-11 h-11 flex items-center justify-center rounded-full ${
+=======
+					className={`absolute top-2.5 right-2.5 z-10 w-11 h-11 flex items-center justify-center rounded-full transition-colors ${
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 						favorites[card.id]
 							? "text-shu dark:text-shu-glow bg-shu-soft dark:bg-shu/10"
 							: "text-ink-muted/50 dark:text-night-ink-muted/50 hover:text-shu dark:hover:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10"
@@ -365,11 +377,18 @@ export default function Study({
 						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 py-8">
 							<div
 								className={`font-mincho text-ink dark:text-night-ink text-center px-4 break-words ${
+<<<<<<< HEAD
 									isVocab
 										? "text-4xl sm:text-5xl"
 										: "text-6xl sm:text-7xl"
 								}`}
 								// className={`font-mincho text-ink dark:text-night-ink text-center px-4 break-words text-4xl sm:text-5xl`}
+=======
+									isVocab && !showWord
+										? "text-4xl sm:text-5xl"
+										: "text-6xl sm:text-7xl"
+								}`}
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 							>
 								{frontText}
 							</div>
@@ -397,7 +416,11 @@ export default function Study({
 					) : (
 						// Meaning side: shows the Bengali/English meaning.
 						// Reverse mode shows this first; normal mode shows it after flip.
+<<<<<<< HEAD
 						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 px-3 py-5">
+=======
+						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 px-6 py-8">
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 							{!isVocab && !reverse && (
 								<div className="font-mincho text-3xl sm:text-4xl text-ai dark:text-ai-glow text-center">
 									{card.reading}
@@ -408,7 +431,11 @@ export default function Study({
 									className={`font-bengali text-ink dark:text-night-ink text-center ${
 										!isVocab
 											? "text-2xl sm:text-3xl"
+<<<<<<< HEAD
 											: "text-xl sm:text-2xl"
+=======
+											: "text-xl"
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 									}`}
 								>
 									{meaningText(card)}
@@ -427,7 +454,11 @@ export default function Study({
 										{card.onyomi &&
 											card.onyomi.length > 0 && (
 												<div className="flex items-start gap-2">
+<<<<<<< HEAD
 													<span className="shrink-0 font-bengali text-[10px] font-bold text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded px-1.5 py-0.5 mt-0.5">
+=======
+													<span className="shrink-0 font-bengali text-[10px] font-bold text-shu dark:text-shu-glow bg-shu-soft dark:bg-shu/10 rounded px-1.5 py-0.5 mt-0.5">
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 														{T("onyomi")}
 													</span>
 													<div className="flex-1 text-left">
@@ -438,7 +469,11 @@ export default function Study({
 																	className="font-mincho text-sm text-ink dark:text-night-ink"
 																>
 																	{r.reading}
+<<<<<<< HEAD
 																	<span className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted ml-2">
+=======
+																	<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted ml-2">
+>>>>>>> b4b959955e2cf068f04838d2f9232153569259ed
 																		（
 																		{r.word}{" "}
 																		{
