@@ -176,7 +176,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
   if (phase === "setup") {
     return (
       <div className="max-w-lg mx-auto">
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-5">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-5">
           <h2 className="font-bengali text-lg font-bold text-ink dark:text-night-ink mb-4">
             {T("quizSetupTitle")}
           </h2>
@@ -191,8 +191,8 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
                   onClick={() => setSetupGroupBy("lesson")}
                   className={`px-2.5 py-1.5 text-xs font-bengali font-medium transition-colors ${
                     setupGroupBy === "lesson"
-                      ? "bg-ai text-washi"
-                      : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                      ? "bg-shu text-washi"
+                      : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
                   }`}
                 >
                   {T("groupByLesson")}
@@ -201,8 +201,8 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
                   onClick={() => setSetupGroupBy("particle")}
                   className={`px-2.5 py-1.5 text-xs font-bengali font-medium transition-colors ${
                     setupGroupBy === "particle"
-                      ? "bg-ai text-washi"
-                      : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                      ? "bg-shu text-washi"
+                      : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
                   }`}
                 >
                   {T("groupByParticle")}
@@ -300,7 +300,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
           {lessonBadge}
           {restartButton}
         </div>
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-6">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-6">
           <div className="flex justify-center mb-4">
             <Hanko label={`${pct}%`} tone={pct >= 80 ? "take" : "shu"} size="lg" />
           </div>
@@ -360,7 +360,7 @@ export default function GrammarQuiz({ lessons, level, settings, updateSetting = 
         <div className="h-full bg-ai transition-all" style={{ width: `${(answeredCount / total) * 100}%` }} />
       </div>
 
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-5">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-5">
         <div className="flex items-center justify-between mb-3">
           <span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2 py-0.5">
             Lesson {q.lesson}

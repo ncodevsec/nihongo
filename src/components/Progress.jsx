@@ -92,28 +92,28 @@ export default function Progress({ kanjiData, categories, progress, resetProgres
   const untouchedPct = total ? (stats.untouched / total) * 100 : 0;
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl lg:max-w-3xl mx-auto">
       {/* Overview — four balanced stat cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg p-3 flex flex-col items-center gap-1.5 text-center">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
           <Hanko label={`${stats.mastered}`} tone="take" size="sm" />
           <span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
             {T("progressMastered")}
           </span>
         </div>
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg p-3 flex flex-col items-center gap-1.5 text-center">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
           <Hanko label={`${stats.accuracy}%`} tone="sakura" size="sm" />
           <span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
             {T("progressAccuracyLabel")}
           </span>
         </div>
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg p-3 flex flex-col items-center gap-1.5 text-center">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
           <Hanko label={`${stats.seen}`} tone="shu" size="sm" />
           <span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
             {T("progressAnswered")}
           </span>
         </div>
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg p-3 flex flex-col items-center gap-1.5 text-center">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
           <Hanko label={`${stats.starred}`} tone="ai" size="sm" />
           <span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
             {T("progressStarred")}
@@ -122,10 +122,10 @@ export default function Progress({ kanjiData, categories, progress, resetProgres
       </div>
 
       {/* Status breakdown — New / Learning / Mastered */}
-      <h2 className="font-bengali text-sm font-bold text-ink dark:text-night-ink mb-2">
+      <h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
         {T("progressStatusBreakdown")}
       </h2>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg p-4 mb-5">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-4 mb-5">
         <div className="w-full h-3 rounded-full overflow-hidden flex mb-3 bg-ai-soft dark:bg-night-line">
           {masteredPct > 0 && <div className="h-full bg-take" style={{ width: `${masteredPct}%` }} />}
           {learningPct > 0 && <div className="h-full bg-sakura" style={{ width: `${learningPct}%` }} />}
@@ -150,10 +150,10 @@ export default function Progress({ kanjiData, categories, progress, resetProgres
       </div>
 
       {/* Streak + 14-day activity */}
-      <h2 className="font-bengali text-sm font-bold text-ink dark:text-night-ink mb-2">
+      <h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
         {T("progressActivity")}
       </h2>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg p-4 mb-5">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-4 mb-5">
         <div className="flex items-center gap-3 mb-3">
           <Hanko label={`${streak}`} tone="shu" size="sm" />
           <div>
@@ -187,7 +187,7 @@ export default function Progress({ kanjiData, categories, progress, resetProgres
 
       {/* Per-category breakdown */}
       <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-        <h2 className="font-bengali text-sm font-bold text-ink dark:text-night-ink">
+        <h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow">
           {T("progressByCategory")}
         </h2>
         {isVocab && (
@@ -202,8 +202,8 @@ export default function Progress({ kanjiData, categories, progress, resetProgres
                 onClick={() => setGroupBy(g.key)}
                 className={`px-2.5 py-1 text-[11px] font-bengali font-medium transition-colors ${
                   groupBy === g.key
-                    ? "bg-ai text-washi"
-                    : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                    ? "bg-shu text-washi"
+                    : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
                 }`}
               >
                 {g.label}
@@ -212,7 +212,7 @@ export default function Progress({ kanjiData, categories, progress, resetProgres
           </div>
         )}
       </div>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg divide-y divide-ai-line dark:divide-night-line mb-6">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none divide-y divide-ai-line dark:divide-night-line mb-6">
         {stats.byCategory.map((c) => {
           const donePct = c.total ? (c.done / c.total) * 100 : 0;
           const startedPct = c.total ? (c.started / c.total) * 100 : 0;

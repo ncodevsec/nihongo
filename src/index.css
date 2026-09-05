@@ -31,7 +31,7 @@ body {
 }
 
 html.dark body {
-  background-color: #1c1717;
+  background-color: #000000;
 }
 
 :focus-visible {
