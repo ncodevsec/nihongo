@@ -21,7 +21,7 @@ export default function Footer({
 						width={28}
 						height={28}
 					/>
-					<span className="font-semibold text-base font-bold text-ink dark:text-night-ink">
+					<span className="font-semibold text-base text-ink dark:text-night-ink">
 						NihonGo - Study Lab
 					</span>
 				</div>
