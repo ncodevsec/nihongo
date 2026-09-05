@@ -41,7 +41,8 @@ export default {
         // module selector, active nav states, and "wrong answer" states.
         shu: "#bd2828",
         "shu-soft": "#fbeeee",
-        "shu-glow": "#e56c6c",
+        // "shu-glow": "#e56c6c",
+        "shu-glow": "#ff3434",
 
         // Cherry-blossom pink — same hue again, pushed toward high
         // lightness for a soft decorative accent (example panels, chips).
@@ -65,15 +66,28 @@ export default {
         kin: "#bd2828",
 
         // ---- Dark mode surfaces ----
-        // Warm charcoal with a faint red undertone (same hue, near-zero
-        // saturation) rather than true black — ties dark mode back to the
-        // same brand color story while keeping the harsh-contrast-free
-        // reading comfort of a warm near-black background.
-        night: "#1c1717",
-        "night-paper": "#272121",
-        "night-line": "#3e3232",
-        "night-ink": "#eae5dc",
-        "night-ink-muted": "#a39c8f",
+        // True neutral black/gray — deliberately NOT tinted with the brand
+        // hue. Earlier versions carried a faint red undertone into the
+        // background/surfaces/borders, which softened the whole theme into
+        // a muddy "reddish-brown" look. Keeping surfaces strictly neutral
+        // (black → dark gray → mid gray) is what makes the red accents
+        // (buttons, active states, headings) actually pop with real
+        // contrast — the same "black canvas, red highlights" approach
+        // ChatGPT and X use for their dark themes.
+        night: "#000000",
+        "night-paper": "#151515",
+        "night-line": "#2a2a2a",
+        "night-ink": "#e9e9e9",
+        "night-ink-muted": "#9a9a9a",
+      },
+      boxShadow: {
+        // A more formal, visibly-elevated card shadow for light mode —
+        // used instead of shadow-sm on primary surfaces (flashcards, quiz
+        // cards, panels) so the UI reads as a deliberately designed
+        // desktop app rather than flat/sketch-like. Dark mode surfaces use
+        // borders instead (shadows barely read against a black backdrop).
+        card: "0 1px 2px rgba(20,15,15,0.04), 0 8px 24px -4px rgba(20,15,15,0.12)",
+        "card-lg": "0 2px 4px rgba(20,15,15,0.05), 0 16px 40px -8px rgba(20,15,15,0.16)",
       },
       fontFamily: {
         mincho: ['"Shippori Mincho"', "serif"],

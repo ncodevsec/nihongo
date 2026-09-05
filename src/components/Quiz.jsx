@@ -268,7 +268,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
   if (phase === "setup") {
     return (
       <div className="max-w-lg mx-auto">
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-5">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-5">
           <h2 className="font-bengali text-lg font-bold text-ink dark:text-night-ink mb-4">
             {T("quizSetupTitle")}
           </h2>
@@ -290,8 +290,8 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
                       onClick={() => setSetupGroupBy(g.key)}
                       className={`px-2.5 py-1.5 text-xs font-bengali font-medium transition-colors ${
                         setupGroupBy === g.key
-                          ? "bg-ai text-washi"
-                          : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                          ? "bg-shu text-washi"
+                          : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
                       }`}
                     >
                       {g.label}
@@ -443,7 +443,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
           {categorySelector}
           {restartButton}
         </div>
-        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-6">
+        <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-6">
           <div className="flex justify-center mb-4">
             <Hanko label={`${pct}%`} tone={pct >= 80 ? "take" : "shu"} size="lg" />
           </div>
@@ -547,7 +547,7 @@ export default function Quiz({ moduleKey, kanjiData, categories, progress, recor
         />
       </div>
 
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm p-5">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-5">
         <div className="flex items-center justify-between mb-3">
           <span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2 py-0.5">
             {pickLang(cat, lang)}

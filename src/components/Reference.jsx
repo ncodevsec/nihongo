@@ -156,8 +156,8 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
   const visible = sorted.slice(0, visibleCount);
 
   const gridCols = showWord
-    ? "grid-cols-[2.5rem_5rem_1fr_auto_auto] sm:grid-cols-[3.5rem_6rem_1fr_7rem_auto_auto]"
-    : "grid-cols-[6rem_1fr_auto_auto] sm:grid-cols-[8rem_1fr_7rem_auto_auto]";
+    ? "grid-cols-[2.5rem_5rem_1fr_auto_auto] sm:grid-cols-[3.5rem_6rem_1fr_auto_auto_auto] lg:grid-cols-[5rem_8rem_1fr_auto_auto_auto]"
+    : "grid-cols-[10rem_1fr_auto_auto] sm:grid-cols-[12rem_1fr_7rem_auto_auto] lg:grid-cols-[14rem_1fr_7rem_auto_auto] xl:grid-cols-[16rem_1fr_7rem_auto_auto]";
 
   const SORT_OPTIONS = [
     { key: "lesson", label: T("sortLesson") },
@@ -168,7 +168,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
   ];
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl lg:max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row gap-2 mb-2">
         <input
           type="text"
@@ -189,8 +189,8 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
                 onClick={() => setGroupBy(g.key)}
                 className={`px-2.5 py-1.5 text-sm font-bengali font-medium transition-colors ${
                   groupBy === g.key
-                    ? "bg-ai text-washi"
-                    : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                    ? "bg-shu text-washi"
+                    : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
                 }`}
               >
                 {g.label}
@@ -246,7 +246,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
         {sorted.length} {T("showingCountOf")} {visible.length} {T("showingCountShown")}
       </div>
 
-      <div className="border border-ai-line dark:border-night-line rounded-lg overflow-hidden bg-paper dark:bg-night-paper">
+      <div className="border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden bg-paper dark:bg-night-paper">
         <div
           className={`grid ${gridCols} gap-2 px-3 py-2 bg-ai-soft dark:bg-night-line/60 border-b border-ai-line dark:border-night-line text-[10px] font-bengali font-semibold text-ai dark:text-ai-glow uppercase tracking-wide`}
         >
@@ -278,7 +278,7 @@ export default function Reference({ moduleKey, kanjiData, categories, progress, 
                     {k.kanji}
                   </span>
                 )}
-                <span className="font-mincho text-sm leading-snug text-ink dark:text-night-ink break-words">
+                <span className="font-mincho text-md leading-snug text-ink dark:text-night-ink break-words">
                   {k.reading}
                 </span>
                 {showMeaning && (

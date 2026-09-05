@@ -66,7 +66,7 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
   );
 
   const activePillClass =
-    "bg-shu text-washi dark:bg-shu-glow dark:text-night";
+    "bg-shu text-washi dark:bg-shu-glow dark:text-white";
   const inactivePillClass =
     "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line";
 
@@ -145,8 +145,27 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
 
   return (
     <div className="max-w-2xl mx-auto">
+      <SectionLabel>{T("sectionTheme")}</SectionLabel>
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
+        <Row title={T("appTheme")} subtitle={T("appThemeSub")}>
+          <div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
+            {THEME_OPTIONS.map((th) => (
+              <button
+                key={th.key}
+                onClick={() => updateSetting("theme", th.key)}
+                className={`px-2.5 py-1.5 text-[11px] font-bengali font-medium transition-colors ${
+                  settings.theme === th.key ? activePillClass : inactivePillClass
+                }`}
+              >
+                {th.label}
+              </button>
+            ))}
+          </div>
+        </Row>
+      </div>
+
       <SectionLabel>{T("sectionLanguage")}</SectionLabel>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
         <Row title={T("siteLanguage")} subtitle={T("siteLanguageSub")}>
           <div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
             {[
@@ -167,43 +186,8 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
         </Row>
       </div>
 
-      <SectionLabel>{T("sectionTheme")}</SectionLabel>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden">
-        <Row title={T("appTheme")} subtitle={T("appThemeSub")}>
-          <div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
-            {THEME_OPTIONS.map((th) => (
-              <button
-                key={th.key}
-                onClick={() => updateSetting("theme", th.key)}
-                className={`px-2.5 py-1.5 text-[11px] font-bengali font-medium transition-colors ${
-                  settings.theme === th.key ? activePillClass : inactivePillClass
-                }`}
-              >
-                {th.label}
-              </button>
-            ))}
-          </div>
-        </Row>
-      </div>
-
-      <SectionLabel>{T("sectionKanji")}</SectionLabel>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden divide-y divide-ai-line dark:divide-night-line">
-        <Row title={T("showBnMeaning")} subtitle={T("showBnMeaningSub")}>
-          <Toggle
-            checked={settings.showKanjiBn}
-            onChange={(v) => updateSetting("showKanjiBn", v)}
-          />
-        </Row>
-        <Row title={T("showJukugo")} subtitle={T("showJukugoSub")}>
-          <Toggle
-            checked={settings.showJukugo}
-            onChange={(v) => updateSetting("showJukugo", v)}
-          />
-        </Row>
-      </div>
-
       <SectionLabel>{T("sectionVocab")}</SectionLabel>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden divide-y divide-ai-line dark:divide-night-line">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line">
         <Row title={T("showVocabKanji")} subtitle={T("showVocabKanjiSub")}>
           <Toggle
             checked={settings.showVocabKanji}
@@ -230,8 +214,24 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
         </Row>
       </div>
 
+      <SectionLabel>{T("sectionKanji")}</SectionLabel>
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line">
+        <Row title={T("showBnMeaning")} subtitle={T("showBnMeaningSub")}>
+          <Toggle
+            checked={settings.showKanjiBn}
+            onChange={(v) => updateSetting("showKanjiBn", v)}
+          />
+        </Row>
+        <Row title={T("showJukugo")} subtitle={T("showJukugoSub")}>
+          <Toggle
+            checked={settings.showJukugo}
+            onChange={(v) => updateSetting("showJukugo", v)}
+          />
+        </Row>
+      </div>
+
       <SectionLabel>{T("sectionData")}</SectionLabel>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden divide-y divide-ai-line dark:divide-night-line">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line">
         <Row title={T("exportDataLabel")} subtitle={T("exportDataSub")}>
           <button
             onClick={handleExport}
@@ -266,7 +266,7 @@ export default function Settings({ settings, updateSetting, resetSettings, reset
       </div>
 
       <SectionLabel>{T("sectionReset")}</SectionLabel>
-      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden divide-y divide-ai-line dark:divide-night-line mb-8">
+      <div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line mb-8">
         <Row title={T("resetSettingsLabel")}>
           <button
             onClick={handleResetSettings}

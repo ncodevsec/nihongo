@@ -17,8 +17,8 @@ export default function LevelModuleBar({ moduleKey, onModuleChange, level, onLev
                 onClick={() => onLevelChange(key)}
                 className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
                   isActiveLevel
-                    ? "bg-ai text-washi shadow-sm"
-                    : "text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                    ? "bg-shu text-washi shadow-sm"
+                    : "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
                 }`}
               >
                 {lvl.label}

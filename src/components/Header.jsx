@@ -1,4 +1,3 @@
-import Hanko from "./Hanko.jsx";
 import { MODULES } from "../data/modules.js";
 import { t } from "../lib/i18n.js";
 
@@ -26,7 +25,7 @@ export default function Header({ active, onChange, onBack, moduleKey, accuracy, 
   const isSettings = active === "settings";
 
   return (
-    <header className="relative bg-paper dark:bg-night-paper border-b border-ai-line dark:border-night-line transition-colors overflow-hidden">
+    <header className="relative bg-paper dark:bg-night-paper border-b border-ai-line dark:border-night-line transition-colors overflow-hidden shadow-card dark:shadow-none">
       {/* Faint cherry-blossom accent wash in the corner — decorative only */}
       <div
         className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-[0.35] dark:opacity-[0.12] blur-2xl"
@@ -37,7 +36,7 @@ export default function Header({ active, onChange, onBack, moduleKey, accuracy, 
       <div className="relative max-w-4xl mx-auto px-3 sm:px-5 py-3 sm:py-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <Hanko label="本" tone="shu" size="sm" />
+            <img src="./icons/logo-mark-96.png" alt="NihonGo" className="w-9 h-9 shrink-0" width={36} height={36} />
             <div className="min-w-0">
               <h1 className="font-mincho text-lg sm:text-xl font-bold text-ink dark:text-night-ink truncate">
                 NihonGo

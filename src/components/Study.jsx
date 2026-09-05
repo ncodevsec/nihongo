@@ -165,8 +165,8 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
               onClick={() => setGroupBy(g.key)}
               className={`px-2.5 py-1.5 font-bengali font-medium transition-colors ${
                 groupBy === g.key
-                  ? "bg-ai text-washi"
-                  : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                  ? "bg-shu text-washi"
+                  : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
               }`}
             >
               {g.label}
@@ -282,7 +282,7 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
         </button>
         <button
           onClick={() => setFlipped((f) => !f)}
-          className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-sm active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
+          className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
         >
           {(!flipped) !== reverse ? (
             // Word side: shows the Japanese word (kanji/reading).
@@ -389,7 +389,7 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
       <div className="grid grid-cols-2 gap-2.5 mt-4">
         <button
           onClick={() => mark(false)}
-          className="flex items-center justify-center font-bengali text-sm font-semibold border-2 border-shu text-shu dark:border-shu-glow dark:text-shu-glow rounded-lg py-3 hover:bg-shu hover:text-washi dark:hover:bg-shu-glow dark:hover:text-night active:scale-[0.98] transition-all"
+          className="flex items-center justify-center font-bengali text-sm font-semibold bg-shu dark:bg-shu-glow text-washi dark:text-white rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
         >
           {T("reviewAgain")}
         </button>
@@ -401,16 +401,16 @@ export default function Study({ moduleKey, kanjiData, categories, progress, setL
         </button>
       </div>
 
-      <div className="flex gap-2.5 mt-3">
+      <div className="flex gap-2.5 mt-8">
         <button
           onClick={goPrev}
-          className="flex-1 flex items-center justify-center font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-2.5 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+          className="flex-1 flex items-center justify-center font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-1 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
         >
           {T("prevCard")}
         </button>
         <button
           onClick={goNext}
-          className="flex-1 flex items-center justify-center font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-2.5 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+          className="flex-1 flex items-center justify-center font-bengali text-sm border border-ai-line dark:border-night-line rounded-lg py-1 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
         >
           {T("nextCard")}
         </button>

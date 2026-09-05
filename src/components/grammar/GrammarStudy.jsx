@@ -103,15 +103,15 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
   if (onlyStarred) visiblePoints = visiblePoints.filter((p) => favorites[p.id]);
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl lg:max-w-3xl mx-auto">
       <div className="flex items-center gap-2 mb-3">
         <div className="flex rounded-full border border-ai-line dark:border-night-line overflow-hidden">
           <button
             onClick={() => setGroupBy("lesson")}
             className={`px-3 py-1.5 text-xs font-bengali font-medium transition-colors ${
               groupBy === "lesson"
-                ? "bg-ai text-washi"
-                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                ? "bg-shu text-washi"
+                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
             }`}
           >
             {T("groupByLesson")}
@@ -120,8 +120,8 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
             onClick={() => setGroupBy("particle")}
             className={`px-3 py-1.5 text-xs font-bengali font-medium transition-colors ${
               groupBy === "particle"
-                ? "bg-ai text-washi"
-                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                ? "bg-shu text-washi"
+                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
             }`}
           >
             {T("groupByParticle")}
@@ -130,7 +130,7 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2 mb-5">
-        <div className="">
+        <div className="flex-1">
           <label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
             {groupBy === "particle" ? T("grammarSelectParticle") : T("grammarSelectLesson")}
           </label>
@@ -169,7 +169,7 @@ export default function GrammarStudy({ lessons, level, settings, favorites, togg
           return (
             <div
               key={pointId}
-              className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden shadow-sm"
+              className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden shadow-card dark:shadow-none"
             >
               {/* Rule heading */}
               <div className="flex items-start justify-between gap-2 px-4 sm:px-5 pt-4">

@@ -82,7 +82,7 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl lg:max-w-3xl mx-auto">
       <div className="flex flex-col sm:flex-row gap-2 mb-3">
         <input
           type="text"
@@ -96,8 +96,8 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
             onClick={() => setGroupBy("lesson")}
             className={`px-2.5 py-1.5 text-sm font-bengali font-medium transition-colors ${
               groupBy === "lesson"
-                ? "bg-ai text-washi"
-                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                ? "bg-shu text-washi"
+                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
             }`}
           >
             {T("groupByLesson")}
@@ -106,8 +106,8 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
             onClick={() => setGroupBy("particle")}
             className={`px-2.5 py-1.5 text-sm font-bengali font-medium transition-colors ${
               groupBy === "particle"
-                ? "bg-ai text-washi"
-                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-ai-soft dark:hover:bg-night-line"
+                ? "bg-shu text-washi"
+                : "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
             }`}
           >
             {T("groupByParticle")}
@@ -134,7 +134,7 @@ export default function GrammarList({ lessons, level, settings, favorites, toggl
         {filtered.length} {T("showingCountOf")} {visible.length} {T("showingCountShown")}
       </div>
 
-      <div className="border border-ai-line dark:border-night-line rounded-lg overflow-hidden bg-paper dark:bg-night-paper divide-y divide-ai-line dark:divide-night-line">
+      <div className="border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden bg-paper dark:bg-night-paper divide-y divide-ai-line dark:divide-night-line">
         {visible.map((p) => {
           const isOpen = expanded === p.id;
           const starred = !!favorites[p.id];
