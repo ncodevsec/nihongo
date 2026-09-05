@@ -108,7 +108,7 @@ const RAW = [
   ["教室", "きょうしつ", "শ্রেণিকক্ষ", "Classroom", "lesson3"],
   ["食堂", "しょくどう", "ক্যান্টিন", "Dining hall, canteen", "lesson3"],
   ["事務所", "じむしょ", "অফিস", "Office", "lesson3"],
-  ["会議室", "かいぎしつ", "সভাকক্ষ", "Conference room", "lesson3"],
+  ["会議室", "かいぎしつ", "সভাকক্ষ / মিটিং রুম", "Conference room / Meeting Room", "lesson3"],
   ["受付", "うけつけ", "অভ্যর্থনা ডেস্ক", "Reception desk", "lesson3"],
   ["ロビー", "ロビー", "লবি", "Lobby", "lesson3"],
   ["部屋", "へや", "কক্ষ", "Room", "lesson3"],
@@ -199,7 +199,6 @@ const RAW = [
   ["えーと", "えーと", "ইয়ে...", "Well, let me see", "lesson4"], // Extra
   ["うけつけい", "うけつけい", "তথ্যকেন্দ্র", "Information, directory assistance", "lesson4"], // Extra
   ["お願いします。", "おねがいします", "অনুগ্রহ করে", "Please.", "lesson4"], // Extra
-  ["お問い合わせの番号", "おといあわせのばんごう", "জিজ্ঞাসিত নম্বর", "The number being inquired about", "lesson4"], // Extra
   ["ありがとうございました。", "ありがとうございました", "অনেক ধন্যবাদ", "Thank you very much.", "lesson4"], // Extra
 
   // Lesson 5
@@ -252,7 +251,7 @@ const RAW = [
   ["何日", "なんにち", "কত তারিখ/কয়দিন", "Which day, How many days", "lesson5"],
   ["いつ", "いつ", "কখন", "When", "lesson5"],
   ["誕生日", "たんじょうび", "জন্মদিন", "Birthday", "lesson5"],
-  ["普通", "ふつう", "লোকাল (ট্রেন)", "Local Train", "lesson5"],
+  ["普通", "ふつう", "লোকাল ট্রেন", "Local Train", "lesson5"],
   ["急行", "きゅうこう", "দ্রুতগামী ট্রেন", "Rapid Train", "lesson5"],
   ["特急", "とっきゅう", "বিশেষ দ্রুতগামী (এক্সপ্রেস) ট্রেন", "Express Train", "lesson5"],
   ["次の", "つぎの", "পরবর্তী", "Next", "lesson5"],
@@ -320,7 +319,7 @@ const RAW = [
   ["切ります", "きります", "কাটা, টুকরো করা", "Cut, slice", "lesson7"],
   ["送ります", "おくります", "পাঠানো", "Send", "lesson7"],
   ["あげます", "あげます", "দেওয়া (অন্যকে)", "Give", "lesson7"],
-  ["もらいます", "もらいます", "পাওয়া", "Receive", "lesson7"],
+  ["もらいます", "もらいます", "গ্রহন করা / নেওয়া / পাওয়া", "Receive", "lesson7"],
   ["貸します", "かします", "ধার দেওয়া", "Lend", "lesson7"],
   ["借ります", "かります", "ধার নেওয়া", "Borrow", "lesson7"],
   ["教えます", "おしえます", "শেখানো", "Teach", "lesson7"],
@@ -413,7 +412,7 @@ const RAW = [
   ["そして", "そして", "এবং", "And", "lesson8"],
   ["～が、～", "が", "কিন্তু", "~, but ~", "lesson8"],
   ["おげんきですか", "おげんきですか", "আপনি কেমন আছেন?", "How are you?", "lesson8"],
-  ["そうですね", "そうですね", "হ্যাঁ, ঠিক বলেছেন / তাই তো", "That's right / I agree", "lesson8"],
+  ["そうですね", "そうですね", "তাই না? / হ্যাঁ, ঠিক বলেছেন", "That's right / I agree", "lesson8"],
   ["もう いっぱい いかがですか", "もう いっぱい いかがですか", "আরেক কাপ নেবেন?", "Would you like another cup?", "lesson8"],
   ["いいえ、けっこうです", "いいえ、けっこうです", "না, ধন্যবাদ", "No, thank you", "lesson8"],
   ["もう～ですね", "もう～ですね", "ইতিমধ্যে ~, তাই না?", "Already ~, isn't it?", "lesson8"],
@@ -432,14 +431,14 @@ const RAW = [
   ["嫌い［な］", "きらい", "অপছন্দ", "Dislike", "lesson9"],
   ["上手［な］", "じょうず", "দক্ষ", "Good at", "lesson9"],
   ["下手［な］", "へた", "অদক্ষ", "Poor at", "lesson9"],
-  ["料理", "りょうり", "রান্না", "Dish, cooking", "lesson9"],
+  ["料理", "りょうり", "রান্না করা খাবার", "Dish, cooking", "lesson9"],
   ["飲み物", "のみもの", "পানীয়", "Drinks", "lesson9"],
   ["スポーツ", "スポーツ", "খেলাধুলা", "Sport", "lesson9"],
   ["野球", "やきゅう", "বেসবল", "Baseball", "lesson9"],
   ["ダンス", "ダンス", "নাচ", "Dance", "lesson9"],
   ["音楽", "おんがく", "সঙ্গীত", "Music", "lesson9"],
   ["歌", "うた", "গান", "Song", "lesson9"],
-  ["クラシック", "クラシック", "শাস্ত্রীয় সঙ্গীত", "Classical music", "lesson9"],
+  ["クラシック", "クラシック", "শাস্ত্রীয় সঙ্গীত / ক্লাসিক গান", "Classical music", "lesson9"],
   ["ジャズ", "ジャズ", "জ্যাজ সঙ্গীত", "Jazz", "lesson9"],
   ["コンサート", "コンサート", "কনসার্ট", "Concert", "lesson9"],
   ["カラオケ", "カラオケ", "কারাওকে (একা মিউজিকের সাথে গান গাওয়া)", "Karaoke (Singing along to recorded music)", "lesson9"],
@@ -462,7 +461,7 @@ const RAW = [
   ["妻／家内", "つま", "স্ত্রী (নিজের)", "(my) wife", "lesson9"],
   ["子ども", "こども", "বাচ্চা", "Child", "lesson9"],
   ["よく", "よく", "ভালোভাবে/প্রায়ই", "Well, much", "lesson9"],
-  ["だいたい", "だいたい", "মোটামুটি", "Mostly, roughly", "lesson9"],
+  ["だいたい", "だいたい", "অধিকংশ ক্ষেত্রে", "Mostly, roughly", "lesson9"],
   ["たくさん", "たくさん", "অনেক", "Many, much", "lesson9"],
   ["少し", "すこし", "একটু", "A little, a few", "lesson9"],
   ["全然", "ぜんぜん", "একদমই না", "Not at all", "lesson9"],
@@ -501,7 +500,7 @@ const RAW = [
   ["ドア", "ドア", "দরজা", "Door", "lesson10"],
   ["窓", "まど", "জানালা", "Window", "lesson10"],
   ["ポスト", "ポスト", "ডাকবাক্স", "Mailbox, postbox", "lesson10"],
-  ["ビル", "ビル", "ভবন", "Building", "lesson10"],
+  ["ビル", "ビル", "ভবন (উঁচু কর্পোরেট বা সরকারি ভবন)", "Building", "lesson10"],
   ["公園", "こうえん", "পার্ক", "Park", "lesson10"],
   ["喫茶店", "きっさてん", "চায়ের দোকান / কফির দোকান", "Tea Stall / Coffee shop", "lesson10"],
   ["本屋", "ほんや", "বইয়ের দোকান", "Bookstore", "lesson10"],
@@ -948,7 +947,7 @@ const RAW = [
   ["色々", "いろいろ", "বিভিন্ন রকম", "Various", "lesson20"],
   ["サラリーマン", "サラリーマン", "বেতনভুক্ত কর্মী", "Salaried worker", "lesson20"], // Extra
   ["物価", "ぶっか", "দ্রব্যমূল্য", "Commodity prices", "lesson20"], // Extra
-  ["この間", "このあいだ", "সেদিন", "The other day", "lesson20"], // Extra
+  ["この間", "このあいだ", "সেদিন / কিছুদিন আগে / সম্প্রতি", "The other day", "lesson20"], // Extra
   ["国へ帰るの？", "くにへかえるの", "দেশে ফিরে যাচ্ছ?", "Are you going back to your country?", "lesson20"], // Extra
   ["どうしようかな。", "どうしようかな", "কী করা যায় ভাবছি", "What shall I do?", "lesson20"], // Extra
 
@@ -995,7 +994,7 @@ const RAW = [
   ["カンガルー", "カンガルー", "ক্যাঙ্গারু", "Kangaroo", "lesson21"],
   ["かぐやひめ", "かぐやひめ", "জাপানি লোককাহিনির চাঁদের রাজকন্যা", "Princess Kaguya, a character from a Japanese folktale", "lesson21"],
   ["見ないと。", "みないと", "দেখতেই হবে", "I've got to watch it.", "lesson21"], // Extra
-  ["しかたがありません。", "しかたがありません", "কিছু করার নেই", "It can't be helped.", "lesson21"], // Extra
+  ["しかたがありません。", "しかたがありません", "কিছু করার নেই / উপায় নেই / নিরুপায়", "It can't be helped.", "lesson21"], // Extra
   ["ラッシュアワー", "ラッシュアワー", "ভিড়ের সময়", "Rush hour", "lesson21"], // Extra
   ["同じ", "おなじ", "একই", "The same", "lesson21"], // Extra
   ["首相", "しゅしょう", "প্রধানমন্ত্রী", "Prime minister", "lesson21"], // Extra
