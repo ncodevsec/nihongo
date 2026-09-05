@@ -422,39 +422,7 @@ export default function Study({
 								((card.onyomi && card.onyomi.length > 0) ||
 									(card.kunyomi &&
 										card.kunyomi.length > 0)) && (
-									<div className="w-full max-w-xs mt-1 pt-3 border-t border-ai-line dark:border-night-line space-y-2">
-										{card.onyomi &&
-											card.onyomi.length > 0 && (
-												<div className="flex items-start gap-2">
-													<span className="shrink-0 font-bengali text-[10px] font-bold text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded px-1.5 py-0.5 mt-0.5">
-														{T("onyomi")}
-													</span>
-													<div className="flex-1 text-left">
-														{card.onyomi.map(
-															(r, i) => (
-																<div
-																	key={i}
-																	className="font-mincho text-sm text-ink dark:text-night-ink"
-																>
-																	{r.reading}
-																	<span className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted ml-2">
-																		（
-																		{r.word}{" "}
-																		{
-																			r.wordReading
-																		}{" "}
-																		—{" "}
-																		{
-																			r.meaningBn
-																		}
-																		）
-																	</span>
-																</div>
-															),
-														)}
-													</div>
-												</div>
-											)}
+									<div className="w-full max-w-sm mt-1 pt-3 border-t border-ai-line dark:border-night-line space-y-2">
 										{card.kunyomi &&
 											card.kunyomi.length > 0 && (
 												<div className="flex items-start gap-2">
@@ -466,20 +434,34 @@ export default function Study({
 															(r, i) => (
 																<div
 																	key={i}
-																	className="font-mincho text-sm text-ink dark:text-night-ink"
+																	className="font-mincho text-md text-ink dark:text-night-ink"
 																>
 																	{r.reading}
-																	<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted ml-2">
-																		（
-																		{r.word}{" "}
-																		{
-																			r.wordReading
-																		}{" "}
-																		—{" "}
-																		{
-																			r.meaningBn
-																		}
-																		）
+																	<span className="font-bengali text-md text-ink-muted dark:text-night-ink-muted ml-2">
+																		（ {r.word}{" "}.{" "}{r.wordReading}{" "}.{" "}{r.meaningBn} ）
+																	</span>
+																</div>
+															),
+														)}
+													</div>
+												</div>
+											)}
+										{card.onyomi &&
+											card.onyomi.length > 0 && (
+												<div className="flex items-start gap-2">
+													<span className="shrink-0 font-bengali text-[10px] font-bold text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded px-1.5 py-0.5 mt-0.5">
+														{T("onyomi")}
+													</span>
+													<div className="flex-1 text-left">
+														{card.onyomi.map(
+															(r, i) => (
+																<div
+																	key={i}
+																	className="font-mincho text-md text-ink dark:text-night-ink"
+																>
+																	{r.reading}
+																	<span className="font-bengali text-md text-ink-muted dark:text-night-ink-muted ml-2">
+																		（ {r.word}{"  "}.{"  "}{r.wordReading}{"  "}.{"  "}{r.meaningBn} ）
 																	</span>
 																</div>
 															),
