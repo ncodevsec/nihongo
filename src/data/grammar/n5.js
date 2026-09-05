@@ -34,7 +34,7 @@ export const GRAMMAR_N5 = [
         "id": "1-2",
         "particle": "じゃ",
         "headingBn": "Noun1/Subject + は + Noun2/Object + じゃ/では ありません",
-        "explanationBn": "Noun যুক্ত বাক্যকে নাবোধক/Negative Sentence করতে じゃありません। বা では(দেওয়া)ありません বসে। \nじゃありません / ではありません-এর অর্থ (না)।",
+        "explanationBn": "Noun যুক্ত বাক্যকে নাবোধক/Negative Sentence করতে じゃありません। বা では(দেওয়া)ありません বসে। じゃありません/ではありません-এর অর্থ (না)।",
         "examples": [
           {
             "jp": "ミラーさんは いしゃじゃありません。",
