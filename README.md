@@ -1,4 +1,4 @@
-# NihonGo — Source Project
+# NihonGo - Study Lab
 
 The full React + Vite + Tailwind source for the NihonGo JLPT/NAT study
 app. This is the raw, unbuilt project — customize it, then build for

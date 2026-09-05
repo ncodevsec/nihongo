@@ -33,7 +33,7 @@ export default {
         // Dark-mode-only text/border/fill variant of "ai" — lifted in
         // lightness so it stays crisp against the dark background instead
         // of reading as washed-out.
-        "ai-glow": "#dd7e7e",
+        "ai-glow": "#ff5454",
 
         // "shu" — the primary brand red, a direct professional-strength
         // derivation of the logo's pure red (same hue, tuned saturation/
