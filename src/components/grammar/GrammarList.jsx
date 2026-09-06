@@ -4,6 +4,7 @@ import {
 	flattenGrammarPoints,
 	grammarCategories,
 	grammarParticleCategories,
+	formatGrammarPointId,
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton } from "../FilterControls.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
@@ -39,10 +40,39 @@ function StarButton({ starred, onClick, labelOn, labelOff }) {
 	);
 }
 
+// Same read/unread check control Reference.jsx uses for vocab and kanji —
+// a filled checkmark once a rule has been marked as read.
+function ReadButton({ read, onClick, labelOn, labelOff }) {
+	return (
+		<button
+			onClick={onClick}
+			aria-label={read ? labelOn : labelOff}
+			title={read ? labelOn : labelOff}
+			className={`shrink-0 w-7 h-7 flex items-center justify-center rounded-full border ${
+				read
+					? "border-take bg-take text-washi dark:border-take-glow dark:bg-take-glow dark:text-night"
+					: "border-ai-line dark:border-night-line text-ink-muted dark:text-night-ink-muted hover:border-take hover:text-take dark:hover:border-take-glow dark:hover:text-take-glow"
+			}`}
+		>
+			<svg viewBox="0 0 20 20" fill="none" className="w-4 h-4" aria-hidden="true">
+				<path
+					d="M4 10.5l4 4 8-9"
+					stroke="currentColor"
+					strokeWidth="2.2"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				/>
+			</svg>
+		</button>
+	);
+}
+
 export default function GrammarList({
 	lessons,
 	level,
 	settings,
+	progress = {},
+	setLearned = () => {},
 	favorites,
 	toggleFavorite,
 }) {
@@ -182,6 +212,7 @@ export default function GrammarList({
 				{visible.map((p) => {
 					const isOpen = expanded === p.id;
 					const starred = !!favorites[p.id];
+					const read = !!progress[p.id]?.learned;
 					return (
 						<div key={p.id}>
 							<div className="flex items-center gap-2 px-3 py-2.5 hover:bg-washi dark:hover:bg-night">
@@ -192,12 +223,18 @@ export default function GrammarList({
 									className="flex-1 min-w-0 flex items-center gap-2.5 text-left"
 								>
 									<span className="shrink-0 font-mono text-[10px] text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded-full px-2 py-0.5">
-										L{p.lesson}
+										{formatGrammarPointId(p.pointId)}
 									</span>
 									<span className="font-bengali text-sm text-ink dark:text-night-ink truncate">
 										{p.headingBn}
 									</span>
 								</button>
+								<ReadButton
+									read={read}
+									onClick={() => setLearned(p.id, !read)}
+									labelOn={T("markAsUnread")}
+									labelOff={T("markAsRead")}
+								/>
 								<StarButton
 									starred={starred}
 									onClick={() => toggleFavorite(p.id)}

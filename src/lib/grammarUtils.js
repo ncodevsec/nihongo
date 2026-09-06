@@ -10,6 +10,14 @@ export function grammarItemId(level, pointId) {
   return `grammar-${level}-${pointId}`;
 }
 
+// The raw per-point id in the source data is "[lesson]-[rule]" (e.g.
+// "8-5"). Displayed to the user it should read "8.5" instead — the lesson
+// and rule number are still both there, just with the same separator the
+// rest of the app uses for numbering (see Progress's category labels).
+export function formatGrammarPointId(pointId) {
+  return pointId.replace("-", ".");
+}
+
 // Flattens lessons into a single list of points, each carrying its lesson
 // number and a ready-to-use progress/favorites id.
 export function flattenGrammarPoints(lessons, level) {
@@ -20,6 +28,10 @@ export function flattenGrammarPoints(lessons, level) {
         ...point,
         lesson: lesson.lesson,
         category: `lesson${lesson.lesson}`,
+        // The composite `id` below (used for progress/favorites storage)
+        // overwrites the raw "8-5" id from the source data, so it's kept
+        // here under its own key for display purposes.
+        pointId: point.id,
         id: grammarItemId(level, point.id),
       });
     }
@@ -103,6 +115,7 @@ export function buildGrammarQuestions(points) {
     return {
       id: point.id,
       lesson: point.lesson,
+      pointId: point.pointId,
       headingBn: point.headingBn,
       blanked,
       meaningBn: example.meaningBn,

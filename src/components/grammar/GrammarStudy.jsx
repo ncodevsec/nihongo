@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { t, pickLang } from "../../lib/i18n.js";
+import { t } from "../../lib/i18n.js";
 import {
-	grammarItemId,
 	flattenGrammarPoints,
 	grammarCategories,
 	grammarParticleCategories,
+	formatGrammarPointId,
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton } from "../FilterControls.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
@@ -86,10 +86,39 @@ function StarButton({ starred, onClick, labelOn, labelOff }) {
 	);
 }
 
+// Same read/unread check control Reference.jsx uses for vocab and kanji —
+// a filled checkmark once a rule has been marked as read.
+function ReadButton({ read, onClick, labelOn, labelOff }) {
+	return (
+		<button
+			onClick={onClick}
+			aria-label={read ? labelOn : labelOff}
+			title={read ? labelOn : labelOff}
+			className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-full border ${
+				read
+					? "border-take bg-take text-washi dark:border-take-glow dark:bg-take-glow dark:text-night"
+					: "border-ai-line dark:border-night-line text-ink-muted dark:text-night-ink-muted hover:border-take hover:text-take dark:hover:border-take-glow dark:hover:text-take-glow"
+			}`}
+		>
+			<svg viewBox="0 0 20 20" fill="none" className="w-5 h-5" aria-hidden="true">
+				<path
+					d="M4 10.5l4 4 8-9"
+					stroke="currentColor"
+					strokeWidth="2.2"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+				/>
+			</svg>
+		</button>
+	);
+}
+
 export default function GrammarStudy({
 	lessons,
 	level,
 	settings,
+	progress = {},
+	setLearned = () => {},
 	favorites,
 	toggleFavorite,
 }) {
@@ -108,6 +137,7 @@ export default function GrammarStudy({
 	const [selectedLessons, setSelectedLessons] = useState([]); // [] = all
 	const [selectedParticles, setSelectedParticles] = useState([]); // [] = all
 	const [onlyStarred, setOnlyStarred] = useState(false);
+	const [index, setIndex] = useState(0);
 	const allPoints = useMemo(
 		() => flattenGrammarPoints(lessons, level),
 		[lessons, level],
@@ -116,6 +146,7 @@ export default function GrammarStudy({
 	useEffect(() => {
 		setSelectedLessons([]);
 		setSelectedParticles([]);
+		setIndex(0);
 	}, [lessons]);
 
 	useEffect(() => {
@@ -123,16 +154,7 @@ export default function GrammarStudy({
 		setSelectedParticles([]);
 	}, [groupBy]);
 
-	if (!lessons || lessons.length === 0) {
-		return (
-			<div className="max-w-2xl mx-auto text-center py-16 font-bengali text-ink-muted dark:text-night-ink-muted">
-				{T("grammarComingSoon")}
-			</div>
-		);
-	}
-
 	let visiblePoints;
-	const showLessonBadgePerPoint = true;
 	if (groupBy === "particle") {
 		visiblePoints =
 			selectedParticles.length === 0
@@ -149,8 +171,31 @@ export default function GrammarStudy({
 	if (onlyStarred)
 		visiblePoints = visiblePoints.filter((p) => favorites[p.id]);
 
-	return (
-		<div className="max-w-2xl lg:max-w-3xl mx-auto">
+	// Jumping back to the first card whenever the visible set changes keeps
+	// this in sync with Study.jsx's own flashcard behavior for vocab/kanji.
+	useEffect(() => {
+		setIndex(0);
+	}, [selectedLessons, selectedParticles, onlyStarred, groupBy]);
+
+	useEffect(() => {
+		if (index >= visiblePoints.length) setIndex(0);
+	}, [visiblePoints.length, index]);
+
+	if (!lessons || lessons.length === 0) {
+		return (
+			<div className="max-w-2xl mx-auto text-center py-16 font-bengali text-ink-muted dark:text-night-ink-muted">
+				{T("grammarComingSoon")}
+			</div>
+		);
+	}
+
+	const goNext = () =>
+		setIndex((i) => (i + 1 < visiblePoints.length ? i + 1 : 0));
+	const goPrev = () =>
+		setIndex((i) => (i - 1 >= 0 ? i - 1 : visiblePoints.length - 1));
+
+	const filterRow = (
+		<>
 			<div className="flex items-center gap-2 mb-3">
 				<div className="flex rounded-full border border-ai-line dark:border-night-line overflow-hidden">
 					<button
@@ -210,88 +255,129 @@ export default function GrammarStudy({
 					/>
 				</div>
 			</div>
+		</>
+	);
 
-			<div className="space-y-4">
-				{visiblePoints.map((point, i) => {
-					const pointId = point.id;
-					const starred = !!favorites[pointId];
-					return (
-						<div
-							key={pointId}
-							className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden shadow-card dark:shadow-none"
-						>
-							{/* Rule heading */}
-							<div className="flex items-start justify-between gap-2 px-4 sm:px-5 pt-4">
-								<div className="flex items-start gap-2.5 min-w-0">
-									<span className="shrink-0 mt-0.5 w-6 h-6 rounded-full bg-shu text-washi font-mono text-[11px] font-bold flex items-center justify-center">
-										{i + 1}
-									</span>
-									<div className="min-w-0">
-										{showLessonBadgePerPoint && (
-											<span className="inline-block font-bengali text-[10px] text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded-full px-2 py-0.5 mb-1">
-												Lesson {point.lesson}
-											</span>
-										)}
-										<h3 className="font-bengali text-base font-bold text-ink dark:text-night-ink leading-snug">
-											{point.headingBn}
-										</h3>
-									</div>
-								</div>
-								<StarButton
-									starred={starred}
-									onClick={() => toggleFavorite(pointId)}
-									labelOn={T("markAsUnstarred")}
-									labelOff={T("markAsStarred")}
-								/>
-							</div>
+	const point = visiblePoints[index];
 
-							{/* Explanation */}
-							<div className="px-4 sm:px-5 pt-3 pb-4">
-								<ExplanationBody text={point.explanationBn} />
-							</div>
+	if (!point) {
+		return (
+			<div className="max-w-2xl lg:max-w-3xl mx-auto">
+				{filterRow}
+				<div className="text-center py-12 font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
+					{T("noResults")}
+				</div>
+			</div>
+		);
+	}
 
-							{/* Examples — visually separated from the rule text */}
-							{point.examples.length > 0 && (
-								<div className="bg-sakura-soft dark:bg-night border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3.5">
-									<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-sakura-deep dark:text-sakura mb-2.5">
-										{T("grammarExamples")}
-									</div>
-									<div className="space-y-3">
-										{point.examples.map((ex, ei) => (
-											<div
-												key={ei}
-												className={
-													ei > 0
-														? "pt-3 border-t border-sakura-line dark:border-night-line"
-														: ""
-												}
-											>
-												{ex.note && (
-													<div className="font-bengali text-[11px] italic text-ink-muted dark:text-night-ink-muted mb-1">
-														({ex.note})
-													</div>
-												)}
-												<div className="font-mincho text-lg text-ink dark:text-night-ink leading-snug">
-													{ex.jp}
-												</div>
-												{ex.meaningBn && (
-													<div className="font-bengali text-sm text-sakura-deep dark:text-sakura mt-1">
-														{ex.meaningBn}
-													</div>
-												)}
-											</div>
-										))}
-									</div>
-								</div>
-							)}
+	const starred = !!favorites[point.id];
+	const read = !!progress[point.id]?.learned;
+
+	return (
+		<div className="max-w-2xl lg:max-w-3xl mx-auto">
+			{filterRow}
+
+			<div className="flex items-center justify-between text-[11px] font-mono text-ink-muted dark:text-night-ink-muted mb-1.5">
+				<span>
+					{index + 1} / {visiblePoints.length}
+				</span>
+				{read && (
+					<span className="text-take dark:text-take-glow font-semibold font-bengali">
+						✓ {T("alreadyRead")}
+					</span>
+				)}
+			</div>
+			<div className="w-full h-1 bg-ai-soft dark:bg-night-line rounded-full mb-4 overflow-hidden">
+				<div
+					className="h-full bg-shu transition-all"
+					style={{
+						width: `${((index + 1) / visiblePoints.length) * 100}%`,
+					}}
+				/>
+			</div>
+
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden shadow-card dark:shadow-none">
+				{/* Rule heading */}
+				<div className="flex items-start justify-between gap-2 px-4 sm:px-5 pt-4">
+					<div className="flex items-start gap-2.5 min-w-0">
+						<span className="shrink-0 mt-0.5 font-mono text-[11px] font-bold text-washi bg-shu rounded-full px-2.5 py-1">
+							{formatGrammarPointId(point.pointId)}
+						</span>
+						<h3 className="font-bengali text-base font-bold text-ink dark:text-night-ink leading-snug">
+							{point.headingBn}
+						</h3>
+					</div>
+					<div className="flex items-center gap-1.5 shrink-0">
+						<ReadButton
+							read={read}
+							onClick={() => setLearned(point.id, !read)}
+							labelOn={T("markAsUnread")}
+							labelOff={T("markAsRead")}
+						/>
+						<StarButton
+							starred={starred}
+							onClick={() => toggleFavorite(point.id)}
+							labelOn={T("markAsUnstarred")}
+							labelOff={T("markAsStarred")}
+						/>
+					</div>
+				</div>
+
+				{/* Explanation */}
+				<div className="px-4 sm:px-5 pt-3 pb-4">
+					<ExplanationBody text={point.explanationBn} />
+				</div>
+
+				{/* Examples — visually separated from the rule text */}
+				{point.examples.length > 0 && (
+					<div className="bg-sakura-soft dark:bg-night border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3.5">
+						<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-sakura-deep dark:text-sakura mb-2.5">
+							{T("grammarExamples")}
 						</div>
-					);
-				})}
-				{visiblePoints.length === 0 && (
-					<div className="text-center py-12 font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
-						{T("noResults")}
+						<div className="space-y-3">
+							{point.examples.map((ex, ei) => (
+								<div
+									key={ei}
+									className={
+										ei > 0
+											? "pt-3 border-t border-sakura-line dark:border-night-line"
+											: ""
+									}
+								>
+									{ex.note && (
+										<div className="font-bengali text-[11px] italic text-ink-muted dark:text-night-ink-muted mb-1">
+											({ex.note})
+										</div>
+									)}
+									<div className="font-mincho text-lg text-ink dark:text-night-ink leading-snug">
+										{ex.jp}
+									</div>
+									{ex.meaningBn && (
+										<div className="font-bengali text-sm text-sakura-deep dark:text-sakura mt-1">
+											{ex.meaningBn}
+										</div>
+									)}
+								</div>
+							))}
+						</div>
 					</div>
 				)}
+			</div>
+
+			<div className="flex gap-10 justify-center mt-6">
+				<button
+					onClick={goPrev}
+					className="text-lg border border-ai-line rounded-full dark:border-night-line px-5 py-3 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+				>
+					{T("prevCard")}
+				</button>
+				<button
+					onClick={goNext}
+					className="text-lg border border-ai-line rounded-full dark:border-night-line px-5 py-3 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+				>
+					{T("nextCard")}
+				</button>
 			</div>
 		</div>
 	);

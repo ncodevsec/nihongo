@@ -171,6 +171,8 @@ export default function App() {
 									lessons={grammarLessons}
 									level={level}
 									settings={settings}
+									progress={progress}
+									setLearned={setLearned}
 									favorites={favorites}
 									toggleFavorite={toggleFavorite}
 								/>
@@ -191,6 +193,8 @@ export default function App() {
 									lessons={grammarLessons}
 									level={level}
 									settings={settings}
+									progress={progress}
+									setLearned={setLearned}
 									favorites={favorites}
 									toggleFavorite={toggleFavorite}
 								/>
