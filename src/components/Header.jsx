@@ -45,6 +45,7 @@ export default function Header({
 	masteredCount,
 	total,
 	settings,
+	updateAvailable = false,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -119,13 +120,19 @@ export default function Header({
 								isSettings ? T("backButton") : T("tabSettings")
 							}
 							aria-pressed={isSettings}
-							className={`w-9 h-9 flex items-center justify-center rounded-full border ${
+							className={`relative w-9 h-9 flex items-center justify-center rounded-full border ${
 								isSettings
 									? "bg-shu border-shu text-washi"
 									: "border-ai-line dark:border-night-line text-ink-muted dark:text-night-ink-muted hover:text-shu hover:border-shu/50 hover:bg-shu-soft dark:hover:bg-night-line"
 							}`}
 						>
 							{isSettings ? <BackIcon /> : <SettingsIcon />}
+							{updateAvailable && !isSettings && (
+								<span
+									className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-shu dark:bg-shu-glow ring-2 ring-paper dark:ring-night-paper"
+									aria-hidden="true"
+								/>
+							)}
 						</button>
 					</div>
 				</div>

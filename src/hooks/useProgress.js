@@ -107,5 +107,28 @@ export function useProgress() {
     });
   }, []);
 
-  return { progress, recordQuizResult, setLearned, resetProgress, activity };
+  // Clears progress for an explicit set of ids only — used for per-category
+  // resets, where the category (e.g. a kanji category, a vocab lesson, a
+  // part-of-speech grouping) isn't a simple prefix of the id itself, so the
+  // caller collects the matching ids first and passes them in here.
+  const resetProgressForIds = useCallback((ids) => {
+    if (!ids || ids.length === 0) return;
+    const idSet = new Set(ids);
+    setProgress((p) => {
+      const next = {};
+      for (const [id, v] of Object.entries(p)) {
+        if (!idSet.has(id)) next[id] = v;
+      }
+      return next;
+    });
+  }, []);
+
+  return {
+    progress,
+    recordQuizResult,
+    setLearned,
+    resetProgress,
+    resetProgressForIds,
+    activity,
+  };
 }

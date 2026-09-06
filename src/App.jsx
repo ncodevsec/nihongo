@@ -3,6 +3,8 @@ import { MODULES } from "./data/modules.js";
 import { useProgress } from "./hooks/useProgress.js";
 import { useSettings } from "./hooks/useSettings.js";
 import { useFavorites } from "./hooks/useFavorites.js";
+import { useAppUpdate } from "./hooks/useAppUpdate.js";
+import { useTimeTracking } from "./hooks/useTimeTracking.js";
 import { t, pickLang } from "./lib/i18n.js";
 import { flattenGrammarPoints, grammarCategories } from "./lib/grammarUtils.js";
 import Header from "./components/Header.jsx";
@@ -29,10 +31,19 @@ export default function App() {
 	const goBack = () => setTabRaw(lastTab);
 	const [moduleKey, setModuleKey] = useState("vocabulary");
 	const [level, setLevel] = useState("n5");
-	const { progress, recordQuizResult, setLearned, resetProgress, activity } =
-		useProgress();
+	const {
+		progress,
+		recordQuizResult,
+		setLearned,
+		resetProgress,
+		resetProgressForIds,
+		activity,
+	} = useProgress();
 	const { settings, updateSetting, resetSettings } = useSettings();
 	const { favorites, toggleFavorite } = useFavorites();
+	const { updateAvailable, checking, lastCheckedAt, checkForUpdate, applyUpdate } =
+		useAppUpdate();
+	const { todaySeconds, weekSeconds, totalSeconds } = useTimeTracking();
 
 	const mod = MODULES[moduleKey];
 	const isGrammar = mod.kind === "grammar";
@@ -106,6 +117,7 @@ export default function App() {
 				masteredCount={masteredCount}
 				total={kanjiData.length}
 				settings={settings}
+				updateAvailable={updateAvailable}
 			/>
 
 			<div className="flex-1 min-w-0 flex flex-col">
@@ -123,6 +135,7 @@ export default function App() {
 						masteredCount={masteredCount}
 						total={kanjiData.length}
 						settings={settings}
+						updateAvailable={updateAvailable}
 					/>
 
 					{tab !== "settings" && (
@@ -190,9 +203,15 @@ export default function App() {
 									resetProgress={() =>
 										resetProgress(idPrefix)
 									}
+									onResetCategory={(ids) =>
+										resetProgressForIds(ids)
+									}
 									settings={settings}
 									activity={activity}
 									favorites={favorites}
+									timeToday={todaySeconds}
+									timeWeek={weekSeconds}
+									timeTotal={totalSeconds}
 								/>
 							</div>
 							<div className={tab === "settings" ? "" : "hidden"}>
@@ -201,6 +220,11 @@ export default function App() {
 									updateSetting={updateSetting}
 									resetSettings={resetSettings}
 									resetAllProgress={() => resetProgress()}
+									updateAvailable={updateAvailable}
+									checkingForUpdate={checking}
+									lastCheckedAt={lastCheckedAt}
+									onCheckForUpdate={checkForUpdate}
+									onApplyUpdate={applyUpdate}
 								/>
 							</div>
 						</>
@@ -253,10 +277,16 @@ export default function App() {
 									resetProgress={() =>
 										resetProgress(idPrefix)
 									}
+									onResetCategory={(ids) =>
+										resetProgressForIds(ids)
+									}
 									settings={settings}
 									activity={activity}
 									favorites={favorites}
 									moduleKey={moduleKey}
+									timeToday={todaySeconds}
+									timeWeek={weekSeconds}
+									timeTotal={totalSeconds}
 								/>
 							</div>
 							<div className={tab === "settings" ? "" : "hidden"}>
@@ -265,6 +295,11 @@ export default function App() {
 									updateSetting={updateSetting}
 									resetSettings={resetSettings}
 									resetAllProgress={() => resetProgress()}
+									updateAvailable={updateAvailable}
+									checkingForUpdate={checking}
+									lastCheckedAt={lastCheckedAt}
+									onCheckForUpdate={checkForUpdate}
+									onApplyUpdate={applyUpdate}
 								/>
 							</div>
 						</>

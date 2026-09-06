@@ -46,6 +46,7 @@ export default function Sidebar({
 	masteredCount,
 	total,
 	settings,
+	updateAvailable = false,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -181,7 +182,7 @@ export default function Sidebar({
 			<div className="px-3 py-4 border-t border-ai-line dark:border-night-line mt-3">
 				<button
 					onClick={() => onChange("settings")}
-					className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-bengali font-medium text-sm ${
+					className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-bengali font-medium text-sm ${
 						active === "settings"
 							? "bg-shu text-washi shadow-sm"
 							: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line hover:text-shu dark:hover:text-shu-glow"
@@ -189,6 +190,16 @@ export default function Sidebar({
 				>
 					<NavIcon name="settings" />
 					{T("tabSettings")}
+					{updateAvailable && (
+						<span
+							className={`absolute right-3 w-2 h-2 rounded-full ${
+								active === "settings"
+									? "bg-washi"
+									: "bg-shu dark:bg-shu-glow"
+							}`}
+							aria-hidden="true"
+						/>
+					)}
 				</button>
 			</div>
 		</aside>

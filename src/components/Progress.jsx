@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import { t, pickLang } from "../lib/i18n.js";
+import { formatDuration } from "../lib/utils.js";
 import Hanko from "./Hanko.jsx";
+import ActivityCalendar from "./ActivityCalendar.jsx";
 import {
 	classifyPartOfSpeech,
 	POS_CATEGORIES,
@@ -26,32 +28,25 @@ function computeStreak(activity) {
 	return streak;
 }
 
-function last14Days(activity) {
-	const days = [];
-	const cursor = new Date();
-	for (let i = 13; i >= 0; i--) {
-		const d = new Date(cursor);
-		d.setDate(cursor.getDate() - i);
-		const key = toDateKey(d);
-		days.push({ key, count: activity[key] || 0, weekday: d.getDay() });
-	}
-	return days;
-}
-
 export default function Progress({
 	kanjiData,
 	categories,
 	progress,
 	resetProgress,
+	onResetCategory,
 	settings,
 	activity = {},
 	favorites = {},
 	moduleKey,
+	timeToday = 0,
+	timeWeek = 0,
+	timeTotal = 0,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
 
 	const [confirmingReset, setConfirmingReset] = useState(false);
+	const [confirmingCategory, setConfirmingCategory] = useState(null);
 	const isVocab = moduleKey === "vocabulary";
 	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'pos' | 'count' (vocab only)
 
@@ -90,7 +85,19 @@ export default function Progress({
 				const started = items.filter(
 					(k) => progress[k.id]?.seen > 0 && !progress[k.id]?.learned,
 				).length;
-				return { ...c, done, started, total: items.length };
+				// Kept alongside the counts so the per-category reset button
+				// can clear exactly these items' progress without touching
+				// any other category, lesson, or grouping. "Touched" means
+				// there's *anything* to reset — either quizzed (seen > 0)
+				// or marked Memorized directly from a flashcard, which sets
+				// `learned` without ever touching `seen`. Checking seen
+				// alone would leave memorized-only items with no working
+				// reset control at all.
+				const ids = items.map((k) => k.id);
+				const touched = items.filter(
+					(k) => progress[k.id]?.seen > 0 || progress[k.id]?.learned,
+				).length;
+				return { ...c, done, started, total: items.length, ids, touched };
 			})
 			.filter((c) => c.total > 0);
 
@@ -107,8 +114,6 @@ export default function Progress({
 	}, [kanjiData, categories, progress, favorites, groupBy]);
 
 	const streak = useMemo(() => computeStreak(activity), [activity]);
-	const days = useMemo(() => last14Days(activity), [activity]);
-	const maxDayCount = Math.max(1, ...days.map((d) => d.count));
 
 	const handleReset = () => {
 		if (!confirmingReset) {
@@ -117,6 +122,15 @@ export default function Progress({
 		}
 		resetProgress();
 		setConfirmingReset(false);
+	};
+
+	const handleResetCategory = (c) => {
+		if (confirmingCategory !== c.key) {
+			setConfirmingCategory(c.key);
+			return;
+		}
+		onResetCategory?.(c.ids);
+		setConfirmingCategory(null);
 	};
 
 	const total = kanjiData.length;
@@ -208,12 +222,12 @@ export default function Progress({
 				</div>
 			</div>
 
-			{/* Streak + 14-day activity */}
+			{/* Streak + monthly activity calendar */}
 			<h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
 				{T("progressActivity")}
 			</h2>
 			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-4 mb-5">
-				<div className="flex items-center gap-3 mb-3">
+				<div className="flex items-center gap-3 mb-4">
 					<Hanko label={`${streak}`} tone="shu" size="sm" />
 					<div>
 						<div className="font-bengali text-sm text-ink dark:text-night-ink font-semibold">
@@ -224,35 +238,54 @@ export default function Progress({
 						</div>
 					</div>
 				</div>
-				<div className="flex items-end gap-1.5">
-					{days.map((d) => {
-						const intensity =
-							d.count === 0
-								? 0
-								: Math.min(1, d.count / maxDayCount);
-						return (
-							<div
-								key={d.key}
-								className="flex-1 flex flex-col items-center gap-1"
-							>
-								<div
-									className={`w-full rounded-sm ${d.count > 0 ? "bg-shu" : "bg-ai-soft dark:bg-night-line"}`}
-									style={{
-										height: 28,
-										opacity:
-											d.count > 0
-												? 0.35 + intensity * 0.65
-												: 1,
-									}}
-									title={`${d.key}: ${d.count}`}
-								/>
-							</div>
-						);
-					})}
+				<ActivityCalendar activity={activity} lang={lang} />
+			</div>
+
+			{/* Time spent — today / this week / all time, tracked while the
+			    app is actually in active use (foreground + interacted with),
+			    kept in its own storage bucket separate from progress. */}
+			<h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
+				{T("timeSpentTitle")}
+			</h2>
+			<div className="grid grid-cols-3 gap-2.5 mb-5">
+				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1 text-center">
+					<span className="font-mono text-base font-semibold text-shu dark:text-shu-glow">
+						{formatDuration(
+							timeToday,
+							T("timeHourShort"),
+							T("timeMinuteShort"),
+							T("timeUnderMinute"),
+						)}
+					</span>
+					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
+						{T("timeToday")}
+					</span>
 				</div>
-				<div className="flex justify-between mt-1 font-mono text-[9px] text-ink-muted dark:text-night-ink-muted">
-					<span>{T("progressFourteenDaysAgo")}</span>
-					<span>{T("progressToday")}</span>
+				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1 text-center">
+					<span className="font-mono text-base font-semibold text-shu dark:text-shu-glow">
+						{formatDuration(
+							timeWeek,
+							T("timeHourShort"),
+							T("timeMinuteShort"),
+							T("timeUnderMinute"),
+						)}
+					</span>
+					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
+						{T("timeThisWeek")}
+					</span>
+				</div>
+				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1 text-center">
+					<span className="font-mono text-base font-semibold text-shu dark:text-shu-glow">
+						{formatDuration(
+							timeTotal,
+							T("timeHourShort"),
+							T("timeMinuteShort"),
+							T("timeUnderMinute"),
+						)}
+					</span>
+					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
+						{T("timeAllTime")}
+					</span>
 				</div>
 			</div>
 
@@ -270,7 +303,10 @@ export default function Progress({
 						].map((g) => (
 							<button
 								key={g.key}
-								onClick={() => setGroupBy(g.key)}
+								onClick={() => {
+									setGroupBy(g.key);
+									setConfirmingCategory(null);
+								}}
 								className={`px-2.5 py-1 text-[11px] font-bengali font-medium ${
 									groupBy === g.key
 										? "bg-shu text-washi"
@@ -289,16 +325,74 @@ export default function Progress({
 					const startedPct = c.total
 						? (c.started / c.total) * 100
 						: 0;
+					const isConfirming = confirmingCategory === c.key;
 					return (
 						<div key={c.key} className="px-4 py-2.5">
-							<div className="flex items-center justify-between text-xs mb-1">
-								<span className="font-bengali text-ink dark:text-night-ink font-medium">
+							<div className="flex items-center justify-between text-xs mb-1 gap-2">
+								<span className="font-bengali text-ink dark:text-night-ink font-medium truncate">
 									{pickLang(c, lang)}
 								</span>
-								<span className="font-mono text-ink-muted dark:text-night-ink-muted">
-									{c.done}/{c.total}
+								<span className="flex items-center gap-2 shrink-0">
+									<span className="font-mono text-ink-muted dark:text-night-ink-muted">
+										{c.done}/{c.total}
+									</span>
+									{c.touched > 0 ? (
+										<button
+											onClick={() => handleResetCategory(c)}
+											aria-label={T("resetCategoryAria")}
+											title={
+												isConfirming
+													? T("resetCategoryConfirm")
+													: T("resetCategoryAria")
+											}
+											className={`tap-quiet w-5 h-5 flex items-center justify-center rounded-full border ${
+												isConfirming
+													? "border-shu bg-shu text-washi"
+													: "border-ai-line dark:border-night-line text-ink-muted dark:text-night-ink-muted hover:border-shu hover:text-shu"
+											}`}
+										>
+											<svg
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												className="w-3 h-3"
+												aria-hidden="true"
+											>
+												<polyline points="1 4 1 10 7 10" />
+												<path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
+											</svg>
+										</button>
+									) : (
+										<span
+											aria-hidden="true"
+											title={T("resetCategoryNothingYet")}
+											className="w-5 h-5 flex items-center justify-center rounded-full border border-ai-line dark:border-night-line text-ink-muted/40 dark:text-night-ink-muted/40 opacity-50"
+										>
+											<svg
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												strokeWidth="2"
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												className="w-3 h-3"
+												aria-hidden="true"
+											>
+												<polyline points="1 4 1 10 7 10" />
+												<path d="M3.51 15a9 9 0 102.13-9.36L1 10" />
+											</svg>
+										</span>
+									)}
 								</span>
 							</div>
+							{isConfirming && (
+								<div className="font-bengali text-[10px] text-shu dark:text-shu-glow mb-1">
+									{T("resetCategoryConfirm")}
+								</div>
+							)}
 							<div className="w-full h-1.5 bg-ai-soft dark:bg-night-line rounded-full overflow-hidden flex">
 								<div
 									className="h-full bg-take transition-all"

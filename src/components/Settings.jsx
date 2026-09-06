@@ -53,6 +53,11 @@ export default function Settings({
 	updateSetting,
 	resetSettings,
 	resetAllProgress,
+	updateAvailable = false,
+	checkingForUpdate = false,
+	lastCheckedAt = null,
+	onCheckForUpdate,
+	onApplyUpdate,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -60,7 +65,13 @@ export default function Settings({
 	const [confirmReset, setConfirmReset] = useState(false);
 	const [confirmSettingsReset, setConfirmSettingsReset] = useState(false);
 	const [importStatus, setImportStatus] = useState(null); // null | "success" | "error"
+	const [applying, setApplying] = useState(false);
 	const fileInputRef = useRef(null);
+
+	const handleApplyUpdate = async () => {
+		setApplying(true);
+		await onApplyUpdate?.();
+	};
 
 	const THEME_OPTIONS = [
 		{ key: "light", label: T("themeLight") },
@@ -156,6 +167,58 @@ export default function Settings({
 
 	return (
 		<div className="max-w-2xl mx-auto">
+			<SectionLabel>{T("sectionApp")}</SectionLabel>
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
+				<Row
+					title={
+						<span className="flex items-center gap-1.5">
+							{T("appUpdateLabel")}
+							{updateAvailable && !applying && (
+								<span className="w-2 h-2 rounded-full bg-shu dark:bg-shu-glow shrink-0" />
+							)}
+						</span>
+					}
+					subtitle={
+						applying
+							? T("appUpdateApplying")
+							: checkingForUpdate
+								? T("appUpdateSubChecking")
+								: updateAvailable
+									? T("appUpdateSubAvailable")
+									: T("appUpdateSubUpToDate")
+					}
+				>
+					{updateAvailable ? (
+						<button
+							onClick={handleApplyUpdate}
+							disabled={applying}
+							className="font-bengali text-xs rounded-md px-3 py-1.5 border border-shu bg-shu text-washi dark:bg-shu-glow disabled:opacity-60 shrink-0"
+						>
+							{applying
+								? T("appUpdateApplying")
+								: T("appUpdateApplyButton")}
+						</button>
+					) : (
+						<button
+							onClick={() => onCheckForUpdate?.()}
+							disabled={checkingForUpdate}
+							className="font-bengali text-xs rounded-md px-3 py-1.5 border border-ai-line dark:border-night-line text-shu dark:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10 disabled:opacity-60 shrink-0"
+						>
+							{checkingForUpdate
+								? T("appUpdateSubChecking")
+								: T("appUpdateCheckButton")}
+						</button>
+					)}
+				</Row>
+				{updateAvailable && (
+					<div className="px-4 pb-3">
+						<p className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted">
+							{T("appUpdateNote")}
+						</p>
+					</div>
+				)}
+			</div>
+
 			<SectionLabel>{T("sectionTheme")}</SectionLabel>
 			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
 				<Row title={T("appTheme")} subtitle={T("appThemeSub")}>
