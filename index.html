@@ -41,11 +41,18 @@
       // at the domain root and under a GitHub Pages repo subpath.
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", () => {
-          navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch(() => {
-            // Offline PWA features are a progressive enhancement — if
-            // registration fails (e.g. unsupported context) the app
-            // still works normally online.
-          });
+          // updateViaCache: "none" tells the browser to never serve sw.js
+          // itself from its own HTTP cache — it's always re-fetched over
+          // the network on every registration.update() check, so a new
+          // service worker (and therefore a new deploy) is never missed
+          // because of ordinary browser caching of the script file.
+          navigator.serviceWorker
+            .register("./sw.js", { scope: "./", updateViaCache: "none" })
+            .catch(() => {
+              // Offline PWA features are a progressive enhancement — if
+              // registration fails (e.g. unsupported context) the app
+              // still works normally online.
+            });
         });
       }
     </script>

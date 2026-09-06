@@ -1,5 +1,27 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
+
+// Writes a tiny version.json (a build timestamp) straight into the output
+// directory on every build. It's fetched at runtime (network-only, never
+// cached — see public/sw.js) by src/hooks/useAppUpdate.js so the app can
+// tell the difference between "already on the latest deploy" and "a newer
+// version exists on GitHub Pages" for the Settings → "Check for updates"
+// button, independent of the service worker's own update cycle.
+function writeVersionFile() {
+  return {
+    name: "write-version-file",
+    apply: "build",
+    writeBundle(options) {
+      const outDir = options.dir || resolve(process.cwd(), "docs");
+      writeFileSync(
+        resolve(outDir, "version.json"),
+        JSON.stringify({ buildTime: Date.now() })
+      );
+    },
+  };
+}
 
 // A relative base ("./") makes every built asset URL relative
 // (./assets/...) instead of root-absolute (/assets/...). Root-absolute
@@ -19,7 +41,7 @@ import react from "@vitejs/plugin-react";
 // approach is both simpler and cannot slow down or hang the build.
 export default defineConfig({
   base: "./",
-  plugins: [react()],
+  plugins: [react(), writeVersionFile()],
   build: {
     outDir: 'docs',
     rollupOptions: {
