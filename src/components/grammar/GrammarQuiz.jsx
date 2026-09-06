@@ -7,6 +7,7 @@ import {
 	grammarCategories,
 	grammarParticleCategories,
 	buildGrammarQuestions,
+	formatGrammarPointId,
 	shuffle,
 } from "../../lib/grammarUtils.js";
 
@@ -436,7 +437,7 @@ export default function GrammarQuiz({
 			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-5">
 				<div className="flex items-center justify-between mb-3">
 					<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2 py-0.5">
-						Lesson {q.lesson}
+						{formatGrammarPointId(q.pointId)}
 					</span>
 				</div>
 
