@@ -2,7 +2,7 @@ import { N5_KANJI } from "./kanji/n5.js";
 import { N4_KANJI } from "./kanji/n4.js";
 import { N5_VOCAB } from "./vocab/n5.js";
 import { N4_VOCAB } from "./vocab/n4.js";
-import { KANJI_CATEGORIES } from "./kanji-categories.js";
+import { KANJI_LESSON_CATEGORIES_N5, KANJI_LESSON_CATEGORIES_N4 } from "./kanji-categories.js";
 import { VOCAB_LESSON_CATEGORIES } from "./vocab-lesson-categories.js";
 import { GRAMMAR_N5 } from "./grammar/n5.js";
 import { GRAMMAR_N4 } from "./grammar/n4.js";
@@ -37,8 +37,8 @@ export const MODULES = {
     jp: "漢字",
     kind: "flashcard",
     levels: {
-      n5: { key: "n5", label: "N5", data: N5_KANJI, categories: KANJI_CATEGORIES },
-      n4: { key: "n4", label: "N4", data: N4_KANJI, categories: KANJI_CATEGORIES },
+      n5: { key: "n5", label: "N5", data: N5_KANJI, categories: KANJI_LESSON_CATEGORIES_N5 },
+      n4: { key: "n4", label: "N4", data: N4_KANJI, categories: KANJI_LESSON_CATEGORIES_N4 },
     },
   },
 };

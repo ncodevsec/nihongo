@@ -13,6 +13,7 @@ const DEFAULTS = {
   timedQuiz: false,
   timedMinutes: 10,
   showJukugo: true, // include 2-kanji compound words (熟語) in the Kanji module
+  showFurigana: false, // show reading hints (ruby text) above kanji app-wide
 };
 
 function loadSettings() {

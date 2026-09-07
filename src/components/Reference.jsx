@@ -8,6 +8,7 @@ import {
 	COUNTING_CATEGORIES,
 } from "../lib/vocabClassify.js";
 import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
+import Furigana from "./Furigana.jsx";
 
 const PAGE_SIZE = 60;
 
@@ -349,7 +350,11 @@ export default function Reference({
 							>
 								{showWord && (
 									<span className="font-mincho text-lg leading-snug text-ink dark:text-night-ink break-words">
-										{k.kanji}
+										<Furigana
+											text={k.kanji}
+											reading={k.reading}
+											show={settings.showFurigana}
+										/>
 									</span>
 								)}
 								<span className="font-mincho text-md leading-snug text-ink dark:text-night-ink break-words">

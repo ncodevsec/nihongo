@@ -4,6 +4,7 @@ import { useHotkeys } from "../hooks/useHotkeys.js";
 import { t, pickLang } from "../lib/i18n.js";
 import Hanko from "./Hanko.jsx";
 import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
+import Furigana from "./Furigana.jsx";
 import {
 	classifyPartOfSpeech,
 	POS_CATEGORIES,
@@ -561,7 +562,15 @@ export default function Quiz({
 										className="font-mincho text-base border border-shu/30 dark:border-shu-glow/30 rounded-md px-2 py-1 bg-shu-soft dark:bg-shu/10 text-ink dark:text-night-ink"
 										title={`${m.reading} — ${m.meaning}`}
 									>
-										{isVocab ? m.reading : m.kanji}
+										{isVocab ? (
+										m.reading
+									) : (
+										<Furigana
+											text={m.kanji}
+											reading={m.reading}
+											show={settings.showFurigana}
+										/>
+									)}
 									</span>
 								))}
 							</div>
@@ -665,7 +674,11 @@ export default function Quiz({
 				<div className="flex flex-col items-center gap-1 mb-5">
 					{showWordAbove && (
 						<div className="font-mincho text-2xl text-ai dark:text-ai-glow">
-							{q.kanji}
+							<Furigana
+								text={q.kanji}
+								reading={q.reading}
+								show={settings.showFurigana}
+							/>
 						</div>
 					)}
 					<div className="font-mincho text-4xl sm:text-5xl min-w-28 px-4 h-24 flex items-center justify-center bg-washi dark:bg-night border border-ai-line dark:border-night-line rounded-lg text-ink dark:text-night-ink text-center">
