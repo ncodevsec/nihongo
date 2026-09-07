@@ -365,18 +365,44 @@ export default function GrammarStudy({
 				)}
 			</div>
 
-			<div className="flex gap-10 justify-center mt-6">
+			<div className="flex gap-6 items-center justify-center mt-6">
 				<button
 					onClick={goPrev}
-					className="text-lg border border-ai-line rounded-full dark:border-night-line px-5 py-3 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+					aria-label={T("prevCard")}
+					title={T("prevCard")}
+					className="w-14 h-14 flex items-center justify-center rounded-full border border-ai-line dark:border-night-line text-ink dark:text-night-ink hover:border-shu hover:text-shu hover:bg-shu-soft dark:hover:border-shu-glow dark:hover:text-shu-glow dark:hover:bg-night-line active:scale-[0.96] transition-all shadow-sm"
 				>
-					{T("prevCard")}
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2.25"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						className="w-6 h-6"
+						aria-hidden="true"
+					>
+						<polyline points="15 18 9 12 15 6" />
+					</svg>
 				</button>
 				<button
 					onClick={goNext}
-					className="text-lg border border-ai-line rounded-full dark:border-night-line px-5 py-3 text-ink dark:text-night-ink hover:border-shu hover:text-shu dark:hover:border-shu-glow dark:hover:text-shu-glow active:scale-[0.98] transition-all"
+					aria-label={T("nextCard")}
+					title={T("nextCard")}
+					className="w-14 h-14 flex items-center justify-center rounded-full border border-ai-line dark:border-night-line text-ink dark:text-night-ink hover:border-shu hover:text-shu hover:bg-shu-soft dark:hover:border-shu-glow dark:hover:text-shu-glow dark:hover:bg-night-line active:scale-[0.96] transition-all shadow-sm"
 				>
-					{T("nextCard")}
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2.25"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						className="w-6 h-6"
+						aria-hidden="true"
+					>
+						<polyline points="9 18 15 12 9 6" />
+					</svg>
 				</button>
 			</div>
 		</div>
