@@ -215,9 +215,8 @@ export default function Reference({
 
 	const visible = sorted.slice(0, visibleCount);
 
-	const gridCols = showWord
-		? "grid-cols-[6rem_6rem_1fr_auto_auto] sm:grid-cols-[7rem_8rem_1fr_auto_auto_auto] lg:grid-cols-[8rem_10rem_1fr_auto_auto_auto] xl:grid-cols-[9rem_10rem_1fr_7rem_auto_auto]"
-		: "grid-cols-[10rem_1fr_auto_auto] sm:grid-cols-[12rem_1fr_7rem_auto_auto] lg:grid-cols-[14rem_1fr_7rem_auto_auto] xl:grid-cols-[16rem_1fr_7rem_auto_auto]";
+	const gridCols =
+		"grid-cols-[10rem_1fr_auto_auto] sm:grid-cols-[12rem_1fr_7rem_auto_auto] lg:grid-cols-[14rem_1fr_7rem_auto_auto] xl:grid-cols-[16rem_1fr_7rem_auto_auto]";
 
 	const SORT_OPTIONS = [
 		{ key: "lesson", label: T("sortLesson") },
@@ -318,7 +317,7 @@ export default function Reference({
 					className={`grid ${gridCols} gap-2 px-3 py-2 bg-ai-soft dark:bg-night-line/60 border-b border-ai-line dark:border-night-line text-[10px] font-bengali font-semibold text-ai dark:text-ai-glow uppercase tracking-wide`}
 				>
 					{showWord && <span>{T("colWord")}</span>}
-					<span>{T("colReading")}</span>
+					{!showWord && <span>{T("colReading")}</span>}
 					{showMeaning && <span>{T("colMeaning")}</span>}
 					<span className="hidden sm:block">{T("colCategory")}</span>
 					<span className="text-right">{T("colStatus")}</span>
@@ -357,9 +356,11 @@ export default function Reference({
 										/>
 									</span>
 								)}
-								<span className="font-mincho text-md leading-snug text-ink dark:text-night-ink break-words">
-									{k.reading}
-								</span>
+								{!showWord && (
+									<span className="font-mincho text-md leading-snug text-ink dark:text-night-ink break-words">
+										{k.reading}
+									</span>
+								)}
 								{showMeaning && (
 									<span className="font-bengali text-xs leading-snug text-ink dark:text-night-ink break-words">
 										{meaningText(k)}
