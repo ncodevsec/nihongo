@@ -15,6 +15,7 @@ import {
 } from "../lib/vocabClassify.js";
 
 import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
+import Furigana from "./Furigana.jsx";
 
 export default function Study({
 	moduleKey,
@@ -370,14 +371,22 @@ export default function Study({
 										: "text-6xl sm:text-7xl"
 								}`}
 							>
-								{frontText}
+								{showWord && (isVocab || reverse) ? (
+									<Furigana
+										text={frontText}
+										reading={card.reading}
+										show={settings.showFurigana}
+									/>
+								) : (
+									frontText
+								)}
 							</div>
-							{showWord && isVocab && (
+							{showWord && isVocab && !settings.showFurigana && (
 								<div className="font-mincho text-lg text-ai dark:text-ai-glow">
 									{card.reading}
 								</div>
 							)}
-							{!isVocab && reverse && (
+							{!isVocab && reverse && !settings.showFurigana && (
 								<div className="font-mincho text-2xl text-ai dark:text-ai-glow">
 									{card.reading}
 								</div>
@@ -438,7 +447,23 @@ export default function Study({
 																>
 																	{r.reading}
 																	<span className="font-bengali text-md text-ink-muted dark:text-night-ink-muted ml-2">
-																		（ {r.word}{" "}.{" "}{r.wordReading}{" "}.{" "}{r.meaningBn} ）
+																		（{" "}
+																		<Furigana
+																			text={r.word}
+																			reading={r.wordReading}
+																			show={settings.showFurigana}
+																			className="font-mincho"
+																		/>
+																		{!settings.showFurigana && (
+																			<>
+																				{" "}
+																				.{" "}
+																				{r.wordReading}
+																			</>
+																		)}{" "}
+																		.{" "}
+																		{r.meaningBn}{" "}
+																		）
 																	</span>
 																</div>
 															),
@@ -461,7 +486,23 @@ export default function Study({
 																>
 																	{r.reading}
 																	<span className="font-bengali text-md text-ink-muted dark:text-night-ink-muted ml-2">
-																		（ {r.word}{"  "}.{"  "}{r.wordReading}{"  "}.{"  "}{r.meaningBn} ）
+																		（{" "}
+																		<Furigana
+																			text={r.word}
+																			reading={r.wordReading}
+																			show={settings.showFurigana}
+																			className="font-mincho"
+																		/>
+																		{!settings.showFurigana && (
+																			<>
+																				{" "}
+																				.{" "}
+																				{r.wordReading}
+																			</>
+																		)}{" "}
+																		.{" "}
+																		{r.meaningBn}{" "}
+																		）
 																	</span>
 																</div>
 															),

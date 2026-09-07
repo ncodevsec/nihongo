@@ -264,6 +264,16 @@ export default function Settings({
 				</Row>
 			</div>
 
+			<SectionLabel>{T("sectionReading")}</SectionLabel>
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
+				<Row title={T("showFurigana")} subtitle={T("showFuriganaSub")}>
+					<Toggle
+						checked={settings.showFurigana}
+						onChange={(v) => updateSetting("showFurigana", v)}
+					/>
+				</Row>
+			</div>
+
 			<SectionLabel>{T("sectionVocab")}</SectionLabel>
 			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line">
 				<Row
