@@ -1,57 +1,56 @@
 import { getKnownReadings } from "../lib/kanjiReadingLookup.js";
 
 const KANJI_RE = /[\u4e00-\u9fff\u3005\u3006\u3007\u303b]/; // includes 々〆〇〻 iteration/numeral marks
-const BRACKET_RE = /[[［][^\]］]*[\]］]/g;
+const KANA_RE = /[\u3040-\u309f\u30a0-\u30ff]/; // hiragana + katakana (incl. ー long vowel mark)
+const BRACKET_RE = /[[［(（][^\]］)）]*[\]］)）]/g;
 
-function isKanjiChar(ch) {
-	return KANJI_RE.test(ch);
+function classify(ch) {
+	if (KANJI_RE.test(ch)) return "kanji";
+	if (KANA_RE.test(ch)) return "kana";
+	// Everything else — punctuation (。、！？), the ～/〜 placeholder dash
+	// used for counter/suffix entries like "～年", digits, latin letters,
+	// spaces — is never actually part of a reading, so it's always shown
+	// as-is and never required to match anything in the reading string.
+	return "other";
 }
 
-// Some vocab entries embed bracket notation right in the word string —
-// a na-adjective marker ("嫌い［な］"), an optional honorific prefix
-// ("［お］酒"), or a usage-context reminder ("動きます［とけいが～］").
-// None of that is meant to be pronounced/matched against the reading, so
-// it's split out here into its own segments and rendered as plain text,
-// leaving only the actual word for furigana matching.
-function tokenizeBrackets(word) {
+function katakanaToHiragana(str) {
+	return str.replace(/[\u30a1-\u30f6]/g, (ch) =>
+		String.fromCharCode(ch.charCodeAt(0) - 0x60),
+	);
+}
+
+// Splits a word into an ordered sequence of segments: bracket groups kept
+// whole (their contents may or may not turn out to be part of the actual
+// reading — see buildParts), and consecutive runs of kanji / kana / other
+// characters everywhere else.
+function tokenize(word) {
 	const segments = [];
+	const pushRuns = (str) => {
+		let current = "";
+		let currentType = null;
+		for (const ch of str) {
+			const type = classify(ch);
+			if (type !== currentType) {
+				if (current) segments.push({ type: currentType, text: current });
+				current = ch;
+				currentType = type;
+			} else {
+				current += ch;
+			}
+		}
+		if (current) segments.push({ type: currentType, text: current });
+	};
+
 	let lastIndex = 0;
 	let m;
 	BRACKET_RE.lastIndex = 0;
 	while ((m = BRACKET_RE.exec(word))) {
-		if (m.index > lastIndex) {
-			segments.push({ type: "text", content: word.slice(lastIndex, m.index) });
-		}
-		segments.push({ type: "bracket", content: m[0] });
+		if (m.index > lastIndex) pushRuns(word.slice(lastIndex, m.index));
+		segments.push({ type: "bracket", raw: m[0], inner: m[0].slice(1, -1) });
 		lastIndex = m.index + m[0].length;
 	}
-	if (lastIndex < word.length) {
-		segments.push({ type: "text", content: word.slice(lastIndex) });
-	}
-	return segments;
-}
-
-function stripBrackets(str) {
-	return str.replace(BRACKET_RE, "");
-}
-
-// Splits a word into consecutive runs of kanji vs. everything else (kana,
-// punctuation, etc).
-function segmentWord(word) {
-	const segments = [];
-	let current = "";
-	let currentType = null;
-	for (const ch of word) {
-		const type = isKanjiChar(ch) ? "kanji" : "kana";
-		if (type !== currentType) {
-			if (current) segments.push({ type: currentType, text: current });
-			current = ch;
-			currentType = type;
-		} else {
-			current += ch;
-		}
-	}
-	if (current) segments.push({ type: currentType, text: current });
+	if (lastIndex < word.length) pushRuns(word.slice(lastIndex));
 	return segments;
 }
 
@@ -103,47 +102,82 @@ function splitCompoundReading(chars, reading) {
 	return result;
 }
 
-// Given a bracket-free word like "食べます" and its reading "たべます",
-// works out which slice of the reading belongs to each kanji character.
-// Returns null if there's no kanji, or a kana run doesn't literally match
-// the reading where expected (an irregular reading) — callers fall back
-// to plain text in that case.
-function splitReadingByKanji(word, reading) {
-	const segments = segmentWord(word);
-	if (!segments.some((s) => s.type === "kanji")) return null;
-
-	const result = [];
+// Walks the word's segments left to right against the reading, building
+// a flat list of render-ready parts. Returns null if a kana run doesn't
+// literally match the reading where expected (a genuinely irregular
+// reading) — callers fall back to plain text in that case rather than
+// risk a scattered/misaligned result.
+function buildParts(segments, reading) {
+	const parts = [];
 	let pos = 0;
+
 	for (let i = 0; i < segments.length; i++) {
 		const seg = segments[i];
+
+		if (seg.type === "other") {
+			// Some placeholder/punctuation characters (like the ～ in a
+			// counter entry such as "～年") are occasionally echoed
+			// literally in the reading string too. If so, stay in sync by
+			// consuming it there as well — it's still rendered exactly the
+			// same either way, this just keeps the position cursor correct
+			// for whatever comes after.
+			if (reading.startsWith(seg.text, pos)) pos += seg.text.length;
+			parts.push({ type: "plain", text: seg.text });
+			continue;
+		}
+
+		if (seg.type === "bracket") {
+			// Some bracketed content is a real (optional) part of the
+			// pronunciation — an honorific prefix like ［お］ in ［お］話 — and
+			// some is a non-pronounced grammar/usage note — ［な］ in
+			// 嫌い［な］, ［とけいが～］ in 動きます［とけいが～］. Try matching
+			// it against the reading at the current position; if it fits,
+			// treat it as consumed (so the following kanji doesn't absorb
+			// it too); if not, it's just a note — skip over it entirely
+			// without moving the reading cursor. Either way it's always
+			// rendered as plain text, never wrapped in ruby.
+			const hira = katakanaToHiragana(seg.inner);
+			if (reading.startsWith(hira, pos)) pos += hira.length;
+			else if (reading.startsWith(seg.inner, pos)) pos += seg.inner.length;
+			parts.push({ type: "plain", text: seg.raw });
+			continue;
+		}
+
 		if (seg.type === "kana") {
 			if (!reading.startsWith(seg.text, pos)) return null;
-			result.push({ type: "kana", text: seg.text });
+			parts.push({ type: "plain", text: seg.text });
 			pos += seg.text.length;
-		} else {
-			const next = segments[i + 1];
-			let end;
-			if (next) {
-				const idx = reading.indexOf(next.text, pos);
-				if (idx === -1) return null;
-				end = idx;
-			} else {
-				end = reading.length;
-			}
-			if (end <= pos) return null;
-			const chars = [...seg.text];
-			const parts = splitCompoundReading(chars, reading.slice(pos, end));
-			for (const p of parts) {
-				result.push({ type: "kanji", text: p.char, reading: p.reading });
-			}
-			pos = end;
+			continue;
 		}
+
+		// kanji run — find where it ends by anchoring on the next kana
+		// segment (skipping over any non-consuming "other"/bracket-note
+		// segments in between), or taking the rest of the reading if this
+		// is the last meaningful segment.
+		let j = i + 1;
+		while (segments[j] && segments[j].type === "other") j++;
+		let end;
+		if (segments[j] && segments[j].type === "kana") {
+			const idx = reading.indexOf(segments[j].text, pos);
+			end = idx === -1 ? reading.length : idx;
+		} else {
+			end = reading.length;
+		}
+		if (end <= pos) return null;
+
+		const chars = [...seg.text];
+		const sub = splitCompoundReading(chars, reading.slice(pos, end));
+		for (const p of sub) {
+			parts.push({ type: "kanji", text: p.char, reading: p.reading });
+		}
+		pos = end;
 	}
-	return result;
+
+	return parts;
 }
 
 function renderPart(part, key) {
-	if (part.type === "kana") return <span key={key}>{part.text}</span>;
+	if (part.type === "plain") return <span key={key}>{part.text}</span>;
 	return (
 		<ruby key={key}>
 			{part.text}
@@ -160,50 +194,36 @@ function renderPart(part, key) {
 }
 
 // Renders Japanese text with an optional furigana reading, annotating
-// only the kanji — kana (hiragana/katakana) is left as plain text since
-// it's already phonetic. Bracket-notation portions of the word (na-
-// adjective markers, optional prefixes, usage hints — see
-// tokenizeBrackets) are always shown as plain text at their original
-// position, never wrapped in ruby, since they're not actually pronounced
-// as part of the reading.
+// only the kanji. Kana is left as plain text (already phonetic), and so
+// is anything punctuation-like or a ～/〜 placeholder dash. Bracketed
+// notes (grammar markers, optional prefixes, usage-context reminders)
+// are always shown as plain text too — matched against the reading when
+// they turn out to be part of the actual pronunciation, skipped over
+// when they're not (see buildParts).
 export default function Furigana({ text, reading, show, className = "" }) {
 	if (!show || !reading || reading === text) {
 		return <span className={className}>{text}</span>;
 	}
 
-	const segments = tokenizeBrackets(text);
-	const hasBrackets = segments.some((s) => s.type === "bracket");
-	const coreWord = segments
-		.filter((s) => s.type === "text")
-		.map((s) => s.content)
-		.join("");
-	const coreReading = hasBrackets ? stripBrackets(reading) : reading;
-
-	if (!coreWord || coreReading === coreWord) {
+	const segments = tokenize(text);
+	if (!segments.some((s) => s.type === "kanji")) {
 		return <span className={className}>{text}</span>;
 	}
 
-	const parts = splitReadingByKanji(coreWord, coreReading);
+	// A reading occasionally echoes the word's own bracket notation
+	// verbatim (a data artifact, e.g. "心配[な]") — strip that. But when
+	// the word itself has no brackets at all, a bracket/paren group in the
+	// reading is usually genuine optional-pronunciation info instead (e.g.
+	// "お正月" read as "(お)しょうがつ" — the お is real, just marked
+	// optional) — unwrap those instead of deleting them, keeping the
+	// inner content as part of the reading.
+	const wordHasBrackets = segments.some((s) => s.type === "bracket");
+	const cleanReading = wordHasBrackets
+		? reading.replace(BRACKET_RE, "")
+		: reading.replace(BRACKET_RE, (m) => m.slice(1, -1));
 
-	if (!hasBrackets) {
-		if (!parts) {
-			// Couldn't cleanly separate kana from kanji (e.g. an irregular
-			// reading with no kana anchor) — still better to show the
-			// reading over the whole word than not at all.
-			return (
-				<ruby className={className}>
-					{text}
-					<rp>(</rp>
-					<rt
-						className="font-normal text-ai dark:text-ai-glow opacity-90"
-						style={{ fontSize: "0.45em" }}
-					>
-						{reading}
-					</rt>
-					<rp>)</rp>
-				</ruby>
-			);
-		}
+	const parts = buildParts(segments, cleanReading);
+	if (parts) {
 		return (
 			<span className={className}>
 				{parts.map((p, i) => renderPart(p, i))}
@@ -211,30 +231,41 @@ export default function Furigana({ text, reading, show, className = "" }) {
 		);
 	}
 
-	// Bracket-notation entry: never fall back to a single ruby block
-	// spanning brackets/hints too (that's exactly what produced furigana
-	// scattered across unrelated glyphs) — if a clean split isn't
-	// possible, just show the plain word instead.
-	if (!parts) {
+	// Couldn't cleanly match (a genuinely irregular reading) — fall back
+	// to one ruby block, but still only over the actual word, never over
+	// bracketed notes, so it can't end up scattered across them.
+	const core = segments
+		.filter((s) => s.type === "kanji" || s.type === "kana")
+		.map((s) => s.text)
+		.join("");
+	const leading = [];
+	const trailing = [];
+	let seenCore = false;
+	for (const s of segments) {
+		if (s.type === "kanji" || s.type === "kana") {
+			seenCore = true;
+		} else {
+			(seenCore ? trailing : leading).push(s.type === "bracket" ? s.raw : s.text);
+		}
+	}
+	if (!core || cleanReading === core) {
 		return <span className={className}>{text}</span>;
 	}
-
-	const rendered = [];
-	let coreOffset = 0;
-	let partCursor = 0;
-	for (const seg of segments) {
-		if (seg.type === "bracket") {
-			rendered.push(<span key={rendered.length}>{seg.content}</span>);
-			continue;
-		}
-		const segEnd = coreOffset + seg.content.length;
-		while (partCursor < parts.length && coreOffset < segEnd) {
-			const p = parts[partCursor];
-			rendered.push(renderPart(p, rendered.length));
-			coreOffset += p.type === "kana" ? p.text.length : 1;
-			partCursor++;
-		}
-	}
-
-	return <span className={className}>{rendered}</span>;
+	return (
+		<span className={className}>
+			{leading.join("")}
+			<ruby>
+				{core}
+				<rp>(</rp>
+				<rt
+					className="font-normal text-ai dark:text-ai-glow opacity-90"
+					style={{ fontSize: "0.45em" }}
+				>
+					{cleanReading}
+				</rt>
+				<rp>)</rp>
+			</ruby>
+			{trailing.join("")}
+		</span>
+	);
 }
