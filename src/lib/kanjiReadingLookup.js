@@ -43,3 +43,29 @@ export function getKnownReadings(kanji) {
 	if (!lookup) lookup = buildLookup();
 	return lookup.get(kanji) || [];
 }
+
+// Per-level sets of individual kanji characters, used to color-code kanji
+// throughout the app by whether they belong to the level the person is
+// currently studying (e.g. red while in N5 for every kanji that's part of
+// the N5 set). Jukugo entries are included too, but since jukugo are only
+// ever built from that level's own base kanji, this doesn't add anything
+// the base entries don't already cover — it's just a safe, simple way to
+// build the set without needing to special-case them.
+function buildLevelSet(kanjiList) {
+	const set = new Set();
+	for (const entry of kanjiList) {
+		for (const ch of entry.kanji) set.add(ch);
+	}
+	return set;
+}
+
+let levelSets = null;
+export function getLevelKanjiSet(level) {
+	if (!levelSets) {
+		levelSets = {
+			n5: buildLevelSet(N5_KANJI),
+			n4: buildLevelSet(N4_KANJI),
+		};
+	}
+	return levelSets[level] || null;
+}

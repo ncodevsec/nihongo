@@ -173,5 +173,15 @@ export function useAppUpdate() {
       .catch(() => {});
   }, []);
 
+  // Every time the site loads, quietly check for a newer deploy on its
+  // own — no need to open Settings and tap "Check for updates" manually.
+  // A short delay lets the app finish its own first render first.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      checkForUpdate().catch(() => {});
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [checkForUpdate]);
+
   return { updateAvailable, checking, lastCheckedAt, checkForUpdate, applyUpdate };
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { t } from "../../lib/i18n.js";
 import Hanko from "../Hanko.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
+import LeveledKanji from "../LeveledKanji.jsx";
 import {
 	flattenGrammarPoints,
 	grammarCategories,
@@ -445,7 +446,7 @@ export default function GrammarQuiz({
 					{T("grammarQuizFillBlank")}
 				</p>
 				<div className="font-mincho text-xl sm:text-2xl text-center text-ink dark:text-night-ink px-2 py-5 mb-2 bg-washi dark:bg-night border border-ai-line dark:border-night-line rounded-lg leading-relaxed">
-					{q.blanked}
+					<LeveledKanji text={q.blanked} level={level} />
 				</div>
 				{q.meaningBn && (
 					<p className="text-center font-bengali text-xs text-ink-muted dark:text-night-ink-muted mb-5">
