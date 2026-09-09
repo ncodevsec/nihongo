@@ -36,6 +36,7 @@ const UI = {
   grammarComingSoon: { bn: "এই স্তরের গ্রামার এখনো যোগ করা হয়নি — শীঘ্রই আসছে।", en: "Grammar for this level hasn't been added yet — coming soon." },
   grammarSelectLesson: { bn: "একটি পাঠ বেছে নিন", en: "Select a lesson" },
   grammarSelectParticle: { bn: "একটি পার্টিকেল বেছে নিন", en: "Select a particle" },
+  grammarSelectTransform: { bn: "একটি রূপান্তর ধরন বেছে নিন", en: "Select a transformation type" },
   grammarExamples: { bn: "উদাহরণ", en: "Examples" },
   grammarQuizFillBlank: { bn: "ফাঁকা স্থান পূরণ করুন", en: "Fill in the blank" },
 
