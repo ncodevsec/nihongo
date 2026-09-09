@@ -62,6 +62,61 @@ export function grammarParticleCategories(lessons) {
   return Array.from(seen.values());
 }
 
+// The two categories for the "By Transformation" grouping view — parts-
+// of-speech conjugation practice, independent of level/lesson since the
+// conjugation rules themselves don't change between N5 and N4.
+export const TRANSFORM_CATEGORIES = [
+  { key: "verb", jp: "動詞", bn: "ক্রিয়াপদ (Verb)", en: "Verb" },
+  { key: "adjective", jp: "形容詞", bn: "বিশেষণ (Adjective)", en: "Adjective" },
+];
+
+const VERB_FORM_LABELS = {
+  dictionary: { bn: "অভিধান রূপ", en: "Dictionary form" },
+  te: { bn: "て রূপ", en: "Te form" },
+  ta: { bn: "た রূপ", en: "Ta form" },
+  nai: { bn: "ない রূপ", en: "Nai form" },
+};
+
+const ADJ_FORM_LABELS = {
+  past: { bn: "অতীত রূপ", en: "Past form" },
+  negative: { bn: "নেতিবাচক রূপ", en: "Negative form" },
+  pastNegative: { bn: "অতীত নেতিবাচক রূপ", en: "Past negative form" },
+};
+
+// Flattens the compact per-verb/per-adjective source data (one object per
+// word, all its forms together) into one row per (word, transformation)
+// pair — e.g. たべます becomes 4 rows (dictionary/te/ta/nai), each with
+// its own id so star/read status track independently per transformation,
+// not per word.
+export function buildTransformationRows(verbs, adjectives) {
+  const rows = [];
+  for (const v of verbs) {
+    for (const key of ["dictionary", "te", "ta", "nai"]) {
+      rows.push({
+        id: `transform-${v.id}-${key}`,
+        category: "verb",
+        mainForm: v.masu,
+        transformedForm: v[key],
+        formLabel: VERB_FORM_LABELS[key],
+        meaningBn: v.meaningBn,
+      });
+    }
+  }
+  for (const a of adjectives) {
+    for (const key of ["past", "negative", "pastNegative"]) {
+      rows.push({
+        id: `transform-${a.id}-${key}`,
+        category: "adjective",
+        mainForm: a.base,
+        transformedForm: a[key],
+        formLabel: ADJ_FORM_LABELS[key],
+        meaningBn: a.meaningBn,
+      });
+    }
+  }
+  return rows;
+}
+
 const KANA_RUN_RE = /[\u3040-\u30ff\u30fc]{2,}/g;
 
 // Finds a short kana phrase from the rule's heading that also appears
