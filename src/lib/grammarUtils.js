@@ -62,12 +62,18 @@ export function grammarParticleCategories(lessons) {
   return Array.from(seen.values());
 }
 
-// The two categories for the "By Transformation" grouping view — parts-
-// of-speech conjugation practice, independent of level/lesson since the
+// The seven categories for the "By Transformation" grouping view — one
+// per specific conjugation, not just "verb"/"adjective" in general, so
+// each can be studied on its own. Independent of level/lesson since the
 // conjugation rules themselves don't change between N5 and N4.
 export const TRANSFORM_CATEGORIES = [
-  { key: "verb", jp: "動詞", bn: "ক্রিয়াপদ (Verb)", en: "Verb" },
-  { key: "adjective", jp: "形容詞", bn: "বিশেষণ (Adjective)", en: "Adjective" },
+  { key: "verb-dictionary", jp: "動詞ー辞書形", bn: "ক্রিয়া - অভিধান রূপ", en: "Verb - Dictionary form" },
+  { key: "verb-te", jp: "動詞ーて形", bn: "ক্রিয়া - て রূপ", en: "Verb - Te form" },
+  { key: "verb-ta", jp: "動詞ーた形", bn: "ক্রিয়া - た রূপ", en: "Verb - Ta form" },
+  { key: "verb-nai", jp: "動詞ーない形", bn: "ক্রিয়া - ない রূপ", en: "Verb - Nai form" },
+  { key: "adj-past", jp: "形容詞ー過去形", bn: "বিশেষণ - অতীত রূপ", en: "Adjective - Past form" },
+  { key: "adj-negative", jp: "形容詞ー否定形", bn: "বিশেষণ - নেতিবাচক রূপ", en: "Adjective - Negative form" },
+  { key: "adj-pastNegative", jp: "形容詞ー過去否定形", bn: "বিশেষণ - অতীত নেতিবাচক রূপ", en: "Adjective - Past negative form" },
 ];
 
 const VERB_FORM_LABELS = {
@@ -87,14 +93,15 @@ const ADJ_FORM_LABELS = {
 // word, all its forms together) into one row per (word, transformation)
 // pair — e.g. たべます becomes 4 rows (dictionary/te/ta/nai), each with
 // its own id so star/read status track independently per transformation,
-// not per word.
+// not per word, and its own specific category (e.g. "verb-te") so each
+// transformation type can be studied as its own group.
 export function buildTransformationRows(verbs, adjectives) {
   const rows = [];
   for (const v of verbs) {
     for (const key of ["dictionary", "te", "ta", "nai"]) {
       rows.push({
         id: `transform-${v.id}-${key}`,
-        category: "verb",
+        category: `verb-${key}`,
         mainForm: v.masu,
         transformedForm: v[key],
         formLabel: VERB_FORM_LABELS[key],
@@ -106,7 +113,7 @@ export function buildTransformationRows(verbs, adjectives) {
     for (const key of ["past", "negative", "pastNegative"]) {
       rows.push({
         id: `transform-${a.id}-${key}`,
-        category: "adjective",
+        category: `adj-${key}`,
         mainForm: a.base,
         transformedForm: a[key],
         formLabel: ADJ_FORM_LABELS[key],
