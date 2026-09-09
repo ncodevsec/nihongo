@@ -191,6 +191,7 @@ const UI = {
   appUpdateCheckButton: { bn: "আপডেট চেক করুন", en: "Check for updates" },
   appUpdateApplyButton: { bn: "এখনই আপডেট করুন", en: "Update now" },
   appUpdateApplying: { bn: "আপডেট হচ্ছে…", en: "Updating…" },
+  appVersionLabel: { bn: "অ্যাপ ভার্সন", en: "App version" },
   sectionLanguage: { bn: "ভাষা", en: "Language" },
   siteLanguage: { bn: "সাইটের ভাষা", en: "Site language" },
   siteLanguageSub: { bn: "মেনু, বাটন ও লেবেলের ভাষা", en: "Language of menus, buttons, and labels" },

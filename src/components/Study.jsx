@@ -16,6 +16,7 @@ import {
 
 import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
 import Furigana from "./Furigana.jsx";
+import LeveledKanji from "./LeveledKanji.jsx";
 
 export default function Study({
 	moduleKey,
@@ -27,6 +28,7 @@ export default function Study({
 	isActive = true,
 	favorites = {},
 	toggleFavorite = () => {},
+	level,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -376,9 +378,10 @@ export default function Study({
 										text={frontText}
 										reading={card.reading}
 										show={settings.showFurigana}
+										level={level}
 									/>
 								) : (
-									frontText
+									<LeveledKanji text={frontText} level={level} />
 								)}
 							</div>
 							{showWord && isVocab && !settings.showFurigana && (
@@ -452,6 +455,7 @@ export default function Study({
 																			text={r.word}
 																			reading={r.wordReading}
 																			show={settings.showFurigana}
+																			level={level}
 																			className="font-mincho"
 																		/>
 																		{!settings.showFurigana && (
@@ -491,6 +495,7 @@ export default function Study({
 																			text={r.word}
 																			reading={r.wordReading}
 																			show={settings.showFurigana}
+																			level={level}
 																			className="font-mincho"
 																		/>
 																		{!settings.showFurigana && (

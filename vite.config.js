@@ -1,14 +1,18 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import { writeFileSync } from "node:fs";
+import { writeFileSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-// Writes a tiny version.json (a build timestamp) straight into the output
-// directory on every build. It's fetched at runtime (network-only, never
-// cached — see public/sw.js) by src/hooks/useAppUpdate.js so the app can
-// tell the difference between "already on the latest deploy" and "a newer
-// version exists on GitHub Pages" for the Settings → "Check for updates"
-// button, independent of the service worker's own update cycle.
+const pkg = JSON.parse(readFileSync(resolve(process.cwd(), "package.json"), "utf-8"));
+
+// Writes a tiny version.json (the package.json version + a build
+// timestamp) straight into the output directory on every build. It's
+// fetched at runtime (network-only, never cached — see public/sw.js) by
+// src/hooks/useAppUpdate.js so the app can tell the difference between
+// "already on the latest deploy" and "a newer version exists on GitHub
+// Pages" for the automatic/manual update check, independent of the
+// service worker's own update cycle. The version number is also shown
+// directly in Settings via the __APP_VERSION__ build-time constant below.
 function writeVersionFile() {
   return {
     name: "write-version-file",
@@ -17,7 +21,7 @@ function writeVersionFile() {
       const outDir = options.dir || resolve(process.cwd(), "docs");
       writeFileSync(
         resolve(outDir, "version.json"),
-        JSON.stringify({ buildTime: Date.now() })
+        JSON.stringify({ version: pkg.version, buildTime: Date.now() })
       );
     },
   };
@@ -42,6 +46,9 @@ function writeVersionFile() {
 export default defineConfig({
   base: "./",
   plugins: [react(), writeVersionFile()],
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   build: {
     outDir: 'docs',
     rollupOptions: {

@@ -8,6 +8,7 @@ import {
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton } from "../FilterControls.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
+import LeveledKanji from "../LeveledKanji.jsx";
 
 // Renders a rule's Bengali explanation with light structure: sub-points
 // (১, ২, ৩...) get their own indented line, bracketed notes get an
@@ -351,7 +352,7 @@ export default function GrammarStudy({
 										</div>
 									)}
 									<div className="font-mincho text-lg text-ink dark:text-night-ink leading-snug">
-										{ex.jp}
+										<LeveledKanji text={ex.jp} level={level} />
 									</div>
 									{ex.meaningBn && (
 										<div className="font-bengali text-sm text-sakura-deep dark:text-sakura mt-1">

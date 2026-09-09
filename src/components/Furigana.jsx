@@ -1,4 +1,4 @@
-import { getKnownReadings } from "../lib/kanjiReadingLookup.js";
+import { getKnownReadings, getLevelKanjiSet } from "../lib/kanjiReadingLookup.js";
 
 const KANJI_RE = /[\u4e00-\u9fff\u3005\u3006\u3007\u303b]/; // includes 々〆〇〻 iteration/numeral marks
 const KANA_RE = /[\u3040-\u309f\u30a0-\u30ff]/; // hiragana + katakana (incl. ー long vowel mark)
@@ -176,11 +176,14 @@ function buildParts(segments, reading) {
 	return parts;
 }
 
-function renderPart(part, key) {
+function renderPart(part, key, levelSet) {
 	if (part.type === "plain") return <span key={key}>{part.text}</span>;
+	const colored = levelSet?.has(part.text);
 	return (
 		<ruby key={key}>
-			{part.text}
+			<span className={colored ? "text-shu dark:text-shu-glow" : undefined}>
+				{part.text}
+			</span>
 			<rp>(</rp>
 			<rt
 				className="font-normal text-ai dark:text-ai-glow opacity-90"
@@ -193,21 +196,42 @@ function renderPart(part, key) {
 	);
 }
 
+// Colors individual kanji characters within a plain (non-ruby) string —
+// used for the "no furigana to show" and irregular-reading fallback
+// paths, so the level coloring still applies even when furigana itself
+// isn't shown or a clean split wasn't possible.
+function colorizePlain(text, levelSet) {
+	if (!levelSet) return text;
+	return [...text].map((ch, i) =>
+		levelSet.has(ch) ? (
+			<span key={i} className="text-shu dark:text-shu-glow">
+				{ch}
+			</span>
+		) : (
+			ch
+		),
+	);
+}
+
 // Renders Japanese text with an optional furigana reading, annotating
 // only the kanji. Kana is left as plain text (already phonetic), and so
 // is anything punctuation-like or a ～/〜 placeholder dash. Bracketed
 // notes (grammar markers, optional prefixes, usage-context reminders)
 // are always shown as plain text too — matched against the reading when
 // they turn out to be part of the actual pronunciation, skipped over
-// when they're not (see buildParts).
-export default function Furigana({ text, reading, show, className = "" }) {
+// when they're not (see buildParts). When `level` is given, kanji that
+// belong to that level's set (N5 or N4) are colored — this applies
+// whether or not furigana itself is being shown.
+export default function Furigana({ text, reading, show, level, className = "" }) {
+	const levelSet = level ? getLevelKanjiSet(level) : null;
+
 	if (!show || !reading || reading === text) {
-		return <span className={className}>{text}</span>;
+		return <span className={className}>{colorizePlain(text, levelSet)}</span>;
 	}
 
 	const segments = tokenize(text);
 	if (!segments.some((s) => s.type === "kanji")) {
-		return <span className={className}>{text}</span>;
+		return <span className={className}>{colorizePlain(text, levelSet)}</span>;
 	}
 
 	// A reading occasionally echoes the word's own bracket notation
@@ -226,7 +250,7 @@ export default function Furigana({ text, reading, show, className = "" }) {
 	if (parts) {
 		return (
 			<span className={className}>
-				{parts.map((p, i) => renderPart(p, i))}
+				{parts.map((p, i) => renderPart(p, i, levelSet))}
 			</span>
 		);
 	}
@@ -249,13 +273,13 @@ export default function Furigana({ text, reading, show, className = "" }) {
 		}
 	}
 	if (!core || cleanReading === core) {
-		return <span className={className}>{text}</span>;
+		return <span className={className}>{colorizePlain(text, levelSet)}</span>;
 	}
 	return (
 		<span className={className}>
 			{leading.join("")}
 			<ruby>
-				{core}
+				{colorizePlain(core, levelSet)}
 				<rp>(</rp>
 				<rt
 					className="font-normal text-ai dark:text-ai-glow opacity-90"

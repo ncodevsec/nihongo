@@ -5,6 +5,7 @@ import { t, pickLang } from "../lib/i18n.js";
 import Hanko from "./Hanko.jsx";
 import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
 import Furigana from "./Furigana.jsx";
+import LeveledKanji from "./LeveledKanji.jsx";
 import {
 	classifyPartOfSpeech,
 	POS_CATEGORIES,
@@ -79,6 +80,7 @@ export default function Quiz({
 	settings,
 	updateSetting = () => {},
 	isActive = true,
+	level,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -569,6 +571,7 @@ export default function Quiz({
 											text={m.kanji}
 											reading={m.reading}
 											show={settings.showFurigana}
+											level={level}
 										/>
 									)}
 									</span>
@@ -678,11 +681,16 @@ export default function Quiz({
 								text={q.kanji}
 								reading={q.reading}
 								show={settings.showFurigana}
+								level={level}
 							/>
 						</div>
 					)}
 					<div className="font-mincho text-4xl sm:text-5xl min-w-28 px-4 h-24 flex items-center justify-center bg-washi dark:bg-night border border-ai-line dark:border-night-line rounded-lg text-ink dark:text-night-ink text-center">
-						{questionMain}
+						{isVocab ? (
+							questionMain
+						) : (
+							<LeveledKanji text={questionMain} level={level} />
+						)}
 					</div>
 				</div>
 

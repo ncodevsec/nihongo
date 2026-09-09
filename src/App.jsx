@@ -245,6 +245,7 @@ export default function App() {
 									isActive={tab === "study"}
 									favorites={favorites}
 									toggleFavorite={toggleFavorite}
+									level={level}
 								/>
 							</div>
 							<div className={tab === "quiz" ? "" : "hidden"}>
@@ -257,6 +258,7 @@ export default function App() {
 									settings={settings}
 									updateSetting={updateSetting}
 									isActive={tab === "quiz"}
+									level={level}
 								/>
 							</div>
 							<div
@@ -271,6 +273,7 @@ export default function App() {
 									settings={settings}
 									favorites={favorites}
 									toggleFavorite={toggleFavorite}
+									level={level}
 								/>
 							</div>
 							<div className={tab === "progress" ? "" : "hidden"}>

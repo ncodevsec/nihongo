@@ -168,7 +168,7 @@ export default function Settings({
 	return (
 		<div className="max-w-2xl mx-auto">
 			<SectionLabel>{T("sectionApp")}</SectionLabel>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line">
 				<Row
 					title={
 						<span className="flex items-center gap-1.5">
@@ -217,6 +217,11 @@ export default function Settings({
 						</p>
 					</div>
 				)}
+				<Row title={T("appVersionLabel")}>
+					<span className="font-mono text-xs text-ink-muted dark:text-night-ink-muted">
+						v{__APP_VERSION__}
+					</span>
+				</Row>
 			</div>
 
 			<SectionLabel>{T("sectionTheme")}</SectionLabel>

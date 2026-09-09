@@ -81,6 +81,7 @@ export default function Reference({
 	settings,
 	favorites = {},
 	toggleFavorite = () => {},
+	level,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -353,6 +354,7 @@ export default function Reference({
 											text={k.kanji}
 											reading={k.reading}
 											show={settings.showFurigana}
+											level={level}
 										/>
 									</span>
 								)}
