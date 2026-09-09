@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
-import { t } from "../../lib/i18n.js";
+import { t, pickLang } from "../../lib/i18n.js";
 import {
 	flattenGrammarPoints,
 	grammarCategories,
 	grammarParticleCategories,
 	formatGrammarPointId,
+	TRANSFORM_CATEGORIES,
+	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
+import {
+	VERB_TRANSFORMATIONS,
+	ADJECTIVE_TRANSFORMATIONS,
+} from "../../data/grammar/transformations.js";
 import { StarFilterButton } from "../FilterControls.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
 
@@ -88,10 +94,18 @@ export default function GrammarList({
 		() => grammarParticleCategories(lessons),
 		[lessons],
 	);
+	const transformRows = useMemo(
+		() =>
+			buildTransformationRows(
+				VERB_TRANSFORMATIONS,
+				ADJECTIVE_TRANSFORMATIONS,
+			),
+		[],
+	);
 
 	const [query, setQuery] = useState("");
 	const [debouncedQuery, setDebouncedQuery] = useState("");
-	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'particle'
+	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'particle' | 'transform'
 	const [selectedFilters, setSelectedFilters] = useState([]); // [] = all
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -106,8 +120,29 @@ export default function GrammarList({
 		setSelectedFilters([]);
 	}, [groupBy]);
 
+	const isTransform = groupBy === "transform";
+
 	const filtered = useMemo(() => {
 		const q = debouncedQuery.trim().toLowerCase();
+		if (isTransform) {
+			return transformRows.filter((r) => {
+				if (
+					selectedFilters.length > 0 &&
+					!selectedFilters.includes(r.category)
+				)
+					return false;
+				if (onlyStarred && !favorites[r.id]) return false;
+				if (!q) return true;
+				const haystack = (
+					r.mainForm +
+					" " +
+					r.transformedForm +
+					" " +
+					r.meaningBn
+				).toLowerCase();
+				return haystack.includes(q);
+			});
+		}
 		return allPoints.filter((p) => {
 			if (selectedFilters.length > 0) {
 				const key =
@@ -129,6 +164,8 @@ export default function GrammarList({
 		});
 	}, [
 		allPoints,
+		transformRows,
+		isTransform,
 		debouncedQuery,
 		selectedFilters,
 		groupBy,
@@ -142,7 +179,7 @@ export default function GrammarList({
 
 	const visible = filtered.slice(0, visibleCount);
 
-	if (allPoints.length === 0) {
+	if (allPoints.length === 0 && !isTransform) {
 		return (
 			<div className="max-w-2xl mx-auto text-center py-16 font-bengali text-ink-muted dark:text-night-ink-muted">
 				{T("grammarComingSoon")}
@@ -181,18 +218,30 @@ export default function GrammarList({
 					>
 						{T("groupByParticle")}
 					</button>
+					<button
+						onClick={() => setGroupBy("transform")}
+						className={`px-2.5 py-1.5 text-sm font-bengali font-medium ${
+							groupBy === "transform"
+								? "bg-shu text-washi"
+								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+						}`}
+					>
+						{T("groupByTransform")}
+					</button>
 				</div>
 				<div className="sm:w-44 shrink-0">
 					<CategoryMultiSelect
 						categories={
-							groupBy === "particle"
-								? particleCategories
-								: categories
+							isTransform
+								? TRANSFORM_CATEGORIES
+								: groupBy === "particle"
+									? particleCategories
+									: categories
 						}
 						selected={selectedFilters}
 						onChange={setSelectedFilters}
 						lang={lang}
-						allLabel={`${T("allCategories")} (${allPoints.length})`}
+						allLabel={`${T("allCategories")} (${isTransform ? transformRows.length : allPoints.length})`}
 					/>
 				</div>
 				<StarFilterButton
@@ -208,72 +257,124 @@ export default function GrammarList({
 				{T("showingCountShown")}
 			</div>
 
-			<div className="border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden bg-paper dark:bg-night-paper divide-y divide-ai-line dark:divide-night-line">
-				{visible.map((p) => {
-					const isOpen = expanded === p.id;
-					const starred = !!favorites[p.id];
-					const read = !!progress[p.id]?.learned;
-					return (
-						<div key={p.id}>
-							<div className="flex items-center gap-2 px-3 py-2.5 hover:bg-washi dark:hover:bg-night">
-								<button
-									onClick={() =>
-										setExpanded(isOpen ? null : p.id)
-									}
-									className="flex-1 min-w-0 flex items-center gap-2.5 text-left"
-								>
-									<span className="shrink-0 font-mono text-[10px] text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded-full px-2 py-0.5">
-										{formatGrammarPointId(p.pointId)}
-									</span>
-									<span className="font-bengali text-sm text-ink dark:text-night-ink truncate">
-										{p.headingBn}
-									</span>
-								</button>
-								<ReadButton
-									read={read}
-									onClick={() => setLearned(p.id, !read)}
-									labelOn={T("markAsUnread")}
-									labelOff={T("markAsRead")}
-								/>
-								<StarButton
-									starred={starred}
-									onClick={() => toggleFavorite(p.id)}
-									labelOn={T("markAsUnstarred")}
-									labelOff={T("markAsStarred")}
-								/>
-							</div>
-							{isOpen && (
-								<div className="px-4 pb-4 pt-1 bg-washi dark:bg-night border-t border-ai-line dark:border-night-line">
-									<p className="font-bengali text-sm text-ink dark:text-night-ink leading-relaxed whitespace-pre-line mb-3">
-										{p.explanationBn}
-									</p>
-									{p.examples.length > 0 && (
-										<div className="bg-sakura-soft dark:bg-night-paper rounded-md p-3 space-y-2.5">
-											{p.examples.map((ex, ei) => (
-												<div key={ei}>
-													<div className="font-mincho text-base text-ink dark:text-night-ink">
-														{ex.jp}
-													</div>
-													{ex.meaningBn && (
-														<div className="font-bengali text-xs text-sakura-deep dark:text-sakura mt-0.5">
-															{ex.meaningBn}
-														</div>
-													)}
-												</div>
-											))}
-										</div>
-									)}
-								</div>
-							)}
-						</div>
-					);
-				})}
-				{filtered.length === 0 && (
-					<div className="px-3 py-8 text-center font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
-						{T("noResults")}
+			{isTransform ? (
+				<div className="border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden bg-paper dark:bg-night-paper">
+					<div className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 px-3 py-2 bg-washi dark:bg-night border-b border-ai-line dark:border-night-line font-bengali text-[11px] font-semibold text-ink-muted dark:text-night-ink-muted">
+						<span>{T("colMainForm")}</span>
+						<span>{T("colTransformedForm")}</span>
+						<span className="w-7" />
+						<span className="w-7" />
 					</div>
-				)}
-			</div>
+					<div className="divide-y divide-ai-line dark:divide-night-line">
+						{visible.map((r) => {
+							const starred = !!favorites[r.id];
+							const read = !!progress[r.id]?.learned;
+							return (
+								<div
+									key={r.id}
+									className="grid grid-cols-[1fr_1fr_auto_auto] gap-2 items-center px-3 py-2.5 hover:bg-washi dark:hover:bg-night"
+								>
+									<span className="font-mincho text-base text-ink dark:text-night-ink truncate">
+										{r.mainForm}
+									</span>
+									<span className="min-w-0">
+										<span className="font-mincho text-base text-shu dark:text-shu-glow truncate block">
+											{r.transformedForm}
+										</span>
+										<span className="font-bengali text-[10px] text-ink-muted dark:text-night-ink-muted">
+											{pickLang(r.formLabel, lang)}
+										</span>
+									</span>
+									<ReadButton
+										read={read}
+										onClick={() => setLearned(r.id, !read)}
+										labelOn={T("markAsUnread")}
+										labelOff={T("markAsRead")}
+									/>
+									<StarButton
+										starred={starred}
+										onClick={() => toggleFavorite(r.id)}
+										labelOn={T("markAsUnstarred")}
+										labelOff={T("markAsStarred")}
+									/>
+								</div>
+							);
+						})}
+						{filtered.length === 0 && (
+							<div className="px-3 py-8 text-center font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
+								{T("noResults")}
+							</div>
+						)}
+					</div>
+				</div>
+			) : (
+				<div className="border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden bg-paper dark:bg-night-paper divide-y divide-ai-line dark:divide-night-line">
+					{visible.map((p) => {
+						const isOpen = expanded === p.id;
+						const starred = !!favorites[p.id];
+						const read = !!progress[p.id]?.learned;
+						return (
+							<div key={p.id}>
+								<div className="flex items-center gap-2 px-3 py-2.5 hover:bg-washi dark:hover:bg-night">
+									<button
+										onClick={() =>
+											setExpanded(isOpen ? null : p.id)
+										}
+										className="flex-1 min-w-0 flex items-center gap-2.5 text-left"
+									>
+										<span className="shrink-0 font-mono text-[10px] text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded-full px-2 py-0.5">
+											{formatGrammarPointId(p.pointId)}
+										</span>
+										<span className="font-bengali text-sm text-ink dark:text-night-ink truncate">
+											{p.headingBn}
+										</span>
+									</button>
+									<ReadButton
+										read={read}
+										onClick={() => setLearned(p.id, !read)}
+										labelOn={T("markAsUnread")}
+										labelOff={T("markAsRead")}
+									/>
+									<StarButton
+										starred={starred}
+										onClick={() => toggleFavorite(p.id)}
+										labelOn={T("markAsUnstarred")}
+										labelOff={T("markAsStarred")}
+									/>
+								</div>
+								{isOpen && (
+									<div className="px-4 pb-4 pt-1 bg-washi dark:bg-night border-t border-ai-line dark:border-night-line">
+										<p className="font-bengali text-sm text-ink dark:text-night-ink leading-relaxed whitespace-pre-line mb-3">
+											{p.explanationBn}
+										</p>
+										{p.examples.length > 0 && (
+											<div className="bg-sakura-soft dark:bg-night-paper rounded-md p-3 space-y-2.5">
+												{p.examples.map((ex, ei) => (
+													<div key={ei}>
+														<div className="font-mincho text-base text-ink dark:text-night-ink">
+															{ex.jp}
+														</div>
+														{ex.meaningBn && (
+															<div className="font-bengali text-xs text-sakura-deep dark:text-sakura mt-0.5">
+																{ex.meaningBn}
+															</div>
+														)}
+													</div>
+												))}
+											</div>
+										)}
+									</div>
+								)}
+							</div>
+						);
+					})}
+					{filtered.length === 0 && (
+						<div className="px-3 py-8 text-center font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
+							{T("noResults")}
+						</div>
+					)}
+				</div>
+			)}
 
 			{visibleCount < filtered.length && (
 				<div className="p-3 text-center">
