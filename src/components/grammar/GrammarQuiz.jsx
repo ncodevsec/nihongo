@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { t } from "../../lib/i18n.js";
+import { t, pickLang } from "../../lib/i18n.js";
 import Hanko from "../Hanko.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
 import LeveledKanji from "../LeveledKanji.jsx";
@@ -9,6 +9,9 @@ import {
 	grammarParticleCategories,
 	buildGrammarQuestions,
 	formatGrammarPointId,
+	TRANSFORM_CATEGORIES,
+	buildTransformationRows,
+	buildTransformQuestions,
 	shuffle,
 } from "../../lib/grammarUtils.js";
 
@@ -40,9 +43,10 @@ export default function GrammarQuiz({
 		() => grammarParticleCategories(lessons),
 		[lessons],
 	);
+	const transformRows = useMemo(() => buildTransformationRows(), []);
 
 	const [phase, setPhase] = useState("setup");
-	const [setupGroupBy, setSetupGroupBy] = useState("lesson"); // 'lesson' | 'particle'
+	const [setupGroupBy, setSetupGroupBy] = useState("lesson"); // 'lesson' | 'particle' | 'transform'
 	const [setupFilters, setSetupFilters] = useState([]); // [] = all
 	const [setupLength, setSetupLength] = useState(settings.quizLength);
 	const [setupTimed, setSetupTimed] = useState(settings.timedQuiz);
@@ -58,20 +62,28 @@ export default function GrammarQuiz({
 		setSetupFilters([]);
 	}, [setupGroupBy]);
 
+	const isSetupTransform = setupGroupBy === "transform";
+
 	const setupPool = useMemo(() => {
+		if (isSetupTransform) {
+			return setupFilters.length === 0
+				? transformRows
+				: transformRows.filter((r) => setupFilters.includes(r.category));
+		}
 		if (setupFilters.length === 0) return allPoints;
 		if (setupGroupBy === "particle")
 			return allPoints.filter((p) =>
 				setupFilters.includes(p.particle || "other"),
 			);
 		return allPoints.filter((p) => setupFilters.includes(p.category));
-	}, [allPoints, setupFilters, setupGroupBy]);
+	}, [allPoints, transformRows, isSetupTransform, setupFilters, setupGroupBy]);
 	const setupAvailableCount =
 		setupLength === "all"
 			? setupPool.length
 			: Math.min(Number(setupLength), setupPool.length);
 
 	const [activeFilters, setActiveFilters] = useState([]); // [] = all
+	const [activeIsTransform, setActiveIsTransform] = useState(false);
 	const [runId, setRunId] = useState(0);
 	const [questions, setQuestions] = useState([]);
 	const [current, setCurrent] = useState(0);
@@ -83,13 +95,7 @@ export default function GrammarQuiz({
 	const [timed, setTimed] = useState(false);
 	const timerRef = useRef(null);
 
-	const pool = useMemo(
-		() =>
-			activeFilters.length === 0
-				? allPoints
-				: allPoints.filter((p) => activeFilters.includes(p.category)),
-		[allPoints, activeFilters],
-	);
+	const activeCategoryList = activeIsTransform ? TRANSFORM_CATEGORIES : categories;
 
 	const applyLength = (list, len) => {
 		if (len === "all") return list;
@@ -97,19 +103,26 @@ export default function GrammarQuiz({
 		return list.slice(0, Math.min(n, list.length));
 	};
 
-	const startRun = useCallback((lf, len, isTimed, minutes, source) => {
-		setActiveFilters(lf);
-		setQuestions(applyLength(shuffle(buildGrammarQuestions(source)), len));
-		setCurrent(0);
-		setResults({});
-		setSelected(null);
-		setAnswered(false);
-		setFinished(false);
-		setTimed(isTimed);
-		setTimeLeft(isTimed ? minutes * 60 : 0);
-		setRunId((id) => id + 1);
-		setPhase("active");
-	}, []);
+	const startRun = useCallback(
+		(lf, len, isTimed, minutes, source, isTransform) => {
+			setActiveFilters(lf);
+			setActiveIsTransform(isTransform);
+			const built = isTransform
+				? buildTransformQuestions(source)
+				: buildGrammarQuestions(source);
+			setQuestions(applyLength(shuffle(built), len));
+			setCurrent(0);
+			setResults({});
+			setSelected(null);
+			setAnswered(false);
+			setFinished(false);
+			setTimed(isTimed);
+			setTimeLeft(isTimed ? minutes * 60 : 0);
+			setRunId((id) => id + 1);
+			setPhase("active");
+		},
+		[],
+	);
 
 	const handleStartFromSetup = () => {
 		updateSetting("quizLength", setupLength);
@@ -121,6 +134,7 @@ export default function GrammarQuiz({
 			setupTimed,
 			setupMinutes,
 			setupPool,
+			isSetupTransform,
 		);
 	};
 
@@ -176,11 +190,13 @@ export default function GrammarQuiz({
 		activeFilters.length === 0
 			? T("allCategories")
 			: activeFilters.length === 1
-				? (
-						categories.find((c) => c.key === activeFilters[0]) || {
+				? pickLang(
+						activeCategoryList.find((c) => c.key === activeFilters[0]) || {
 							en: activeFilters[0],
-						}
-					).en
+							bn: activeFilters[0],
+						},
+						lang,
+					)
 				: `${activeFilters.length} ${T("allCategories")}`;
 	const lessonBadge = (
 		<span className="font-bengali text-xs border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted truncate">
@@ -254,12 +270,24 @@ export default function GrammarQuiz({
 								>
 									{T("groupByParticle")}
 								</button>
+								<button
+									onClick={() => setSetupGroupBy("transform")}
+									className={`px-2.5 py-1.5 text-xs font-bengali font-medium ${
+										setupGroupBy === "transform"
+											? "bg-shu text-washi"
+											: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+									}`}
+								>
+									{T("groupByTransform")}
+								</button>
 							</div>
 							<CategoryMultiSelect
 								categories={
-									setupGroupBy === "particle"
-										? particleCategories
-										: categories
+									isSetupTransform
+										? TRANSFORM_CATEGORIES
+										: setupGroupBy === "particle"
+											? particleCategories
+											: categories
 								}
 								selected={setupFilters}
 								onChange={setSetupFilters}
@@ -436,22 +464,45 @@ export default function GrammarQuiz({
 			</div>
 
 			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-5">
-				<div className="flex items-center justify-between mb-3">
-					<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2 py-0.5">
-						{formatGrammarPointId(q.pointId)}
-					</span>
-				</div>
+				{activeIsTransform ? (
+					<>
+						<div className="flex items-center justify-between mb-3">
+							<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2 py-0.5">
+								{pickLang(q.formLabel, lang)}
+							</span>
+						</div>
+						<p className="text-center font-bengali text-xs text-ink-muted dark:text-night-ink-muted mb-1">
+							{T("grammarQuizTransformPrompt")}
+						</p>
+						<div className="font-mincho text-2xl sm:text-3xl text-center text-ink dark:text-night-ink px-2 py-5 mb-2 bg-washi dark:bg-night border border-ai-line dark:border-night-line rounded-lg leading-relaxed">
+							{q.mainForm}
+						</div>
+						{q.meaningBn && (
+							<p className="text-center font-bengali text-xs text-ink-muted dark:text-night-ink-muted mb-5">
+								{q.meaningBn}
+							</p>
+						)}
+					</>
+				) : (
+					<>
+						<div className="flex items-center justify-between mb-3">
+							<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2 py-0.5">
+								{formatGrammarPointId(q.pointId)}
+							</span>
+						</div>
 
-				<p className="text-center font-bengali text-xs text-ink-muted dark:text-night-ink-muted mb-1">
-					{T("grammarQuizFillBlank")}
-				</p>
-				<div className="font-mincho text-xl sm:text-2xl text-center text-ink dark:text-night-ink px-2 py-5 mb-2 bg-washi dark:bg-night border border-ai-line dark:border-night-line rounded-lg leading-relaxed">
-					<LeveledKanji text={q.blanked} level={level} />
-				</div>
-				{q.meaningBn && (
-					<p className="text-center font-bengali text-xs text-ink-muted dark:text-night-ink-muted mb-5">
-						{q.meaningBn}
-					</p>
+						<p className="text-center font-bengali text-xs text-ink-muted dark:text-night-ink-muted mb-1">
+							{T("grammarQuizFillBlank")}
+						</p>
+						<div className="font-mincho text-xl sm:text-2xl text-center text-ink dark:text-night-ink px-2 py-5 mb-2 bg-washi dark:bg-night border border-ai-line dark:border-night-line rounded-lg leading-relaxed">
+							<LeveledKanji text={q.blanked} level={level} />
+						</div>
+						{q.meaningBn && (
+							<p className="text-center font-bengali text-xs text-ink-muted dark:text-night-ink-muted mb-5">
+								{q.meaningBn}
+							</p>
+						)}
+					</>
 				)}
 
 				<div className="space-y-2">
@@ -494,9 +545,11 @@ export default function GrammarQuiz({
 
 				{answered && (
 					<>
-						<p className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted text-center mt-4">
-							{q.headingBn}
-						</p>
+						{!activeIsTransform && (
+							<p className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted text-center mt-4">
+								{q.headingBn}
+							</p>
+						)}
 						<div className="flex items-center justify-end mt-3">
 							<button
 								onClick={goNext}

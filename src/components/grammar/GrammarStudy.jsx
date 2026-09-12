@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { shuffle } from "../../lib/utils.js";
+import { useHotkeys } from "../../hooks/useHotkeys.js";
 import { t, pickLang } from "../../lib/i18n.js";
 import {
 	flattenGrammarPoints,
@@ -8,11 +10,7 @@ import {
 	TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
-import {
-	VERB_TRANSFORMATIONS,
-	ADJECTIVE_TRANSFORMATIONS,
-} from "../../data/grammar/transformations.js";
-import { StarFilterButton } from "../FilterControls.jsx";
+import { StarFilterButton, ShuffleButton, ToggleChip } from "../FilterControls.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
 import LeveledKanji from "../LeveledKanji.jsx";
 
@@ -128,6 +126,7 @@ export default function GrammarStudy({
 	setLearned = () => {},
 	favorites,
 	toggleFavorite,
+	isActive = true,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -141,19 +140,14 @@ export default function GrammarStudy({
 		() => grammarParticleCategories(lessons),
 		[lessons],
 	);
-	const transformRows = useMemo(
-		() =>
-			buildTransformationRows(
-				VERB_TRANSFORMATIONS,
-				ADJECTIVE_TRANSFORMATIONS,
-			),
-		[],
-	);
+	const transformRows = useMemo(() => buildTransformationRows(), []);
 	const [selectedLessons, setSelectedLessons] = useState([]); // [] = all
 	const [selectedParticles, setSelectedParticles] = useState([]); // [] = all
 	const [selectedTransformCats, setSelectedTransformCats] = useState([]); // [] = all
+	const [onlyUnread, setOnlyUnread] = useState(false);
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [index, setIndex] = useState(0);
+	const [flipped, setFlipped] = useState(false);
 	const allPoints = useMemo(
 		() => flattenGrammarPoints(lessons, level),
 		[lessons, level],
@@ -163,6 +157,9 @@ export default function GrammarStudy({
 		setSelectedLessons([]);
 		setSelectedParticles([]);
 		setIndex(0);
+		setFlipped(false);
+		setOnlyUnread(false);
+		setOnlyStarred(false);
 	}, [lessons]);
 
 	useEffect(() => {
@@ -181,7 +178,6 @@ export default function GrammarStudy({
 				: transformRows.filter((r) =>
 						selectedTransformCats.includes(r.category),
 					);
-		if (onlyStarred) visiblePoints = visiblePoints.filter((r) => favorites[r.id]);
 	} else if (groupBy === "particle") {
 		visiblePoints =
 			selectedParticles.length === 0
@@ -189,32 +185,73 @@ export default function GrammarStudy({
 				: allPoints.filter((p) =>
 						selectedParticles.includes(p.particle || "other"),
 					);
-		if (onlyStarred)
-			visiblePoints = visiblePoints.filter((p) => favorites[p.id]);
 	} else {
 		visiblePoints =
 			selectedLessons.length === 0
 				? allPoints
 				: allPoints.filter((p) => selectedLessons.includes(p.category));
-		if (onlyStarred)
-			visiblePoints = visiblePoints.filter((p) => favorites[p.id]);
 	}
+	if (onlyUnread)
+		visiblePoints = visiblePoints.filter((p) => !progress[p.id]?.learned);
+	if (onlyStarred)
+		visiblePoints = visiblePoints.filter((p) => favorites[p.id]);
+
+	// A shuffled deck, same pattern as Study.jsx's flashcards for
+	// vocab/kanji: an id order is picked once and reused across filter
+	// changes (new items not yet in it are appended), so re-shuffling is
+	// an explicit action rather than happening on every filter tweak.
+	const [order, setOrder] = useState(() =>
+		shuffle(allPoints.map((p) => p.id)).concat(
+			shuffle(transformRows.map((r) => r.id)),
+		),
+	);
+
+	useEffect(() => {
+		setOrder(
+			shuffle(allPoints.map((p) => p.id)).concat(
+				shuffle(transformRows.map((r) => r.id)),
+			),
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [lessons]);
+
+	const deck = useMemo(() => {
+		const visibleIds = new Set(visiblePoints.map((p) => p.id));
+		const byId = new Map(visiblePoints.map((p) => [p.id, p]));
+		const orderedIds = order.filter((id) => visibleIds.has(id));
+		const seen = new Set(orderedIds);
+		for (const p of visiblePoints) {
+			if (!seen.has(p.id)) {
+				orderedIds.push(p.id);
+				seen.add(p.id);
+			}
+		}
+		return orderedIds.map((id) => byId.get(id)).filter(Boolean);
+	}, [order, visiblePoints]);
+
+	const reshuffle = () => {
+		setOrder(shuffle(deck.map((p) => p.id)));
+		setIndex(0);
+		setFlipped(false);
+	};
 
 	// Jumping back to the first card whenever the visible set changes keeps
 	// this in sync with Study.jsx's own flashcard behavior for vocab/kanji.
 	useEffect(() => {
 		setIndex(0);
+		setFlipped(false);
 	}, [
 		selectedLessons,
 		selectedParticles,
 		selectedTransformCats,
+		onlyUnread,
 		onlyStarred,
 		groupBy,
 	]);
 
 	useEffect(() => {
-		if (index >= visiblePoints.length) setIndex(0);
-	}, [visiblePoints.length, index]);
+		if (index >= deck.length) setIndex(0);
+	}, [deck.length, index]);
 
 	if (!lessons || lessons.length === 0) {
 		return (
@@ -224,10 +261,43 @@ export default function GrammarStudy({
 		);
 	}
 
-	const goNext = () =>
-		setIndex((i) => (i + 1 < visiblePoints.length ? i + 1 : 0));
-	const goPrev = () =>
-		setIndex((i) => (i - 1 >= 0 ? i - 1 : visiblePoints.length - 1));
+	const goNext = useCallback(() => {
+		setFlipped(false);
+		setIndex((i) => (i + 1 < deck.length ? i + 1 : 0));
+	}, [deck.length]);
+	const goPrev = useCallback(() => {
+		setFlipped(false);
+		setIndex((i) => (i - 1 >= 0 ? i - 1 : deck.length - 1));
+	}, [deck.length]);
+
+	const point = deck[index];
+
+	const mark = useCallback(
+		(read) => {
+			if (!point) return;
+			setLearned(point.id, read);
+			goNext();
+		},
+		[point, setLearned, goNext],
+	);
+
+	useHotkeys(
+		useCallback(
+			(e) => {
+				if (!isActive) return;
+				if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT")
+					return;
+				if (e.key === " ") {
+					e.preventDefault();
+					setFlipped((f) => !f);
+				} else if (e.key === "ArrowRight") goNext();
+				else if (e.key === "ArrowLeft") goPrev();
+				else if (e.key.toLowerCase() === "l") mark(true);
+				else if (e.key.toLowerCase() === "r") mark(false);
+			},
+			[isActive, goNext, goPrev, mark],
+		),
+	);
 
 	const filterRow = (
 		<>
@@ -301,19 +371,25 @@ export default function GrammarStudy({
 						/>
 					)}
 				</div>
-				<div className="self-end sm:self-auto sm:mt-[22px]">
+				<div className="self-end sm:self-auto sm:mt-[22px] flex items-center gap-2">
+					<ToggleChip
+						active={onlyUnread}
+						onClick={() => setOnlyUnread((v) => !v)}
+						title={T("onlyUnread")}
+					>
+						{T("onlyUnread")}
+					</ToggleChip>
 					<StarFilterButton
 						active={onlyStarred}
 						onClick={() => setOnlyStarred((v) => !v)}
 						labelOn={T("onlyStarred")}
 						labelOff={T("onlyStarred")}
 					/>
+					<ShuffleButton onClick={reshuffle} label={T("shuffle")} />
 				</div>
 			</div>
 		</>
 	);
-
-	const point = visiblePoints[index];
 
 	if (!point) {
 		return (
@@ -336,7 +412,7 @@ export default function GrammarStudy({
 
 				<div className="flex items-center justify-between text-[11px] font-mono text-ink-muted dark:text-night-ink-muted mb-1.5">
 					<span>
-						{index + 1} / {visiblePoints.length}
+						{index + 1} / {deck.length}
 					</span>
 					{read && (
 						<span className="text-take dark:text-take-glow font-semibold font-bengali">
@@ -348,7 +424,7 @@ export default function GrammarStudy({
 					<div
 						className="h-full bg-shu transition-all"
 						style={{
-							width: `${((index + 1) / visiblePoints.length) * 100}%`,
+							width: `${((index + 1) / deck.length) * 100}%`,
 						}}
 					/>
 				</div>
@@ -374,7 +450,10 @@ export default function GrammarStudy({
 						</div>
 					</div>
 
-					<div className="flex flex-col items-center justify-center gap-4 py-10 px-4">
+					<button
+						onClick={() => setFlipped((f) => !f)}
+						className="w-full flex flex-col items-center justify-center gap-4 py-10 px-4 text-left"
+					>
 						<div className="text-center">
 							<div className="font-bengali text-[10px] uppercase tracking-wide text-ink-muted dark:text-night-ink-muted mb-1.5">
 								{T("colMainForm")}
@@ -395,17 +474,23 @@ export default function GrammarStudy({
 						>
 							<polyline points="9 18 15 12 9 6" />
 						</svg>
-						<div className="text-center">
-							<div className="font-bengali text-[10px] uppercase tracking-wide text-ink-muted dark:text-night-ink-muted mb-1.5">
-								{T("colTransformedForm")}
+						{flipped ? (
+							<div className="text-center">
+								<div className="font-bengali text-[10px] uppercase tracking-wide text-ink-muted dark:text-night-ink-muted mb-1.5">
+									{T("colTransformedForm")}
+								</div>
+								<div className="font-mincho text-3xl sm:text-4xl text-shu dark:text-shu-glow">
+									{point.transformedForm}
+								</div>
 							</div>
-							<div className="font-mincho text-3xl sm:text-4xl text-shu dark:text-shu-glow">
-								{point.transformedForm}
-							</div>
-						</div>
-					</div>
+						) : (
+							<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+								{T("tapToRevealMeaning")}
+							</span>
+						)}
+					</button>
 
-					{point.meaningBn && (
+					{flipped && point.meaningBn && (
 						<div className="bg-sakura-soft dark:bg-night border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
 							<span className="font-bengali text-sm text-sakura-deep dark:text-sakura">
 								{point.meaningBn}
@@ -464,7 +549,7 @@ export default function GrammarStudy({
 
 			<div className="flex items-center justify-between text-[11px] font-mono text-ink-muted dark:text-night-ink-muted mb-1.5">
 				<span>
-					{index + 1} / {visiblePoints.length}
+					{index + 1} / {deck.length}
 				</span>
 				{read && (
 					<span className="text-take dark:text-take-glow font-semibold font-bengali">
@@ -476,7 +561,7 @@ export default function GrammarStudy({
 				<div
 					className="h-full bg-shu transition-all"
 					style={{
-						width: `${((index + 1) / visiblePoints.length) * 100}%`,
+						width: `${((index + 1) / deck.length) * 100}%`,
 					}}
 				/>
 			</div>
@@ -508,45 +593,60 @@ export default function GrammarStudy({
 					</div>
 				</div>
 
-				{/* Explanation */}
-				<div className="px-4 sm:px-5 pt-3 pb-4">
-					<ExplanationBody text={point.explanationBn} />
-				</div>
+				<button
+					onClick={() => setFlipped((f) => !f)}
+					className="w-full text-left"
+				>
+					{!flipped ? (
+						<div className="px-4 sm:px-5 pt-3 pb-6 text-center">
+							<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+								{T("tapToRevealMeaning")}
+							</span>
+						</div>
+					) : (
+						<>
+							{/* Explanation */}
+							<div className="px-4 sm:px-5 pt-3 pb-4">
+								<ExplanationBody text={point.explanationBn} />
+							</div>
 
-				{/* Examples — visually separated from the rule text */}
-				{point.examples.length > 0 && (
-					<div className="bg-sakura-soft dark:bg-night border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3.5">
-						<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-sakura-deep dark:text-sakura mb-2.5">
-							{T("grammarExamples")}
-						</div>
-						<div className="space-y-3">
-							{point.examples.map((ex, ei) => (
-								<div
-									key={ei}
-									className={
-										ei > 0
-											? "pt-3 border-t border-sakura-line dark:border-night-line"
-											: ""
-									}
-								>
-									{ex.note && (
-										<div className="font-bengali text-[11px] italic text-ink-muted dark:text-night-ink-muted mb-1">
-											({ex.note})
-										</div>
-									)}
-									<div className="font-mincho text-lg text-ink dark:text-night-ink leading-snug">
-										<LeveledKanji text={ex.jp} level={level} />
+							{/* Examples — visually separated from the rule text */}
+							{point.examples.length > 0 && (
+								<div className="bg-sakura-soft dark:bg-night border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3.5">
+									<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-sakura-deep dark:text-sakura mb-2.5">
+										{T("grammarExamples")}
 									</div>
-									{ex.meaningBn && (
-										<div className="font-bengali text-sm text-sakura-deep dark:text-sakura mt-1">
-											{ex.meaningBn}
-										</div>
-									)}
+									<div className="space-y-3">
+										{point.examples.map((ex, ei) => (
+											<div
+												key={ei}
+												className={
+													ei > 0
+														? "pt-3 border-t border-sakura-line dark:border-night-line"
+														: ""
+												}
+											>
+												{ex.note && (
+													<div className="font-bengali text-[11px] italic text-ink-muted dark:text-night-ink-muted mb-1">
+														({ex.note})
+													</div>
+												)}
+												<div className="font-mincho text-lg text-ink dark:text-night-ink leading-snug">
+													<LeveledKanji text={ex.jp} level={level} />
+												</div>
+												{ex.meaningBn && (
+													<div className="font-bengali text-sm text-sakura-deep dark:text-sakura mt-1">
+														{ex.meaningBn}
+													</div>
+												)}
+											</div>
+										))}
+									</div>
 								</div>
-							))}
-						</div>
-					</div>
-				)}
+							)}
+						</>
+					)}
+				</button>
 			</div>
 
 			<div className="flex gap-6 items-center justify-center mt-6">

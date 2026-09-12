@@ -175,6 +175,7 @@ export default function App() {
 									setLearned={setLearned}
 									favorites={favorites}
 									toggleFavorite={toggleFavorite}
+									isActive={tab === "study"}
 								/>
 							</div>
 							<div className={tab === "quiz" ? "" : "hidden"}>

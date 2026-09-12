@@ -8,10 +8,6 @@ import {
 	TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
-import {
-	VERB_TRANSFORMATIONS,
-	ADJECTIVE_TRANSFORMATIONS,
-} from "../../data/grammar/transformations.js";
 import { StarFilterButton } from "../FilterControls.jsx";
 import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
 
@@ -94,14 +90,7 @@ export default function GrammarList({
 		() => grammarParticleCategories(lessons),
 		[lessons],
 	);
-	const transformRows = useMemo(
-		() =>
-			buildTransformationRows(
-				VERB_TRANSFORMATIONS,
-				ADJECTIVE_TRANSFORMATIONS,
-			),
-		[],
-	);
+	const transformRows = useMemo(() => buildTransformationRows(), []);
 
 	const [query, setQuery] = useState("");
 	const [debouncedQuery, setDebouncedQuery] = useState("");
