@@ -19,7 +19,7 @@ const UI = {
   tabProgress: { bn: "অগ্রগতি", en: "Progress" },
   tabSettings: { bn: "সেটিংস", en: "Settings" },
   backButton: { bn: "ফিরে যান", en: "Back" },
-  tabGrammarContent: { bn: "গ্রামার", en: "Grammar" },
+  tabGrammarContent: { bn: "ফ্ল্যাশকার্ড", en: "Flashcard" },
 
   // Shared
   allCategories: { bn: "সব বিভাগ", en: "All categories" },
@@ -28,7 +28,7 @@ const UI = {
   groupByCount: { bn: "গণনা অনুযায়ী", en: "By Count" },
   groupByParticle: { bn: "পার্টিকেল অনুযায়ী", en: "By Particle" },
   groupByTransform: { bn: "রূপান্তর অনুযায়ী", en: "By Transformation" },
-  colMainForm: { bn: "মূল রূপ", en: "Main form" },
+  colMainForm: { bn: "মাসু রূপ", en: "Masu Form" },
   colTransformedForm: { bn: "রূপান্তরিত রূপ", en: "Transformed form" },
   category: { bn: "বিভাগ", en: "Category" },
   lesson: { bn: "পাঠ", en: "Lesson" },
