@@ -19,7 +19,7 @@ const UI = {
   tabProgress: { bn: "অগ্রগতি", en: "Progress" },
   tabSettings: { bn: "সেটিংস", en: "Settings" },
   backButton: { bn: "ফিরে যান", en: "Back" },
-  tabGrammarContent: { bn: "ফ্ল্যাশকার্ড", en: "Flashcard" },
+  tabGrammarContent: { bn: "ফ্ল্যাশকার্ডস", en: "Flashcards" },
 
   // Shared
   allCategories: { bn: "সব বিভাগ", en: "All categories" },
@@ -47,6 +47,8 @@ const UI = {
   shuffle: { bn: "এলোমেলো করুন ↻", en: "Shuffle ↻" },
   alreadyLearned: { bn: "শেখা হয়ে গেছে", en: "Learned" },
   tapToRevealMeaning: { bn: "অর্থ দেখতে এখানে চাপুন (বা স্পেসবার)", en: "Tap to reveal meaning (or press Space)" },
+  tapToRevealExamples: { bn: "উদাহরণ দেখতে এখানে চাপুন (বা স্পেসবার)", en: "Tap to reveal examples (or press Space)" },
+  tapToRevealForm: { bn: "রূপান্তরিত রূপ দেখতে চাপুন (বা স্পেসবার)", en: "Tap to reveal the transformed form (or press Space)" },
   tapToRevealWord: { bn: "শব্দ দেখতে এখানে চাপুন (বা স্পেসবার)", en: "Tap to reveal word (or press Space)" },
   reverseRecall: { bn: "উল্টো অনুশীলন", en: "Reverse Recall" },
   onyomi: { bn: "অনয়োমি", en: "On'yomi" },
