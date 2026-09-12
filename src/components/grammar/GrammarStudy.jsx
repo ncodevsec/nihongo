@@ -452,41 +452,21 @@ export default function GrammarStudy({
 
 					<button
 						onClick={() => setFlipped((f) => !f)}
-						className="w-full flex flex-col items-center justify-center gap-4 py-10 px-4 text-left"
+						className="w-full flex flex-col items-center justify-center gap-3 py-12 px-4 text-left min-h-[220px]"
 					>
-						<div className="text-center">
-							<div className="font-bengali text-[10px] uppercase tracking-wide text-ink-muted dark:text-night-ink-muted mb-1.5">
-								{T("colMainForm")}
-							</div>
-							<div className="font-mincho text-3xl sm:text-4xl text-ink dark:text-night-ink">
-								{point.mainForm}
-							</div>
-						</div>
-						<svg
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							className="w-5 h-5 text-ink-muted dark:text-night-ink-muted rotate-90"
-							aria-hidden="true"
-						>
-							<polyline points="9 18 15 12 9 6" />
-						</svg>
-						{flipped ? (
-							<div className="text-center">
-								<div className="font-bengali text-[10px] uppercase tracking-wide text-ink-muted dark:text-night-ink-muted mb-1.5">
-									{T("colTransformedForm")}
+						{!flipped ? (
+							<>
+								<div className="font-mincho text-4xl sm:text-5xl text-ink dark:text-night-ink text-center">
+									{point.mainForm}
 								</div>
-								<div className="font-mincho text-3xl sm:text-4xl text-shu dark:text-shu-glow">
-									{point.transformedForm}
-								</div>
-							</div>
+								<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
+									{T("tapToRevealForm")}
+								</span>
+							</>
 						) : (
-							<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
-								{T("tapToRevealMeaning")}
-							</span>
+							<div className="font-mincho text-4xl sm:text-5xl text-shu dark:text-shu-glow text-center">
+								{point.transformedForm}
+							</div>
 						)}
 					</button>
 
@@ -567,7 +547,7 @@ export default function GrammarStudy({
 			</div>
 
 			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden shadow-card dark:shadow-none">
-				{/* Rule heading */}
+				{/* Rule heading — always visible, on both sides of the card */}
 				<div className="flex items-start justify-between gap-2 px-4 sm:px-5 pt-4">
 					<div className="flex items-start gap-2.5 min-w-0">
 						<span className="shrink-0 mt-0.5 font-mono text-[11px] font-bold text-washi bg-shu rounded-full px-2.5 py-1">
@@ -598,21 +578,22 @@ export default function GrammarStudy({
 					className="w-full text-left"
 				>
 					{!flipped ? (
-						<div className="px-4 sm:px-5 pt-3 pb-6 text-center">
-							<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
-								{T("tapToRevealMeaning")}
-							</span>
-						</div>
-					) : (
 						<>
-							{/* Explanation */}
+							{/* Front: the rule itself — structure and explanation */}
 							<div className="px-4 sm:px-5 pt-3 pb-4">
 								<ExplanationBody text={point.explanationBn} />
 							</div>
-
-							{/* Examples — visually separated from the rule text */}
-							{point.examples.length > 0 && (
-								<div className="bg-sakura-soft dark:bg-night border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3.5">
+							<div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
+								<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+									{T("tapToRevealExamples")}
+								</span>
+							</div>
+						</>
+					) : (
+						/* Back: only the sentence examples */
+						<div className="bg-sakura-soft dark:bg-night px-4 sm:px-5 py-4">
+							{point.examples.length > 0 ? (
+								<>
 									<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-sakura-deep dark:text-sakura mb-2.5">
 										{T("grammarExamples")}
 									</div>
@@ -642,9 +623,15 @@ export default function GrammarStudy({
 											</div>
 										))}
 									</div>
+								</>
+							) : (
+								<div className="text-center py-6">
+									<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+										{T("noResults")}
+									</span>
 								</div>
 							)}
-						</>
+						</div>
 					)}
 				</button>
 			</div>
