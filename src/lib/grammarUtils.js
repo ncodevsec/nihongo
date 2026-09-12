@@ -1,3 +1,12 @@
+import { N5_VOCAB } from "../data/vocab/n5.js";
+import { N4_VOCAB } from "../data/vocab/n4.js";
+import { classifyPartOfSpeech } from "./vocabClassify.js";
+import {
+  conjugateVerb,
+  conjugateIAdjective,
+  conjugateNaAdjective,
+} from "./conjugate.js";
+
 // Shared helpers for the Grammar module. Grammar data is structured as
 // lessons -> points -> examples (see data/grammar/n4.js). These utilities
 // adapt that shape for reuse with the generic Progress view, build a
@@ -62,18 +71,23 @@ export function grammarParticleCategories(lessons) {
   return Array.from(seen.values());
 }
 
-// The seven categories for the "By Transformation" grouping view — one
-// per specific conjugation, not just "verb"/"adjective" in general, so
-// each can be studied on its own. Independent of level/lesson since the
-// conjugation rules themselves don't change between N5 and N4.
+// The ten categories for the "By Transformation" grouping view — every
+// verb conjugation (Dictionary/て/た/ない) plus い- and な-adjectives kept
+// separate for their own past/negative/past-negative forms, so each can
+// be studied on its own. Independent of level/lesson since the
+// conjugation rules themselves don't change between N5 and N4 — this
+// covers every verb and adjective across both vocab lists at once.
 export const TRANSFORM_CATEGORIES = [
   { key: "verb-dictionary", jp: "動詞ー辞書形", bn: "ক্রিয়া - অভিধান রূপ", en: "Verb - Dictionary form" },
   { key: "verb-te", jp: "動詞ーて形", bn: "ক্রিয়া - て রূপ", en: "Verb - Te form" },
   { key: "verb-ta", jp: "動詞ーた形", bn: "ক্রিয়া - た রূপ", en: "Verb - Ta form" },
   { key: "verb-nai", jp: "動詞ーない形", bn: "ক্রিয়া - ない রূপ", en: "Verb - Nai form" },
-  { key: "adj-past", jp: "形容詞ー過去形", bn: "বিশেষণ - অতীত রূপ", en: "Adjective - Past form" },
-  { key: "adj-negative", jp: "形容詞ー否定形", bn: "বিশেষণ - নেতিবাচক রূপ", en: "Adjective - Negative form" },
-  { key: "adj-pastNegative", jp: "形容詞ー過去否定形", bn: "বিশেষণ - অতীত নেতিবাচক রূপ", en: "Adjective - Past negative form" },
+  { key: "i-adj-past", jp: "い形容詞ー過去形", bn: "I-বিশেষণ - অতীত রূপ", en: "I-Adjective - Past form" },
+  { key: "i-adj-negative", jp: "い形容詞ー否定形", bn: "I-বিশেষণ - নেতিবাচক রূপ", en: "I-Adjective - Negative form" },
+  { key: "i-adj-pastNegative", jp: "い形容詞ー過去否定形", bn: "I-বিশেষণ - অতীত নেতিবাচক রূপ", en: "I-Adjective - Past negative form" },
+  { key: "na-adj-past", jp: "な形容詞ー過去形", bn: "Na-বিশেষণ - অতীত রূপ", en: "Na-Adjective - Past form" },
+  { key: "na-adj-negative", jp: "な形容詞ー否定形", bn: "Na-বিশেষণ - নেতিবাচক রূপ", en: "Na-Adjective - Negative form" },
+  { key: "na-adj-pastNegative", jp: "な形容詞ー過去否定形", bn: "Na-বিশেষণ - অতীত নেতিবাচক রূপ", en: "Na-Adjective - Past negative form" },
 ];
 
 const VERB_FORM_LABELS = {
@@ -89,39 +103,135 @@ const ADJ_FORM_LABELS = {
   pastNegative: { bn: "অতীত নেতিবাচক রূপ", en: "Past negative form" },
 };
 
-// Flattens the compact per-verb/per-adjective source data (one object per
-// word, all its forms together) into one row per (word, transformation)
-// pair — e.g. たべます becomes 4 rows (dictionary/te/ta/nai), each with
-// its own id so star/read status track independently per transformation,
-// not per word, and its own specific category (e.g. "verb-te") so each
-// transformation type can be studied as its own group.
-export function buildTransformationRows(verbs, adjectives) {
+// Entries that are grammatically real ます-forms but aren't suitable for
+// a plain conjugation-drill table — fixed greetings, sentence fragments,
+// or words already built from a te-form + auxiliary verb (知っています,
+// 帰って来ます) where "conjugating" the whole thing again would test a
+// compound rather than a single verb.
+const VERB_EXCLUDE = new Set([
+  "どうもありがとうございます", "これからおせわになります",
+  "そろそろ しつれいします", "また こんど おねがいします",
+  "〜といいます", "しっています", "にています", "たのしみにしています",
+  "もっていきます", "もってきます", "つれていきます", "つれてきます",
+  "かえってきます",
+]);
+
+// い-ending words that classifyPartOfSpeech tags as adjective-like but
+// are actually nouns, greetings, or sentence fragments (お手洗い, おとと
+// い, いらっしゃい, a movie title that happens to end in さむらい, etc.)
+// — verified against the actual word list, not guessed from a pattern.
+const I_ADJ_EXCLUDE = new Set([
+  "おてあらい", "おととい", "うけつけい", "いらっしゃい",
+  "どうぞ おあがりください", "また いらっしゃってください",
+  "しちにんのさむらい", "かしてください", "ぐらい", "ほしうらない",
+  "みあい", "おいわい", "おみまい", "におい", "このくらい",
+]);
+
+function collectPos(target) {
+  const seen = new Map();
+  for (const list of [N5_VOCAB, N4_VOCAB]) {
+    for (const item of list) {
+      if (classifyPartOfSpeech(item) !== target) continue;
+      const reading = item.reading
+        .split(/[、／]/)[0]
+        .trim()
+        .replace(/[［[]な[］\]]/g, "");
+      if (!seen.has(reading)) {
+        seen.set(reading, { reading, meaningBn: item.meaning });
+      }
+    }
+  }
+  return Array.from(seen.values());
+}
+
+// Derives the full "By Transformation" row set directly from this app's
+// own vocab data (N5_VOCAB + N4_VOCAB) — rather than a separately
+// maintained list, so it automatically covers every verb and adjective
+// actually in the app, and stays in sync if that data changes. See
+// conjugate.js for the actual conjugation rules.
+export function buildTransformationRows() {
   const rows = [];
-  for (const v of verbs) {
+
+  for (const { reading, meaningBn } of collectPos("verb")) {
+    if (VERB_EXCLUDE.has(reading)) continue;
+    const conj = conjugateVerb(reading);
+    if (!conj) continue;
     for (const key of ["dictionary", "te", "ta", "nai"]) {
       rows.push({
-        id: `transform-${v.id}-${key}`,
+        id: `transform-verb-${reading}-${key}`,
         category: `verb-${key}`,
-        mainForm: v.masu,
-        transformedForm: v[key],
+        mainForm: reading,
+        transformedForm: conj[key],
         formLabel: VERB_FORM_LABELS[key],
-        meaningBn: v.meaningBn,
+        meaningBn,
       });
     }
   }
-  for (const a of adjectives) {
+
+  for (const { reading, meaningBn } of collectPos("adjective-i")) {
+    if (I_ADJ_EXCLUDE.has(reading)) continue;
+    const conj = conjugateIAdjective(reading);
+    if (!conj) continue;
     for (const key of ["past", "negative", "pastNegative"]) {
       rows.push({
-        id: `transform-${a.id}-${key}`,
-        category: `adj-${key}`,
-        mainForm: a.base,
-        transformedForm: a[key],
+        id: `transform-iadj-${reading}-${key}`,
+        category: `i-adj-${key}`,
+        mainForm: reading,
+        transformedForm: conj[key],
         formLabel: ADJ_FORM_LABELS[key],
-        meaningBn: a.meaningBn,
+        meaningBn,
       });
     }
   }
+
+  for (const { reading, meaningBn } of collectPos("adjective-na")) {
+    const cleanReading = reading.replace(/[［[]な[］\]]/g, "").trim();
+    const conj = conjugateNaAdjective(cleanReading);
+    if (!conj) continue;
+    for (const key of ["past", "negative", "pastNegative"]) {
+      rows.push({
+        id: `transform-naadj-${cleanReading}-${key}`,
+        category: `na-adj-${key}`,
+        mainForm: cleanReading,
+        transformedForm: conj[key],
+        formLabel: ADJ_FORM_LABELS[key],
+        meaningBn,
+      });
+    }
+  }
+
   return rows;
+}
+
+// Builds multiple-choice questions from the transformation rows — given a
+// word's main form and which transformation is being asked for, pick the
+// correct transformed form out of a few plausible distractors drawn from
+// other words in the same category (so wrong options are the same kind
+// of transformation, not an unrelated one).
+export function buildTransformQuestions(rows) {
+  const byCategory = new Map();
+  for (const r of rows) {
+    if (!byCategory.has(r.category)) byCategory.set(r.category, []);
+    byCategory.get(r.category).push(r);
+  }
+  return rows.map((r) => {
+    const siblings = byCategory
+      .get(r.category)
+      .filter((x) => x.id !== r.id && x.transformedForm !== r.transformedForm);
+    const distractorCount = Math.min(3, siblings.length);
+    const distractors = shuffleArr(siblings).slice(0, distractorCount);
+    const options = shuffleArr([
+      { text: r.transformedForm, correct: true },
+      ...distractors.map((d) => ({ text: d.transformedForm, correct: false })),
+    ]);
+    return {
+      id: r.id,
+      mainForm: r.mainForm,
+      formLabel: r.formLabel,
+      meaningBn: r.meaningBn,
+      options,
+    };
+  });
 }
 
 const KANA_RUN_RE = /[\u3040-\u30ff\u30fc]{2,}/g;

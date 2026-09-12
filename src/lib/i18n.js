@@ -39,9 +39,11 @@ const UI = {
   grammarSelectTransform: { bn: "একটি রূপান্তর ধরন বেছে নিন", en: "Select a transformation type" },
   grammarExamples: { bn: "উদাহরণ", en: "Examples" },
   grammarQuizFillBlank: { bn: "ফাঁকা স্থান পূরণ করুন", en: "Fill in the blank" },
+  grammarQuizTransformPrompt: { bn: "সঠিক রূপান্তরিত রূপ বেছে নিন", en: "Choose the correct transformed form" },
 
   // Study
   onlyUnlearned: { bn: "যা শিখিনি", en: "Not Memorized" },
+  onlyUnread: { bn: "যা পড়িনি", en: "Not Read" },
   shuffle: { bn: "এলোমেলো করুন ↻", en: "Shuffle ↻" },
   alreadyLearned: { bn: "শেখা হয়ে গেছে", en: "Learned" },
   tapToRevealMeaning: { bn: "অর্থ দেখতে এখানে চাপুন (বা স্পেসবার)", en: "Tap to reveal meaning (or press Space)" },

@@ -9,6 +9,10 @@ import {
 	classifyCounting,
 	COUNTING_CATEGORIES,
 } from "../lib/vocabClassify.js";
+import {
+	TRANSFORM_CATEGORIES,
+	buildTransformationRows,
+} from "../lib/grammarUtils.js";
 
 function toDateKey(d) {
 	return d.toISOString().slice(0, 10);
@@ -48,11 +52,29 @@ export default function Progress({
 	const [confirmingReset, setConfirmingReset] = useState(false);
 	const [confirmingCategory, setConfirmingCategory] = useState(null);
 	const isVocab = moduleKey === "vocabulary";
-	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'pos' | 'count' (vocab only)
+	const isGrammar = moduleKey === "grammar";
+	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'pos' | 'count' (vocab) | 'particle' | 'transform' (grammar)
+
+	const transformRows = useMemo(
+		() => (isGrammar ? buildTransformationRows() : []),
+		[isGrammar],
+	);
+	const particleCategories = useMemo(() => {
+		if (!isGrammar) return [];
+		const seen = new Map();
+		for (const item of kanjiData) {
+			const key = item.particle || "other";
+			if (!seen.has(key)) seen.set(key, { key, bn: key, en: key });
+		}
+		return Array.from(seen.values());
+	}, [isGrammar, kanjiData]);
 
 	const stats = useMemo(() => {
-		const relevantIds = new Set(kanjiData.map((k) => k.id));
-		const entries = kanjiData.map((k) => progress[k.id]);
+		const isTransform = isGrammar && groupBy === "transform";
+		const dataSource = isTransform ? transformRows : kanjiData;
+
+		const relevantIds = new Set(dataSource.map((k) => k.id));
+		const entries = dataSource.map((k) => progress[k.id]);
 
 		const seen = entries.reduce((s, e) => s + (e?.seen || 0), 0);
 		const correct = entries.reduce((s, e) => s + (e?.correct || 0), 0);
@@ -60,25 +82,30 @@ export default function Progress({
 		const learning = entries.filter(
 			(e) => e && !e.learned && e.seen > 0,
 		).length;
-		const untouched = kanjiData.length - mastered - learning;
+		const untouched = dataSource.length - mastered - learning;
 		const accuracy = seen ? Math.round((correct / seen) * 100) : 0;
-		const starred = kanjiData.filter((k) => favorites[k.id]).length;
+		const starred = dataSource.filter((k) => favorites[k.id]).length;
 
-		const categoryList =
-			groupBy === "pos"
+		const categoryList = isTransform
+			? TRANSFORM_CATEGORIES
+			: groupBy === "pos"
 				? POS_CATEGORIES
 				: groupBy === "count"
 					? COUNTING_CATEGORIES
-					: categories;
+					: groupBy === "particle"
+						? particleCategories
+						: categories;
 		const categoryOf = (item) => {
+			if (isTransform) return item.category;
 			if (groupBy === "pos") return classifyPartOfSpeech(item);
 			if (groupBy === "count") return classifyCounting(item);
+			if (groupBy === "particle") return item.particle || "other";
 			return item.category;
 		};
 
 		const byCategory = categoryList
 			.map((c) => {
-				const items = kanjiData.filter((k) => categoryOf(k) === c.key);
+				const items = dataSource.filter((k) => categoryOf(k) === c.key);
 				const done = items.filter(
 					(k) => progress[k.id]?.learned,
 				).length;
@@ -111,7 +138,16 @@ export default function Progress({
 			starred,
 			relevantIds,
 		};
-	}, [kanjiData, categories, progress, favorites, groupBy]);
+	}, [
+		kanjiData,
+		transformRows,
+		categories,
+		particleCategories,
+		progress,
+		favorites,
+		groupBy,
+		isGrammar,
+	]);
 
 	const streak = useMemo(() => computeStreak(activity), [activity]);
 
@@ -300,6 +336,30 @@ export default function Progress({
 							{ key: "lesson", label: T("groupByLesson") },
 							{ key: "pos", label: T("groupByPos") },
 							{ key: "count", label: T("groupByCount") },
+						].map((g) => (
+							<button
+								key={g.key}
+								onClick={() => {
+									setGroupBy(g.key);
+									setConfirmingCategory(null);
+								}}
+								className={`px-2.5 py-1 text-[11px] font-bengali font-medium ${
+									groupBy === g.key
+										? "bg-shu text-washi"
+										: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+								}`}
+							>
+								{g.label}
+							</button>
+						))}
+					</div>
+				)}
+				{isGrammar && (
+					<div className="flex rounded-full border border-ai-line dark:border-night-line overflow-hidden">
+						{[
+							{ key: "lesson", label: T("groupByLesson") },
+							{ key: "particle", label: T("groupByParticle") },
+							{ key: "transform", label: T("groupByTransform") },
 						].map((g) => (
 							<button
 								key={g.key}
