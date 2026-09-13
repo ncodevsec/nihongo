@@ -151,6 +151,7 @@ export default function GrammarStudy({
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [index, setIndex] = useState(0);
 	const [flipped, setFlipped] = useState(false);
+	const [reverse, setReverse] = useState(false);
 	const allPoints = useMemo(
 		() => flattenGrammarPoints(lessons, level),
 		[lessons, level],
@@ -388,6 +389,38 @@ export default function GrammarStudy({
 						labelOn={T("onlyStarred")}
 						labelOff={T("onlyStarred")}
 					/>
+					{isTransform && (
+						<button
+							onClick={() => {
+								setReverse((v) => !v);
+								setFlipped(false);
+							}}
+							aria-pressed={reverse}
+							title={T("reverseRecall")}
+							className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 border font-bengali font-medium text-xs ${
+								reverse
+									? "bg-shu text-washi border-shu"
+									: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted border-ai-line dark:border-night-line hover:border-shu/50"
+							}`}
+						>
+							<svg
+								viewBox="0 0 24 24"
+								className="w-3.5 h-3.5 shrink-0"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="2"
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								aria-hidden="true"
+							>
+								<polyline points="17 1 21 5 17 9" />
+								<path d="M3 11V9a4 4 0 014-4h14" />
+								<polyline points="7 23 3 19 7 15" />
+								<path d="M21 13v2a4 4 0 01-4 4H3" />
+							</svg>
+							{T("reverseRecall")}
+						</button>
+					)}
 					<ShuffleButton onClick={reshuffle} label={T("shuffle")} />
 				</div>
 			</div>
@@ -432,54 +465,76 @@ export default function GrammarStudy({
 					/>
 				</div>
 
-				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden shadow-card dark:shadow-none">
-					<div className="flex items-start justify-between gap-2 px-4 sm:px-5 pt-4">
-						<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-1">
-							{pickLang(point.formLabel, lang)}
-						</span>
-						<div className="flex items-center gap-1.5 shrink-0">
-							<ReadButton
-								read={read}
-								onClick={() => setLearned(point.id, !read)}
-								labelOn={T("markAsUnread")}
-								labelOff={T("markAsRead")}
+				<div className="relative">
+					<button
+						onClick={() => toggleFavorite(point.id)}
+						aria-label={starred ? T("markAsUnstarred") : T("markAsStarred")}
+						title={starred ? T("markAsUnstarred") : T("markAsStarred")}
+						className={`absolute top-2.5 right-2.5 z-10 w-11 h-11 flex items-center justify-center rounded-full ${
+							starred
+								? "text-shu dark:text-shu-glow bg-shu-soft dark:bg-shu/10"
+								: "text-ink-muted/50 dark:text-night-ink-muted/50 hover:text-shu dark:hover:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10"
+						}`}
+					>
+						<svg
+							viewBox="0 0 24 24"
+							className="w-5 h-5"
+							fill={starred ? "currentColor" : "none"}
+							stroke="currentColor"
+							strokeWidth="1.6"
+						>
+							<path
+								d="M12 3.5l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3.5z"
+								strokeLinejoin="round"
 							/>
-							<StarButton
-								starred={starred}
-								onClick={() => toggleFavorite(point.id)}
-								labelOn={T("markAsUnstarred")}
-								labelOff={T("markAsStarred")}
-							/>
-						</div>
-					</div>
-
+						</svg>
+					</button>
 					<button
 						onClick={() => setFlipped((f) => !f)}
-						className="w-full flex flex-col items-center justify-center gap-3 py-12 px-4 text-left min-h-[220px]"
+						className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
 					>
-						{!flipped ? (
-							<>
-								<div className="font-mincho text-4xl sm:text-5xl text-ink dark:text-night-ink text-center">
-									{point.mainForm}
-								</div>
-								<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
-									{T("tapToRevealForm")}
-								</span>
-							</>
-						) : (
-							<div className="font-mincho text-4xl sm:text-5xl text-shu dark:text-shu-glow text-center">
-								{point.transformedForm}
-							</div>
-						)}
-					</button>
-
-					{flipped && point.meaningBn && (
-						<div className="bg-sakura-soft dark:bg-night border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
-							<span className="font-bengali text-sm text-sakura-deep dark:text-sakura">
-								{point.meaningBn}
+						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 py-8 px-4">
+							<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-0.5 mb-1">
+								{pickLang(point.formLabel, lang)}
 							</span>
+							{!flipped !== reverse ? (
+								<>
+									<div className="font-mincho text-4xl sm:text-5xl text-ink dark:text-night-ink text-center break-words px-4">
+										{point.mainForm}
+									</div>
+									<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
+										{T("tapToRevealForm")}
+									</span>
+								</>
+							) : (
+								<>
+									<div className="font-mincho text-4xl sm:text-5xl text-shu dark:text-shu-glow text-center break-words px-4">
+										{point.transformedForm}
+									</div>
+									{point.meaningBn && (
+										<div className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted mt-1 text-center">
+											{point.meaningBn}
+										</div>
+									)}
+								</>
+							)}
 						</div>
-					)}
+					</button>
+				</div>
+
+				<div className="grid grid-cols-2 gap-2.5 mt-4">
+					<button
+						onClick={() => mark(false)}
+						className="flex items-center justify-center font-bengali text-sm font-semibold bg-shu dark:bg-shu-glow text-washi dark:text-white rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
+					>
+						{T("reviewAgain")}
+					</button>
+					<button
+						onClick={() => mark(true)}
+						className="flex items-center justify-center font-bengali text-sm font-semibold bg-take dark:bg-take-glow text-washi dark:text-night rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
+					>
+						{T("markLearned")}
+					</button>
 				</div>
 
 				<div className="flex gap-6 items-center justify-center mt-6">
@@ -583,7 +638,7 @@ export default function GrammarStudy({
 					{!flipped ? (
 						<>
 							{/* Front: the rule itself — structure and explanation */}
-							<div className="px-4 sm:px-5 pt-3 pb-4">
+							<div className="px-4 sm:px-5 pt-3 pb-4 min-h-[280px]">
 								<ExplanationBody text={point.explanationBn} />
 							</div>
 							<div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
@@ -594,7 +649,7 @@ export default function GrammarStudy({
 						</>
 					) : (
 						/* Back: only the sentence examples */
-						<div className="bg-sakura-soft dark:bg-night px-4 sm:px-5 py-4">
+						<div className="bg-sakura-soft dark:bg-night px-4 sm:px-5 py-4 min-h-[280px]">
 							{point.examples.length > 0 ? (
 								<>
 									<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-sakura-deep dark:text-sakura mb-2.5">
