@@ -127,9 +127,11 @@ const I_ADJ_EXCLUDE = new Set([
   "みあい", "おいわい", "おみまい", "におい", "このくらい",
 ]);
 
-function collectPos(target) {
+function collectPos(target, level) {
   const seen = new Map();
-  for (const list of [N5_VOCAB, N4_VOCAB]) {
+  const lists =
+    level === "n4" ? [N4_VOCAB] : level === "n5" ? [N5_VOCAB] : [N5_VOCAB, N4_VOCAB];
+  for (const list of lists) {
     for (const item of list) {
       if (classifyPartOfSpeech(item) !== target) continue;
       const reading = item.reading
@@ -145,20 +147,20 @@ function collectPos(target) {
 }
 
 // Derives the full "By Transformation" row set directly from this app's
-// own vocab data (N5_VOCAB + N4_VOCAB) — rather than a separately
-// maintained list, so it automatically covers every verb and adjective
-// actually in the app, and stays in sync if that data changes. See
-// conjugate.js for the actual conjugation rules.
-export function buildTransformationRows() {
+// own vocab data for the given level (N5_VOCAB or N4_VOCAB) — rather than
+// a separately maintained list, so it automatically covers every verb
+// and adjective actually taught at that level, and stays in sync if that
+// data changes. See conjugate.js for the actual conjugation rules.
+export function buildTransformationRows(level) {
   const rows = [];
 
-  for (const { reading, meaningBn } of collectPos("verb")) {
+  for (const { reading, meaningBn } of collectPos("verb", level)) {
     if (VERB_EXCLUDE.has(reading)) continue;
     const conj = conjugateVerb(reading);
     if (!conj) continue;
     for (const key of ["dictionary", "te", "ta", "nai"]) {
       rows.push({
-        id: `transform-verb-${reading}-${key}`,
+        id: `transform-${level}-verb-${reading}-${key}`,
         category: `verb-${key}`,
         mainForm: reading,
         transformedForm: conj[key],
@@ -168,13 +170,13 @@ export function buildTransformationRows() {
     }
   }
 
-  for (const { reading, meaningBn } of collectPos("adjective-i")) {
+  for (const { reading, meaningBn } of collectPos("adjective-i", level)) {
     if (I_ADJ_EXCLUDE.has(reading)) continue;
     const conj = conjugateIAdjective(reading);
     if (!conj) continue;
     for (const key of ["past", "negative", "pastNegative"]) {
       rows.push({
-        id: `transform-iadj-${reading}-${key}`,
+        id: `transform-${level}-iadj-${reading}-${key}`,
         category: `i-adj-${key}`,
         mainForm: reading,
         transformedForm: conj[key],
@@ -184,13 +186,13 @@ export function buildTransformationRows() {
     }
   }
 
-  for (const { reading, meaningBn } of collectPos("adjective-na")) {
+  for (const { reading, meaningBn } of collectPos("adjective-na", level)) {
     const cleanReading = reading.replace(/[［[]な[］\]]/g, "").trim();
     const conj = conjugateNaAdjective(cleanReading);
     if (!conj) continue;
     for (const key of ["past", "negative", "pastNegative"]) {
       rows.push({
-        id: `transform-naadj-${cleanReading}-${key}`,
+        id: `transform-${level}-naadj-${cleanReading}-${key}`,
         category: `na-adj-${key}`,
         mainForm: cleanReading,
         transformedForm: conj[key],

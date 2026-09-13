@@ -90,7 +90,10 @@ export default function GrammarList({
 		() => grammarParticleCategories(lessons),
 		[lessons],
 	);
-	const transformRows = useMemo(() => buildTransformationRows(), []);
+	const transformRows = useMemo(
+		() => buildTransformationRows(level),
+		[level],
+	);
 
 	const [query, setQuery] = useState("");
 	const [debouncedQuery, setDebouncedQuery] = useState("");

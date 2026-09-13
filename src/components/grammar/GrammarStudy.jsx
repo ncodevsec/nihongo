@@ -140,7 +140,10 @@ export default function GrammarStudy({
 		() => grammarParticleCategories(lessons),
 		[lessons],
 	);
-	const transformRows = useMemo(() => buildTransformationRows(), []);
+	const transformRows = useMemo(
+		() => buildTransformationRows(level),
+		[level],
+	);
 	const [selectedLessons, setSelectedLessons] = useState([]); // [] = all
 	const [selectedParticles, setSelectedParticles] = useState([]); // [] = all
 	const [selectedTransformCats, setSelectedTransformCats] = useState([]); // [] = all
