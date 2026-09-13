@@ -43,7 +43,10 @@ export default function GrammarQuiz({
 		() => grammarParticleCategories(lessons),
 		[lessons],
 	);
-	const transformRows = useMemo(() => buildTransformationRows(), []);
+	const transformRows = useMemo(
+		() => buildTransformationRows(level),
+		[level],
+	);
 
 	const [phase, setPhase] = useState("setup");
 	const [setupGroupBy, setSetupGroupBy] = useState("lesson"); // 'lesson' | 'particle' | 'transform'

@@ -214,6 +214,8 @@ export default function App() {
 									settings={settings}
 									activity={activity}
 									favorites={favorites}
+									moduleKey={moduleKey}
+									level={level}
 									timeToday={todaySeconds}
 									timeWeek={weekSeconds}
 									timeTotal={totalSeconds}
@@ -292,6 +294,7 @@ export default function App() {
 									activity={activity}
 									favorites={favorites}
 									moduleKey={moduleKey}
+									level={level}
 									timeToday={todaySeconds}
 									timeWeek={weekSeconds}
 									timeTotal={totalSeconds}

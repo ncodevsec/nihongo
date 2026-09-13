@@ -45,6 +45,7 @@ export default function Progress({
 	timeToday = 0,
 	timeWeek = 0,
 	timeTotal = 0,
+	level,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -56,8 +57,8 @@ export default function Progress({
 	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'pos' | 'count' (vocab) | 'particle' | 'transform' (grammar)
 
 	const transformRows = useMemo(
-		() => (isGrammar ? buildTransformationRows() : []),
-		[isGrammar],
+		() => (isGrammar ? buildTransformationRows(level) : []),
+		[isGrammar, level],
 	);
 	const particleCategories = useMemo(() => {
 		if (!isGrammar) return [];
