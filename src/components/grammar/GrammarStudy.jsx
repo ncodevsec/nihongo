@@ -493,7 +493,7 @@ export default function GrammarStudy({
 						onClick={() => setFlipped((f) => !f)}
 						className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
 					>
-						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 py-8 px-4">
+						<div className="h-[260px] overflow-y-auto flex flex-col items-center justify-center gap-3 py-8 px-4">
 							<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-0.5 mb-1">
 								{pickLang(point.formLabel, lang)}
 							</span>
@@ -508,7 +508,7 @@ export default function GrammarStudy({
 								</>
 							) : (
 								<>
-									<div className="font-mincho text-4xl sm:text-5xl text-shu dark:text-shu-glow text-center break-words px-4">
+									<div className="font-mincho text-4xl sm:text-5xl text-ink dark:text-night-ink text-center break-words px-4">
 										{point.transformedForm}
 									</div>
 									{point.meaningBn && (
@@ -638,7 +638,7 @@ export default function GrammarStudy({
 					{!flipped ? (
 						<>
 							{/* Front: the rule itself — structure and explanation */}
-							<div className="px-4 sm:px-5 pt-3 pb-4 min-h-[280px]">
+							<div className="px-4 sm:px-5 pt-3 pb-4 h-[260px] overflow-y-auto">
 								<ExplanationBody text={point.explanationBn} />
 							</div>
 							<div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
@@ -649,10 +649,10 @@ export default function GrammarStudy({
 						</>
 					) : (
 						/* Back: only the sentence examples */
-						<div className="bg-sakura-soft dark:bg-night px-4 sm:px-5 py-4 min-h-[280px]">
+						<div className="px-4 sm:px-5 py-4 h-[260px] overflow-y-auto">
 							{point.examples.length > 0 ? (
 								<>
-									<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-sakura-deep dark:text-sakura mb-2.5">
+									<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-ink-muted dark:text-night-ink-muted mb-2.5">
 										{T("grammarExamples")}
 									</div>
 									<div className="space-y-3">
@@ -661,7 +661,7 @@ export default function GrammarStudy({
 												key={ei}
 												className={
 													ei > 0
-														? "pt-3 border-t border-sakura-line dark:border-night-line"
+														? "pt-3 border-t border-ai-line dark:border-night-line"
 														: ""
 												}
 											>
@@ -674,7 +674,7 @@ export default function GrammarStudy({
 													<LeveledKanji text={ex.jp} level={level} />
 												</div>
 												{ex.meaningBn && (
-													<div className="font-bengali text-sm text-sakura-deep dark:text-sakura mt-1">
+													<div className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted mt-1">
 														{ex.meaningBn}
 													</div>
 												)}

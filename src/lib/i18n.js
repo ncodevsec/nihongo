@@ -23,11 +23,11 @@ const UI = {
 
   // Shared
   allCategories: { bn: "সব বিভাগ", en: "All categories" },
-  groupByLesson: { bn: "পাঠ অনুযায়ী", en: "By Lesson" },
-  groupByPos: { bn: "পদ অনুযায়ী", en: "By PoS" },
-  groupByCount: { bn: "গণনা অনুযায়ী", en: "By Count" },
-  groupByParticle: { bn: "পার্টিকেল অনুযায়ী", en: "By Particle" },
-  groupByTransform: { bn: "রূপান্তর অনুযায়ী", en: "By Transformation" },
+  groupByLesson: { bn: "পাঠ", en: "Lesson" },
+  groupByPos: { bn: "পদ", en: "PoS" },
+  groupByCount: { bn: "গণনা", en: "Count" },
+  groupByParticle: { bn: "পার্টিকেল", en: "Particle" },
+  groupByTransform: { bn: "ট্রান্স", en: "Trans" },
   colMainForm: { bn: "মাসু রূপ", en: "Masu Form" },
   colTransformedForm: { bn: "রূপান্তরিত রূপ", en: "Transformed form" },
   category: { bn: "বিভাগ", en: "Category" },
