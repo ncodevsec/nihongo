@@ -14,7 +14,7 @@ import {
 	COUNTING_CATEGORIES,
 } from "../lib/vocabClassify.js";
 
-import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
+import GroupCategoryTabs from "./GroupCategoryTabs.jsx";
 import Furigana from "./Furigana.jsx";
 import LeveledKanji from "./LeveledKanji.jsx";
 
@@ -198,43 +198,23 @@ export default function Study({
 
 	const filterRow = (
 		<div className="flex flex-wrap items-center gap-2 mb-4 text-xs">
-			{isVocab && (
-				<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
-					{[
-						{ key: "lesson", label: T("groupByLesson") },
-						{ key: "pos", label: T("groupByPos") },
-						{ key: "count", label: T("groupByCount") },
-					].map((g) => (
-						<button
-							key={g.key}
-							onClick={() => setGroupBy(g.key)}
-							className={`px-2.5 py-1.5 font-bengali font-medium ${
-								groupBy === g.key
-									? "bg-shu text-washi"
-									: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-							}`}
-						>
-							{g.label}
-						</button>
-					))}
-				</div>
-			)}
-
-			<div className="w-40 shrink-0">
-				<CategoryMultiSelect
-					categories={
-						groupBy === "pos"
-							? availablePosCategories
-							: groupBy === "count"
-								? availableCountingCategories
-								: availableCategories
-					}
-					selected={selectedCategories}
-					onChange={setSelectedCategories}
-					lang={lang}
-					allLabel={T("allCategories")}
-				/>
-			</div>
+			<GroupCategoryTabs
+				groups={
+					isVocab
+						? [
+								{ key: "lesson", label: T("groupByLesson"), categories: availableCategories },
+								{ key: "pos", label: T("groupByPos"), categories: availablePosCategories },
+								{ key: "count", label: T("groupByCount"), categories: availableCountingCategories },
+							]
+						: [{ key: "lesson", label: T("allCategories"), categories: availableCategories }]
+				}
+				active={groupBy}
+				onActiveChange={setGroupBy}
+				selected={selectedCategories}
+				onSelectedChange={setSelectedCategories}
+				lang={lang}
+				allLabel={T("allCategories")}
+			/>
 
 			<ToggleChip
 				active={onlyUnlearned}

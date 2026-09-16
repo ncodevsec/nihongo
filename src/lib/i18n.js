@@ -27,7 +27,7 @@ const UI = {
   groupByPos: { bn: "পদ", en: "PoS" },
   groupByCount: { bn: "গণনা", en: "Count" },
   groupByParticle: { bn: "পার্টিকেল", en: "Particle" },
-  groupByTransform: { bn: "ট্রান্স", en: "Trans" },
+  groupByTransform: { bn: "ট্রান্সফর্ম", en: "Transform" },
   colMainForm: { bn: "মাসু রূপ", en: "Masu Form" },
   colTransformedForm: { bn: "রূপান্তরিত রূপ", en: "Transformed form" },
   category: { bn: "বিভাগ", en: "Category" },
