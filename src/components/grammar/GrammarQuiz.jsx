@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { t, pickLang } from "../../lib/i18n.js";
 import Hanko from "../Hanko.jsx";
-import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
+import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
 import LeveledKanji from "../LeveledKanji.jsx";
 import {
 	flattenGrammarPoints,
@@ -252,48 +252,16 @@ export default function GrammarQuiz({
 							<label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
 								{T("quizSetupCategory")}
 							</label>
-							<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden mb-2 w-fit">
-								<button
-									onClick={() => setSetupGroupBy("lesson")}
-									className={`px-2.5 py-1.5 text-xs font-bengali font-medium ${
-										setupGroupBy === "lesson"
-											? "bg-shu text-washi"
-											: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-									}`}
-								>
-									{T("groupByLesson")}
-								</button>
-								<button
-									onClick={() => setSetupGroupBy("particle")}
-									className={`px-2.5 py-1.5 text-xs font-bengali font-medium ${
-										setupGroupBy === "particle"
-											? "bg-shu text-washi"
-											: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-									}`}
-								>
-									{T("groupByParticle")}
-								</button>
-								<button
-									onClick={() => setSetupGroupBy("transform")}
-									className={`px-2.5 py-1.5 text-xs font-bengali font-medium ${
-										setupGroupBy === "transform"
-											? "bg-shu text-washi"
-											: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-									}`}
-								>
-									{T("groupByTransform")}
-								</button>
-							</div>
-							<CategoryMultiSelect
-								categories={
-									isSetupTransform
-										? TRANSFORM_CATEGORIES
-										: setupGroupBy === "particle"
-											? particleCategories
-											: categories
-								}
+							<GroupCategoryTabs
+								groups={[
+									{ key: "lesson", label: T("groupByLesson"), categories },
+									{ key: "particle", label: T("groupByParticle"), categories: particleCategories },
+									{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES },
+								]}
+								active={setupGroupBy}
+								onActiveChange={setSetupGroupBy}
 								selected={setupFilters}
-								onChange={setSetupFilters}
+								onSelectedChange={setSetupFilters}
 								lang={lang}
 								allLabel={T("allCategories")}
 							/>

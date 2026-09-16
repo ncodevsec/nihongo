@@ -3,7 +3,7 @@ import { shuffle } from "../lib/utils.js";
 import { useHotkeys } from "../hooks/useHotkeys.js";
 import { t, pickLang } from "../lib/i18n.js";
 import Hanko from "./Hanko.jsx";
-import CategoryMultiSelect from "./CategoryMultiSelect.jsx";
+import GroupCategoryTabs from "./GroupCategoryTabs.jsx";
 import Furigana from "./Furigana.jsx";
 import LeveledKanji from "./LeveledKanji.jsx";
 import {
@@ -329,45 +329,20 @@ export default function Quiz({
 							<label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
 								{T("quizSetupCategory")}
 							</label>
-							{isVocab && (
-								<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden mb-2 w-fit">
-									{[
-										{
-											key: "lesson",
-											label: T("groupByLesson"),
-										},
-										{ key: "pos", label: T("groupByPos") },
-										{
-											key: "count",
-											label: T("groupByCount"),
-										},
-									].map((g) => (
-										<button
-											key={g.key}
-											onClick={() =>
-												setSetupGroupBy(g.key)
-											}
-											className={`px-2.5 py-1.5 text-xs font-bengali font-medium ${
-												setupGroupBy === g.key
-													? "bg-shu text-washi"
-													: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-											}`}
-										>
-											{g.label}
-										</button>
-									))}
-								</div>
-							)}
-							<CategoryMultiSelect
-								categories={
-									setupGroupBy === "pos"
-										? availablePosCategories
-										: setupGroupBy === "count"
-											? availableCountingCategories
-											: availableCategories
+							<GroupCategoryTabs
+								groups={
+									isVocab
+										? [
+												{ key: "lesson", label: T("groupByLesson"), categories: availableCategories },
+												{ key: "pos", label: T("groupByPos"), categories: availablePosCategories },
+												{ key: "count", label: T("groupByCount"), categories: availableCountingCategories },
+											]
+										: [{ key: "lesson", label: T("allCategories"), categories: availableCategories }]
 								}
+								active={setupGroupBy}
+								onActiveChange={setSetupGroupBy}
 								selected={setupCategories}
-								onChange={setSetupCategories}
+								onSelectedChange={setSetupCategories}
 								lang={lang}
 								allLabel={T("allCategories")}
 							/>

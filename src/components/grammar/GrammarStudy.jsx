@@ -11,7 +11,7 @@ import {
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton, ShuffleButton, ToggleChip } from "../FilterControls.jsx";
-import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
+import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
 import LeveledKanji from "../LeveledKanji.jsx";
 
 // Renders a rule's Bengali explanation with light structure: sub-points
@@ -144,9 +144,7 @@ export default function GrammarStudy({
 		() => buildTransformationRows(level),
 		[level],
 	);
-	const [selectedLessons, setSelectedLessons] = useState([]); // [] = all
-	const [selectedParticles, setSelectedParticles] = useState([]); // [] = all
-	const [selectedTransformCats, setSelectedTransformCats] = useState([]); // [] = all
+	const [selectedFilters, setSelectedFilters] = useState([]); // [] = all
 	const [onlyUnread, setOnlyUnread] = useState(false);
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [index, setIndex] = useState(0);
@@ -158,8 +156,7 @@ export default function GrammarStudy({
 	);
 
 	useEffect(() => {
-		setSelectedLessons([]);
-		setSelectedParticles([]);
+		setSelectedFilters([]);
 		setIndex(0);
 		setFlipped(false);
 		setOnlyUnread(false);
@@ -167,9 +164,7 @@ export default function GrammarStudy({
 	}, [lessons]);
 
 	useEffect(() => {
-		setSelectedLessons([]);
-		setSelectedParticles([]);
-		setSelectedTransformCats([]);
+		setSelectedFilters([]);
 	}, [groupBy]);
 
 	const isTransform = groupBy === "transform";
@@ -177,23 +172,23 @@ export default function GrammarStudy({
 	let visiblePoints;
 	if (isTransform) {
 		visiblePoints =
-			selectedTransformCats.length === 0
+			selectedFilters.length === 0
 				? transformRows
 				: transformRows.filter((r) =>
-						selectedTransformCats.includes(r.category),
+						selectedFilters.includes(r.category),
 					);
 	} else if (groupBy === "particle") {
 		visiblePoints =
-			selectedParticles.length === 0
+			selectedFilters.length === 0
 				? allPoints
 				: allPoints.filter((p) =>
-						selectedParticles.includes(p.particle || "other"),
+						selectedFilters.includes(p.particle || "other"),
 					);
 	} else {
 		visiblePoints =
-			selectedLessons.length === 0
+			selectedFilters.length === 0
 				? allPoints
-				: allPoints.filter((p) => selectedLessons.includes(p.category));
+				: allPoints.filter((p) => selectedFilters.includes(p.category));
 	}
 	if (onlyUnread)
 		visiblePoints = visiblePoints.filter((p) => !progress[p.id]?.learned);
@@ -245,9 +240,7 @@ export default function GrammarStudy({
 		setIndex(0);
 		setFlipped(false);
 	}, [
-		selectedLessons,
-		selectedParticles,
-		selectedTransformCats,
+		selectedFilters,
 		onlyUnread,
 		onlyStarred,
 		groupBy,
@@ -305,124 +298,66 @@ export default function GrammarStudy({
 
 	const filterRow = (
 		<>
-			<div className="flex items-center gap-2 mb-3">
-				<div className="flex rounded-full border border-ai-line dark:border-night-line overflow-hidden">
+			<div className="flex flex-wrap items-center gap-2 mb-5">
+				<GroupCategoryTabs
+					groups={[
+						{ key: "lesson", label: T("groupByLesson"), categories: lessonCategories },
+						{ key: "particle", label: T("groupByParticle"), categories: particleCategories },
+						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES },
+					]}
+					active={groupBy}
+					onActiveChange={setGroupBy}
+					selected={selectedFilters}
+					onSelectedChange={setSelectedFilters}
+					lang={lang}
+					allLabel={T("allCategories")}
+				/>
+				<ToggleChip
+					active={onlyUnread}
+					onClick={() => setOnlyUnread((v) => !v)}
+					title={T("onlyUnread")}
+				>
+					{T("onlyUnread")}
+				</ToggleChip>
+				<StarFilterButton
+					active={onlyStarred}
+					onClick={() => setOnlyStarred((v) => !v)}
+					labelOn={T("onlyStarred")}
+					labelOff={T("onlyStarred")}
+				/>
+				{isTransform && (
 					<button
-						onClick={() => setGroupBy("lesson")}
-						className={`px-3 py-1.5 text-xs font-bengali font-medium ${
-							groupBy === "lesson"
-								? "bg-shu text-washi"
-								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+						onClick={() => {
+							setReverse((v) => !v);
+							setFlipped(false);
+						}}
+						aria-pressed={reverse}
+						title={T("reverseRecall")}
+						className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 border font-bengali font-medium text-xs ${
+							reverse
+								? "bg-shu text-washi border-shu"
+								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted border-ai-line dark:border-night-line hover:border-shu/50"
 						}`}
 					>
-						{T("groupByLesson")}
-					</button>
-					<button
-						onClick={() => setGroupBy("particle")}
-						className={`px-3 py-1.5 text-xs font-bengali font-medium ${
-							groupBy === "particle"
-								? "bg-shu text-washi"
-								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-						}`}
-					>
-						{T("groupByParticle")}
-					</button>
-					<button
-						onClick={() => setGroupBy("transform")}
-						className={`px-3 py-1.5 text-xs font-bengali font-medium ${
-							groupBy === "transform"
-								? "bg-shu text-washi"
-								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-						}`}
-					>
-						{T("groupByTransform")}
-					</button>
-				</div>
-			</div>
-
-			<div className="flex flex-col sm:flex-row gap-2 mb-5">
-				<div className="flex-1">
-					<label className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted block mb-1.5">
-						{isTransform
-							? T("grammarSelectTransform")
-							: groupBy === "particle"
-								? T("grammarSelectParticle")
-								: T("grammarSelectLesson")}
-					</label>
-					{isTransform ? (
-						<CategoryMultiSelect
-							categories={TRANSFORM_CATEGORIES}
-							selected={selectedTransformCats}
-							onChange={setSelectedTransformCats}
-							lang={lang}
-							allLabel={T("allCategories")}
-						/>
-					) : groupBy === "particle" ? (
-						<CategoryMultiSelect
-							categories={particleCategories}
-							selected={selectedParticles}
-							onChange={setSelectedParticles}
-							lang={lang}
-							allLabel={T("allCategories")}
-						/>
-					) : (
-						<CategoryMultiSelect
-							categories={lessonCategories}
-							selected={selectedLessons}
-							onChange={setSelectedLessons}
-							lang={lang}
-							allLabel={T("allCategories")}
-						/>
-					)}
-				</div>
-				<div className="self-end sm:self-auto sm:mt-[22px] flex items-center gap-2">
-					<ToggleChip
-						active={onlyUnread}
-						onClick={() => setOnlyUnread((v) => !v)}
-						title={T("onlyUnread")}
-					>
-						{T("onlyUnread")}
-					</ToggleChip>
-					<StarFilterButton
-						active={onlyStarred}
-						onClick={() => setOnlyStarred((v) => !v)}
-						labelOn={T("onlyStarred")}
-						labelOff={T("onlyStarred")}
-					/>
-					{isTransform && (
-						<button
-							onClick={() => {
-								setReverse((v) => !v);
-								setFlipped(false);
-							}}
-							aria-pressed={reverse}
-							title={T("reverseRecall")}
-							className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 border font-bengali font-medium text-xs ${
-								reverse
-									? "bg-shu text-washi border-shu"
-									: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted border-ai-line dark:border-night-line hover:border-shu/50"
-							}`}
+						<svg
+							viewBox="0 0 24 24"
+							className="w-3.5 h-3.5 shrink-0"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							aria-hidden="true"
 						>
-							<svg
-								viewBox="0 0 24 24"
-								className="w-3.5 h-3.5 shrink-0"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								aria-hidden="true"
-							>
-								<polyline points="17 1 21 5 17 9" />
-								<path d="M3 11V9a4 4 0 014-4h14" />
-								<polyline points="7 23 3 19 7 15" />
-								<path d="M21 13v2a4 4 0 01-4 4H3" />
-							</svg>
-							{T("reverseRecall")}
-						</button>
-					)}
-					<ShuffleButton onClick={reshuffle} label={T("shuffle")} />
-				</div>
+							<polyline points="17 1 21 5 17 9" />
+							<path d="M3 11V9a4 4 0 014-4h14" />
+							<polyline points="7 23 3 19 7 15" />
+							<path d="M21 13v2a4 4 0 01-4 4H3" />
+						</svg>
+						{T("reverseRecall")}
+					</button>
+				)}
+				<ShuffleButton onClick={reshuffle} label={T("shuffle")} />
 			</div>
 		</>
 	);

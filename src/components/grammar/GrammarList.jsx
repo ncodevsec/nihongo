@@ -9,7 +9,7 @@ import {
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton } from "../FilterControls.jsx";
-import CategoryMultiSelect from "../CategoryMultiSelect.jsx";
+import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
 
 const PAGE_SIZE = 40;
 
@@ -189,53 +189,19 @@ export default function GrammarList({
 					placeholder={T("searchPlaceholder")}
 					className="font-bengali flex-1 border border-ai-line dark:border-night-line rounded-md px-3 py-1.5 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink placeholder:text-ink-muted/60"
 				/>
-				<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
-					<button
-						onClick={() => setGroupBy("lesson")}
-						className={`px-2.5 py-1.5 text-sm font-bengali font-medium ${
-							groupBy === "lesson"
-								? "bg-shu text-washi"
-								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-						}`}
-					>
-						{T("groupByLesson")}
-					</button>
-					<button
-						onClick={() => setGroupBy("particle")}
-						className={`px-2.5 py-1.5 text-sm font-bengali font-medium ${
-							groupBy === "particle"
-								? "bg-shu text-washi"
-								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-						}`}
-					>
-						{T("groupByParticle")}
-					</button>
-					<button
-						onClick={() => setGroupBy("transform")}
-						className={`px-2.5 py-1.5 text-sm font-bengali font-medium ${
-							groupBy === "transform"
-								? "bg-shu text-washi"
-								: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-						}`}
-					>
-						{T("groupByTransform")}
-					</button>
-				</div>
-				<div className="sm:w-44 shrink-0">
-					<CategoryMultiSelect
-						categories={
-							isTransform
-								? TRANSFORM_CATEGORIES
-								: groupBy === "particle"
-									? particleCategories
-									: categories
-						}
-						selected={selectedFilters}
-						onChange={setSelectedFilters}
-						lang={lang}
-						allLabel={`${T("allCategories")} (${isTransform ? transformRows.length : allPoints.length})`}
-					/>
-				</div>
+				<GroupCategoryTabs
+					groups={[
+						{ key: "lesson", label: T("groupByLesson"), categories },
+						{ key: "particle", label: T("groupByParticle"), categories: particleCategories },
+						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES },
+					]}
+					active={groupBy}
+					onActiveChange={setGroupBy}
+					selected={selectedFilters}
+					onSelectedChange={setSelectedFilters}
+					lang={lang}
+					allLabel={`${T("allCategories")} (${isTransform ? transformRows.length : allPoints.length})`}
+				/>
 				<StarFilterButton
 					active={onlyStarred}
 					onClick={() => setOnlyStarred((v) => !v)}
