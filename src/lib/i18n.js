@@ -44,7 +44,8 @@ const UI = {
   // Study
   onlyUnlearned: { bn: "যা শিখিনি", en: "Not Memorized" },
   onlyUnread: { bn: "যা পড়িনি", en: "Not Read" },
-  shuffle: { bn: "এলোমেলো করুন ↻", en: "Shuffle ↻" },
+  shuffle: { bn: "এলোমেলো", en: "Shuffle" },
+  serial: { bn: "ক্রমিক", en: "Serial" },
   alreadyLearned: { bn: "শেখা হয়ে গেছে", en: "Learned" },
   tapToRevealMeaning: { bn: "অর্থ দেখতে এখানে চাপুন (বা স্পেসবার)", en: "Tap to reveal meaning (or press Space)" },
   tapToRevealExamples: { bn: "উদাহরণ দেখতে এখানে চাপুন (বা স্পেসবার)", en: "Tap to reveal examples (or press Space)" },

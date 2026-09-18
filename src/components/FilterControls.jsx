@@ -49,30 +49,61 @@ export function StarFilterButton({ active, onClick, labelOn, labelOff }) {
 	);
 }
 
-export function ShuffleButton({ onClick, label }) {
+// A toggle between shuffled and serial (original) order — not a one-shot
+// action. When shuffled, cards appear in a random order; switching back
+// to serial shows them in their natural sequence. Toggling shuffle off
+// then on again also produces a fresh random order, so it still doubles
+// as "reshuffle" for anyone who just wants a new random pass.
+export function ShuffleButton({ shuffled, onToggle, label, serialLabel }) {
 	return (
 		<button
-			onClick={onClick}
-			aria-label={label}
-			title={label}
-			className="w-8 h-8 shrink-0 flex items-center justify-center rounded-md border border-ai-line dark:border-night-line bg-paper dark:bg-night-paper text-ai dark:text-ai-glow hover:bg-ai-soft dark:hover:bg-night-line"
+			onClick={onToggle}
+			aria-pressed={shuffled}
+			aria-label={shuffled ? label : serialLabel}
+			title={shuffled ? label : serialLabel}
+			className={`flex items-center gap-1.5 rounded-md px-2.5 py-1.5 border font-bengali font-medium text-xs ${
+				shuffled
+					? "bg-shu text-washi border-shu"
+					: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted border-ai-line dark:border-night-line hover:border-shu/50"
+			}`}
 		>
-			<svg
-				viewBox="0 0 24 24"
-				className="w-4 h-4"
-				fill="none"
-				stroke="currentColor"
-				strokeWidth="1.8"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-				aria-hidden="true"
-			>
-				<polyline points="16 3 21 3 21 8" />
-				<line x1="4" y1="20" x2="21" y2="3" />
-				<polyline points="21 16 21 21 16 21" />
-				<line x1="15" y1="15" x2="21" y2="21" />
-				<line x1="4" y1="4" x2="9" y2="9" />
-			</svg>
+			{shuffled ? (
+				<svg
+					viewBox="0 0 24 24"
+					className="w-3.5 h-3.5 shrink-0"
+					fill="none"
+					stroke="currentColor"
+					strokeWidth="1.8"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					aria-hidden="true"
+				>
+					<polyline points="16 3 21 3 21 8" />
+					<line x1="4" y1="20" x2="21" y2="3" />
+					<polyline points="21 16 21 21 16 21" />
+					<line x1="15" y1="15" x2="21" y2="21" />
+					<line x1="4" y1="4" x2="9" y2="9" />
+				</svg>
+			) : (
+				<svg
+					viewBox="0 0 24 24"
+					className="w-3.5 h-3.5 shrink-0"
+					fill="none"
+					stroke="currentColor"
+					strokeWidth="1.8"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					aria-hidden="true"
+				>
+					<line x1="8" y1="6" x2="21" y2="6" />
+					<line x1="8" y1="12" x2="21" y2="12" />
+					<line x1="8" y1="18" x2="21" y2="18" />
+					<line x1="3" y1="6" x2="3.01" y2="6" />
+					<line x1="3" y1="12" x2="3.01" y2="12" />
+					<line x1="3" y1="18" x2="3.01" y2="18" />
+				</svg>
+			)}
+			{shuffled ? label : serialLabel}
 		</button>
 	);
 }

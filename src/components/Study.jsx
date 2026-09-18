@@ -46,14 +46,11 @@ export default function Study({
 	const [onlyUnlearned, setOnlyUnlearned] = useState(false);
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [reverse, setReverse] = useState(false);
-	const [order, setOrder] = useState(() =>
-		shuffle(kanjiData.map((k) => k.id)),
-	);
+	const [shuffled, setShuffled] = useState(true);
 	const [index, setIndex] = useState(0);
 	const [flipped, setFlipped] = useState(false);
 
 	useEffect(() => {
-		setOrder(shuffle(kanjiData.map((k) => k.id)));
 		setIndex(0);
 		setFlipped(false);
 		setGroupBy("lesson");
@@ -90,43 +87,49 @@ export default function Study({
 		[groupBy],
 	);
 
-	const pool = useMemo(() => {
-		let list = kanjiData;
-		if (selectedCategories.length > 0)
-			list = list.filter((k) =>
-				selectedCategories.includes(categoryOf(k)),
-			);
-		if (onlyUnlearned) list = list.filter((k) => !progress[k.id]?.learned);
-		if (onlyStarred) list = list.filter((k) => favorites[k.id]);
-		return list;
-	}, [
-		kanjiData,
-		selectedCategories,
-		categoryOf,
-		onlyUnlearned,
-		onlyStarred,
-		progress,
-		favorites,
-	]);
+	// Snapshot of which ids belong in the current run, and their order.
+	// Deliberately NOT recomputed just because `progress`/`favorites`
+	// change afterward — marking a card learned or starred mid-session
+	// must not shrink or reorder the run out from under the person; only
+	// changing the filter controls themselves, the shuffle/serial toggle,
+	// or switching module/level rebuilds it.
+	const [order, setOrder] = useState(() => {
+		const ids = kanjiData.map((k) => k.id);
+		return shuffled ? shuffle(ids) : ids;
+	});
 
-	const deck = useMemo(() => {
-		const poolIds = new Set(pool.map((k) => k.id));
-		const kanjiById = new Map(kanjiData.map((k) => [k.id, k]));
-		const orderedIds = order.filter((id) => poolIds.has(id));
-		const seen = new Set(orderedIds);
-		for (const k of pool) {
-			if (!seen.has(k.id)) {
-				orderedIds.push(k.id);
-				seen.add(k.id);
+	const rebuildOrder = useCallback(
+		(useShuffled) => {
+			let list = kanjiData;
+			if (selectedCategories.length > 0) {
+				list = list.filter((k) => selectedCategories.includes(categoryOf(k)));
 			}
-		}
-		return orderedIds.map((id) => kanjiById.get(id)).filter(Boolean);
-	}, [order, pool, kanjiData]);
+			if (onlyUnlearned) list = list.filter((k) => !progress[k.id]?.learned);
+			if (onlyStarred) list = list.filter((k) => favorites[k.id]);
+			const ids = list.map((k) => k.id);
+			return useShuffled ? shuffle(ids) : ids;
+		},
+		[kanjiData, selectedCategories, categoryOf, onlyUnlearned, onlyStarred, progress, favorites],
+	);
 
 	useEffect(() => {
+		setOrder(rebuildOrder(shuffled));
 		setIndex(0);
 		setFlipped(false);
-	}, [selectedCategories, onlyUnlearned, onlyStarred]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [kanjiData, selectedCategories, onlyUnlearned, onlyStarred]);
+
+	useEffect(() => {
+		setOrder(rebuildOrder(shuffled));
+		setIndex(0);
+		setFlipped(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [shuffled]);
+
+	const deck = useMemo(() => {
+		const byId = new Map(kanjiData.map((k) => [k.id, k]));
+		return order.map((id) => byId.get(id)).filter(Boolean);
+	}, [order, kanjiData]);
 
 	useEffect(() => {
 		setSelectedCategories([]);
@@ -146,12 +149,6 @@ export default function Study({
 						(c) => c.key === classifyCounting(card),
 					)
 				: categories.find((c) => c.key === card.category));
-
-	const reshuffle = () => {
-		setOrder(shuffle(kanjiData.map((k) => k.id)));
-		setIndex(0);
-		setFlipped(false);
-	};
 
 	const goNext = useCallback(() => {
 		setFlipped(false);
@@ -263,7 +260,7 @@ export default function Study({
 			</button>
 
 			<div className="ml-auto">
-				<ShuffleButton onClick={reshuffle} label={T("shuffle")} />
+				<ShuffleButton shuffled={shuffled} onToggle={() => setShuffled((v) => !v)} label={T("shuffle")} serialLabel={T("serial")} />
 			</div>
 		</div>
 	);
