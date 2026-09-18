@@ -169,70 +169,62 @@ export default function GrammarStudy({
 
 	const isTransform = groupBy === "transform";
 
-	let visiblePoints;
-	if (isTransform) {
-		visiblePoints =
-			selectedFilters.length === 0
-				? transformRows
-				: transformRows.filter((r) =>
-						selectedFilters.includes(r.category),
-					);
-	} else if (groupBy === "particle") {
-		visiblePoints =
-			selectedFilters.length === 0
-				? allPoints
-				: allPoints.filter((p) =>
-						selectedFilters.includes(p.particle || "other"),
-					);
-	} else {
-		visiblePoints =
-			selectedFilters.length === 0
-				? allPoints
-				: allPoints.filter((p) => selectedFilters.includes(p.category));
-	}
-	if (onlyUnread)
-		visiblePoints = visiblePoints.filter((p) => !progress[p.id]?.learned);
-	if (onlyStarred)
-		visiblePoints = visiblePoints.filter((p) => favorites[p.id]);
-
-	// A shuffled deck, same pattern as Study.jsx's flashcards for
-	// vocab/kanji: an id order is picked once and reused across filter
-	// changes (new items not yet in it are appended), so re-shuffling is
-	// an explicit action rather than happening on every filter tweak.
-	const [order, setOrder] = useState(() =>
-		shuffle(allPoints.map((p) => p.id)).concat(
-			shuffle(transformRows.map((r) => r.id)),
-		),
+	// Snapshot of which ids belong in the current run, built fresh only
+	// when the filter controls themselves change — deliberately NOT
+	// recomputed just because `progress`/`favorites` change afterward, so
+	// marking a card read/starred mid-session doesn't shrink or reorder
+	// the run out from under the person.
+	const buildSourceIds = useCallback(
+		(useShuffled) => {
+			let list;
+			if (isTransform) {
+				list =
+					selectedFilters.length === 0
+						? transformRows
+						: transformRows.filter((r) => selectedFilters.includes(r.category));
+			} else if (groupBy === "particle") {
+				list =
+					selectedFilters.length === 0
+						? allPoints
+						: allPoints.filter((p) => selectedFilters.includes(p.particle || "other"));
+			} else {
+				list =
+					selectedFilters.length === 0
+						? allPoints
+						: allPoints.filter((p) => selectedFilters.includes(p.category));
+			}
+			if (onlyUnread) list = list.filter((p) => !progress[p.id]?.learned);
+			if (onlyStarred) list = list.filter((p) => favorites[p.id]);
+			const ids = list.map((p) => p.id);
+			return useShuffled ? shuffle(ids) : ids;
+		},
+		[isTransform, groupBy, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites],
 	);
 
+	const [shuffled, setShuffled] = useState(true);
+	const [order, setOrder] = useState(() => buildSourceIds(true));
+
 	useEffect(() => {
-		setOrder(
-			shuffle(allPoints.map((p) => p.id)).concat(
-				shuffle(transformRows.map((r) => r.id)),
-			),
-		);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [lessons]);
-
-	const deck = useMemo(() => {
-		const visibleIds = new Set(visiblePoints.map((p) => p.id));
-		const byId = new Map(visiblePoints.map((p) => [p.id, p]));
-		const orderedIds = order.filter((id) => visibleIds.has(id));
-		const seen = new Set(orderedIds);
-		for (const p of visiblePoints) {
-			if (!seen.has(p.id)) {
-				orderedIds.push(p.id);
-				seen.add(p.id);
-			}
-		}
-		return orderedIds.map((id) => byId.get(id)).filter(Boolean);
-	}, [order, visiblePoints]);
-
-	const reshuffle = () => {
-		setOrder(shuffle(deck.map((p) => p.id)));
+		setOrder(buildSourceIds(shuffled));
 		setIndex(0);
 		setFlipped(false);
-	};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [lessons, groupBy, selectedFilters, onlyUnread, onlyStarred]);
+
+	useEffect(() => {
+		setOrder(buildSourceIds(shuffled));
+		setIndex(0);
+		setFlipped(false);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [shuffled]);
+
+	const deck = useMemo(() => {
+		const byId = new Map([
+			...allPoints.map((p) => [p.id, p]),
+			...transformRows.map((r) => [r.id, r]),
+		]);
+		return order.map((id) => byId.get(id)).filter(Boolean);
+	}, [order, allPoints, transformRows]);
 
 	// Jumping back to the first card whenever the visible set changes keeps
 	// this in sync with Study.jsx's own flashcard behavior for vocab/kanji.
@@ -357,7 +349,7 @@ export default function GrammarStudy({
 						{T("reverseRecall")}
 					</button>
 				)}
-				<ShuffleButton onClick={reshuffle} label={T("shuffle")} />
+				<ShuffleButton shuffled={shuffled} onToggle={() => setShuffled((v) => !v)} label={T("shuffle")} serialLabel={T("serial")} />
 			</div>
 		</>
 	);
