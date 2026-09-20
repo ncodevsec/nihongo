@@ -18,6 +18,8 @@ import Features from "./Features.jsx";
 import Faq from "./Faq.jsx";
 import CtaBand from "./CtaBand.jsx";
 import Banners from "./Banners.jsx";
+import SectionHeading from "./SectionHeading.jsx";
+import StreakWidget from "../StreakWidget.jsx";
 
 const TAB_LABEL_KEYS = {
 	study: "tabStudy",
@@ -150,6 +152,26 @@ export default function Home({
 			</Rise>
 
 			<Rise i={2}>
+				<section aria-labelledby="home-streak">
+					<SectionHeading
+						id="home-streak"
+						lang={lang}
+						title={T("progressActivity")}
+						action={
+							<button
+								type="button"
+								onClick={() => onLaunch(resumeModule, level, "progress")}
+								className="shrink-0 font-bengali text-xs font-semibold text-shu dark:text-shu-glow hover:underline"
+							>
+								{T("homeProgressCta")} →
+							</button>
+						}
+					/>
+					<StreakWidget activity={activity} lang={lang} />
+				</section>
+			</Rise>
+
+			<Rise i={3}>
 				<div className="space-y-8 sm:space-y-10 lg:space-y-14">
 					<LevelModules
 						lang={lang}
@@ -162,19 +184,19 @@ export default function Home({
 				</div>
 			</Rise>
 
-			<Rise i={3}>
+			<Rise i={4}>
 				<HowItWorks lang={lang} T={T} onOpen={(tab) => onLaunch(resumeModule, level, tab)} />
 			</Rise>
 
-			<Rise i={4}>
+			<Rise i={5}>
 				<Features lang={lang} T={T} />
 			</Rise>
 
-			<Rise i={5}>
+			<Rise i={6}>
 				<Faq lang={lang} T={T} />
 			</Rise>
 
-			<Rise i={6}>
+			<Rise i={7}>
 				<CtaBand lang={lang} T={T} onStart={startFresh} />
 			</Rise>
 		</div>

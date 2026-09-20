@@ -36,3 +36,22 @@ export function computeStreak(activity) {
   }
   return streak;
 }
+
+// Longest run of consecutive active days anywhere in the history (the
+// "best streak"). Same "YYYY-MM-DD" keys as computeStreak; the current
+// streak is included, so best is never below it.
+export function computeBestStreak(activity) {
+  const days = Object.keys(activity)
+    .filter((k) => activity[k])
+    .map((k) => Date.UTC(+k.slice(0, 4), +k.slice(5, 7) - 1, +k.slice(8, 10)))
+    .sort((a, b) => a - b);
+  let best = 0;
+  let run = 0;
+  let prev = null;
+  for (const day of days) {
+    run = prev !== null && day - prev === 86400000 ? run + 1 : 1;
+    if (run > best) best = run;
+    prev = day;
+  }
+  return Math.max(best, computeStreak(activity));
+}
