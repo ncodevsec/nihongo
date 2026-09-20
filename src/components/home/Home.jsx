@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { MODULES } from "../../data/modules.js";
+import { MODULES, levelLabel } from "../../data/modules.js";
 import { t, pickLang } from "../../lib/i18n.js";
 import { computeStreak, formatDuration } from "../../lib/utils.js";
 import {
@@ -82,7 +82,7 @@ export default function Home({
 	const continueSub = lastSession
 		? [
 				pickLang(MODULES[lastSession.moduleKey], lang),
-				lastSession.level.toUpperCase(),
+				levelLabel(lastSession.level),
 				lastSession.moduleKey === "grammar" && lastSession.tab === "study"
 					? T("tabGrammarContent")
 					: T(TAB_LABEL_KEYS[lastSession.tab]),

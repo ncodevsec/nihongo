@@ -255,6 +255,9 @@ const UI = {
   resetButton: { bn: "রিসেট করুন", en: "Reset" },
   deleteButton: { bn: "মুছে ফেলুন", en: "Delete" },
 
+  levelAll: { bn: "সব", en: "All" },
+  homeLevelAllName: { bn: "সবকিছু একসাথে", en: "Everything" },
+  homeLevelAllDesc: { bn: "N5 ও N4 একসাথে", en: "N5 and N4 together" },
   // Home page
   tabHome: { bn: "হোম", en: "Home" },
   homeEyebrow: { bn: "JLPT N5 · N4 · NAT প্রস্তুতি", en: "JLPT N5 · N4 · NAT prep" },

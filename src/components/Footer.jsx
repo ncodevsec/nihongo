@@ -121,7 +121,7 @@ export default function Footer({
 			<div className="border-t border-ai-line dark:border-night-line">
 				<div className="max-w-6xl mx-auto px-3 sm:px-5 lg:px-10 py-3 flex flex-col sm:flex-row items-center justify-between gap-1.5 text-[11px] font-bengali text-ink-muted dark:text-night-ink-muted">
 					<span>
-						NihonGo — {pickLang(mod, lang)} ({level.toUpperCase()}){" "}
+						NihonGo — {pickLang(mod, lang)} ({level === "all" ? "N5 + N4" : level.toUpperCase()}){" "}
 						{T("footerFor")}
 					</span>
 					<span className="font-mono">{T("footerStorage")}</span>

@@ -66,6 +66,7 @@ export function getLevelKanjiSet(level) {
 			n5: buildLevelSet(N5_KANJI),
 			n4: buildLevelSet(N4_KANJI),
 		};
+		levelSets.all = new Set([...levelSets.n5, ...levelSets.n4]);
 	}
 	return levelSets[level] || null;
 }
