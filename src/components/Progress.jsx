@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { t, pickLang } from "../lib/i18n.js";
-import { formatDuration } from "../lib/utils.js";
+import { formatDuration, computeStreak } from "../lib/utils.js";
 import Hanko from "./Hanko.jsx";
 import ActivityCalendar from "./ActivityCalendar.jsx";
 import {
@@ -13,24 +13,6 @@ import {
 	TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../lib/grammarUtils.js";
-
-function toDateKey(d) {
-	return d.toISOString().slice(0, 10);
-}
-
-function computeStreak(activity) {
-	const today = new Date();
-	let cursor = new Date(today);
-	// If nothing logged today yet, start checking from yesterday so a
-	// still-unbroken streak from previous days doesn't read as zero.
-	if (!activity[toDateKey(cursor)]) cursor.setDate(cursor.getDate() - 1);
-	let streak = 0;
-	while (activity[toDateKey(cursor)]) {
-		streak += 1;
-		cursor.setDate(cursor.getDate() - 1);
-	}
-	return streak;
-}
 
 export default function Progress({
 	kanjiData,

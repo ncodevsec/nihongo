@@ -2,6 +2,12 @@ import { MODULES, MODULE_ORDER, LEVEL_ORDER } from "../data/modules.js";
 import { t, pickLang } from "../lib/i18n.js";
 
 const ICONS = {
+	home: (
+		<>
+			<path d="M3 10.5L12 3l9 7.5" />
+			<path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5" />
+		</>
+	),
 	study: (
 		<path d="M4 5.5a2 2 0 012-2h4.5v13H6a2 2 0 00-2 2v-13zM20 5.5a2 2 0 00-2-2h-4.5v13H18a2 2 0 012 2v-13z" />
 	),
@@ -53,6 +59,7 @@ export default function Sidebar({
 	const isGrammar = MODULES[moduleKey].kind === "grammar";
 
 	const TABS = [
+		{ key: "home", label: T("tabHome"), icon: "home" },
 		{
 			key: "study",
 			label: isGrammar ? T("tabGrammarContent") : T("tabStudy"),
@@ -67,7 +74,14 @@ export default function Sidebar({
 		<aside className="hidden lg:flex lg:flex-col lg:w-72 lg:shrink-0 lg:h-screen lg:sticky lg:top-0 lg:overflow-y-auto border-r border-ai-line dark:border-night-line bg-paper dark:bg-night-paper shadow-card dark:shadow-none">
 			{/* Brand */}
 			<div className="flex items-center gap-3 px-5 pt-6 pb-5 border-b border-ai-line dark:border-night-line mb-4">
-				<a className="shrink-0" href="./">
+				<a
+					className="shrink-0"
+					href="./"
+					onClick={(e) => {
+						e.preventDefault();
+						onChange("home");
+					}}
+				>
 					<img
 						src="./icons/logo-mark-128.png"
 						alt="NihonGo - Study Lab"
