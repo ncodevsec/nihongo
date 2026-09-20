@@ -84,7 +84,7 @@ export default function Sidebar({
 					<img
 						src="./icons/logo-mark-128.png"
 						alt="NihonGo - Study Lab"
-						className="w-9 h-9"
+						className="brand-logo w-9 h-9"
 						width={36}
 						height={36}
 					/>

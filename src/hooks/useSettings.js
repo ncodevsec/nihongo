@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import { DEFAULT_HUE, applyThemeHue, normalizeHue } from "../lib/themeColor.js";
 
 const STORAGE_KEY = "nihongo-settings-v1";
 
 const DEFAULTS = {
   theme: "system", // 'light' | 'dark' | 'system'
+  themeHue: DEFAULT_HUE, // 0–360 accent color position (see lib/themeColor.js)
   uiLang: "en", // 'bn' | 'en' — site-wide interface language
   showKanjiBn: true, // show Bengali meaning in the Kanji module
   showVocabKanji: false, // show kanji script in the Vocabulary module
@@ -46,6 +48,7 @@ export function useSettings() {
 
   useEffect(() => {
     applyTheme(settings.theme);
+    applyThemeHue(normalizeHue(settings.themeHue));
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     } catch {

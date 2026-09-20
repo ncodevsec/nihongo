@@ -415,7 +415,7 @@ export default function GrammarQuiz({
 					<span
 						className={
 							timeLeft <= 30
-								? "text-shu dark:text-shu-glow font-semibold"
+								? "text-danger dark:text-danger-glow font-semibold"
 								: ""
 						}
 					>
@@ -485,7 +485,7 @@ export default function GrammarQuiz({
 								style =
 									"border-take bg-take-soft dark:bg-take/10";
 							else if (idx === selected)
-								style = "border-shu bg-shu-soft dark:bg-shu/10";
+								style = "border-danger bg-danger-soft dark:bg-danger/10";
 							else
 								style =
 									"border-ai-line dark:border-night-line bg-washi dark:bg-night opacity-50";

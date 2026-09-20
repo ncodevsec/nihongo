@@ -1,3 +1,4 @@
+import ThemeColorPicker from "./ThemeColorPicker.jsx";
 import { useRef, useState } from "react";
 import { t } from "../lib/i18n.js";
 
@@ -243,6 +244,11 @@ export default function Settings({
 						))}
 					</div>
 				</Row>
+				<ThemeColorPicker
+					hue={settings.themeHue}
+					onCommit={(h) => updateSetting("themeHue", h)}
+					lang={lang}
+				/>
 			</div>
 
 			<SectionLabel>{T("sectionLanguage")}</SectionLabel>

@@ -524,7 +524,7 @@ export default function Study({
 			<div className="grid grid-cols-2 gap-2.5 mt-4">
 				<button
 					onClick={() => mark(false)}
-					className="flex items-center justify-center font-bengali text-sm font-semibold bg-shu dark:bg-shu-glow text-washi dark:text-white rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
+					className="flex items-center justify-center font-bengali text-sm font-semibold bg-danger dark:bg-danger-glow text-washi dark:text-white rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
 				>
 					{T("reviewAgain")}
 				</button>

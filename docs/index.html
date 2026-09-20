@@ -36,6 +36,22 @@
       })();
     </script>
     <script>
+      // Re-apply the chosen accent color before first paint (the cached
+      // CSS variables are written by lib/themeColor.js) so a non-default
+      // theme doesn't flash red on load.
+      (function () {
+        try {
+          var raw = localStorage.getItem("nihongo-theme-v1");
+          if (!raw) return;
+          var cache = JSON.parse(raw);
+          var root = document.documentElement;
+          for (var k in cache.vars) root.style.setProperty(k, cache.vars[k]);
+          var meta = document.querySelector('meta[name="theme-color"]');
+          if (meta && cache.meta) meta.setAttribute("content", cache.meta);
+        } catch (e) {}
+      })();
+    </script>
+    <script>
       // Register the service worker for offline support + installability.
       // Registered relative to this document so it works correctly both
       // at the domain root and under a GitHub Pages repo subpath.

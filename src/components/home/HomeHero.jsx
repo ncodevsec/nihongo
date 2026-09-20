@@ -73,7 +73,7 @@ export default function HomeHero({
 			<div
 				aria-hidden="true"
 				className="pointer-events-none absolute -top-28 -right-24 w-96 h-96 rounded-full opacity-40 dark:opacity-[0.12] blur-3xl"
-				style={{ background: "radial-gradient(circle, #e48b8b 0%, transparent 70%)" }}
+				style={{ background: "radial-gradient(circle, rgb(var(--sakura)) 0%, transparent 70%)" }}
 			/>
 			<span
 				aria-hidden="true"
