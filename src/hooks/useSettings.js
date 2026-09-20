@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { DEFAULT_HUE, applyThemeHue, normalizeHue } from "../lib/themeColor.js";
+import { DEFAULT_HUE, applyThemeHue, snapToPreset } from "../lib/themeColor.js";
 
 const STORAGE_KEY = "nihongo-settings-v1";
 
 const DEFAULTS = {
   theme: "system", // 'light' | 'dark' | 'system'
-  themeHue: DEFAULT_HUE, // 0–360 accent color position (see lib/themeColor.js)
+  themeHue: DEFAULT_HUE, // accent color: one of the 5 presets in lib/themeColor.js
   uiLang: "en", // 'bn' | 'en' — site-wide interface language
   showKanjiBn: true, // show Bengali meaning in the Kanji module
   showVocabKanji: false, // show kanji script in the Vocabulary module
@@ -23,7 +23,7 @@ function loadSettings() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULTS;
     const parsed = JSON.parse(raw);
-    return { ...DEFAULTS, ...parsed };
+    return { ...DEFAULTS, ...parsed, themeHue: snapToPreset(parsed.themeHue ?? DEFAULT_HUE) };
   } catch {
     return DEFAULTS;
   }
@@ -48,7 +48,7 @@ export function useSettings() {
 
   useEffect(() => {
     applyTheme(settings.theme);
-    applyThemeHue(normalizeHue(settings.themeHue));
+    applyThemeHue(settings.themeHue);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     } catch {

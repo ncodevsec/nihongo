@@ -1,67 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from "react";
 import { t } from "../lib/i18n.js";
-import {
-	DEFAULT_HUE,
-	HUE_PRESETS,
-	applyThemeHue,
-	hueGradient,
-	primaryAt,
-} from "../lib/themeColor.js";
+import { HUE_PRESETS, primaryAt, snapToPreset } from "../lib/themeColor.js";
 
 const PRESET_LABEL = {
 	red: "themeHueRed",
-	orange: "themeHueOrange",
-	green: "themeHueGreen",
-	teal: "themeHueTeal",
 	blue: "themeHueBlue",
+	green: "themeHueGreen",
 	purple: "themeHuePurple",
-	pink: "themeHuePink",
+	orange: "themeHueOrange",
 };
 
-// Accent-color picker for Settings: a hue slider whose track is a gradient
-// of the actual resulting colors, quick presets, a live preview built from
-// the same classes the real UI uses, and a reset. While dragging, the color
-// is applied straight to the page (cheap); the setting itself is saved a
-// moment after the last movement so the whole app isn't re-rendered on
-// every tick.
-export default function ThemeColorPicker({ hue, onCommit, lang }) {
+// Accent-color picker for Settings: five curated colors plus a live
+// preview built from the same classes the real UI uses. Picking one
+// recolors the whole app immediately (see lib/themeColor.js).
+export default function ThemeColorPicker({ hue, onChange, lang }) {
 	const T = (k) => t(lang, k);
-	const [value, setValue] = useState(hue);
-	const timer = useRef(null);
-	const latest = useRef(hue);
-	const commitRef = useRef(onCommit);
-	commitRef.current = onCommit;
-
-	// Follow external changes (e.g. "reset settings").
-	useEffect(() => {
-		setValue(hue);
-		latest.current = hue;
-	}, [hue]);
-
-	// Save any pending change if the panel closes mid-drag.
-	useEffect(
-		() => () => {
-			if (timer.current) {
-				clearTimeout(timer.current);
-				commitRef.current(latest.current);
-			}
-		},
-		[],
-	);
-
-	const change = (next) => {
-		latest.current = next;
-		setValue(next);
-		applyThemeHue(next);
-		if (timer.current) clearTimeout(timer.current);
-		timer.current = setTimeout(() => {
-			timer.current = null;
-			commitRef.current(next);
-		}, 200);
-	};
-
-	const track = useMemo(() => hueGradient(36), []);
-	const isDefault = Math.abs(value - DEFAULT_HUE) < 0.5;
+	const current = snapToPreset(hue);
 
 	return (
 		<div className="border-t border-ai-line dark:border-night-line px-4 py-4 space-y-4">
@@ -72,48 +25,38 @@ export default function ThemeColorPicker({ hue, onCommit, lang }) {
 				</div>
 			</div>
 
-			<div className="px-1">
-				<input
-					type="range"
-					min={0}
-					max={360}
-					step={1}
-					value={Math.round(value)}
-					onChange={(e) => change(Number(e.target.value))}
-					aria-label={T("themeColorHue")}
-					className="hue-slider"
-					style={{ background: track }}
-				/>
-			</div>
-
-			<div className="flex flex-wrap items-center justify-between gap-3">
-				<div className="flex flex-wrap items-center gap-2" role="group" aria-label={T("themeColor")}>
-					{HUE_PRESETS.map((p) => {
-						const active = Math.abs(value - p.hue) < 4;
-						return (
-							<button
-								key={p.key}
-								type="button"
-								onClick={() => change(p.hue)}
-								aria-label={T(PRESET_LABEL[p.key])}
-								aria-pressed={active}
-								title={T(PRESET_LABEL[p.key])}
-								className={`w-7 h-7 rounded-full border-2 border-paper dark:border-night-paper transition-transform hover:scale-110 ${
-									active ? "ring-2 ring-ink dark:ring-night-ink" : "ring-1 ring-ai-line dark:ring-night-line"
-								}`}
+			<div className="grid grid-cols-5 gap-2" role="radiogroup" aria-label={T("themeColor")}>
+				{HUE_PRESETS.map((p) => {
+					const active = current === p.hue;
+					return (
+						<button
+							key={p.key}
+							type="button"
+							role="radio"
+							aria-checked={active}
+							onClick={() => onChange(p.hue)}
+							className={`flex flex-col items-center gap-1.5 rounded-lg border px-1 py-2.5 transition-colors ${
+								active
+									? "border-shu dark:border-shu-glow bg-shu-soft dark:bg-night"
+									: "border-ai-line dark:border-night-line hover:border-shu/40"
+							}`}
+						>
+							<span
+								className="relative w-9 h-9 rounded-full shadow-sm ring-2 ring-paper dark:ring-night-paper flex items-center justify-center"
 								style={{ backgroundColor: primaryAt(p.hue) }}
-							/>
-						);
-					})}
-				</div>
-				<button
-					type="button"
-					onClick={() => change(DEFAULT_HUE)}
-					disabled={isDefault}
-					className="font-bengali text-xs rounded-md px-3 py-1.5 border border-ai-line dark:border-night-line text-shu dark:text-shu-glow hover:bg-shu-soft dark:hover:bg-night-line disabled:opacity-40 disabled:hover:bg-transparent"
-				>
-					{T("themeColorReset")}
-				</button>
+							>
+								{active && (
+									<svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true">
+										<path d="M5 12.5l4.5 4.5L19 7.5" />
+									</svg>
+								)}
+							</span>
+							<span className="font-bengali text-[11px] font-medium text-ink dark:text-night-ink">
+								{T(PRESET_LABEL[p.key])}
+							</span>
+						</button>
+					);
+				})}
 			</div>
 
 			{/* Live preview — real theme classes, so it is exactly what the app will look like */}

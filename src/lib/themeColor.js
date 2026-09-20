@@ -123,23 +123,24 @@ export function primaryAt(hue) {
 	return rgbToHex(shiftedRgb("shu", hue));
 }
 
-export function hueGradient(steps = 24) {
-	const stops = [];
-	for (let i = 0; i <= steps; i += 1) {
-		stops.push(`${primaryAt((i / steps) * 360)} ${((i / steps) * 100).toFixed(1)}%`);
-	}
-	return `linear-gradient(to right, ${stops.join(", ")})`;
-}
-
+// The five offered accent colors (hue = position on the OKLCH hue wheel).
 export const HUE_PRESETS = [
 	{ key: "red", hue: DEFAULT_HUE },
-	{ key: "orange", hue: 55 },
-	{ key: "green", hue: 150 },
-	{ key: "teal", hue: 195 },
 	{ key: "blue", hue: 255 },
+	{ key: "green", hue: 150 },
 	{ key: "purple", hue: 300 },
-	{ key: "pink", hue: 355 },
+	{ key: "orange", hue: 55 },
 ];
+
+// Nearest offered color — also maps a hue saved by the earlier free-form
+// slider onto the closest of the five.
+export function snapToPreset(hue) {
+	const h = Number(hue);
+	if (!Number.isFinite(h)) return DEFAULT_HUE;
+	return HUE_PRESETS.reduce((best, p) =>
+		Math.abs(p.hue - h) < Math.abs(best.hue - h) ? p : best,
+	).hue;
+}
 
 export const normalizeHue = (hue) => {
 	const n = Number(hue);

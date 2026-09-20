@@ -246,7 +246,7 @@ export default function Settings({
 				</Row>
 				<ThemeColorPicker
 					hue={settings.themeHue}
-					onCommit={(h) => updateSetting("themeHue", h)}
+					onChange={(h) => updateSetting("themeHue", h)}
 					lang={lang}
 				/>
 			</div>
