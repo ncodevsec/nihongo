@@ -143,3 +143,42 @@ export function SortDirectionButton({ dir, onClick, labelAsc, labelDesc }) {
 		</button>
 	);
 }
+
+// Two-segment icon toggle for switching a list between table rows and a
+// grid of small cards.
+export function ViewModeToggle({ value, onChange, labelTable, labelGrid }) {
+	const seg = (key, label, icon) => (
+		<button
+			key={key}
+			type="button"
+			onClick={() => onChange(key)}
+			aria-pressed={value === key}
+			aria-label={label}
+			title={label}
+			className={`w-8 h-8 flex items-center justify-center ${
+				value === key
+					? "bg-shu text-washi"
+					: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:text-shu dark:hover:text-shu-glow"
+			}`}
+		>
+			<svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+				{icon}
+			</svg>
+		</button>
+	);
+	return (
+		<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
+			{seg("table", labelTable, <path d="M4 6h16M4 12h16M4 18h16" />)}
+			{seg(
+				"grid",
+				labelGrid,
+				<>
+					<rect x="4" y="4" width="6.5" height="6.5" rx="1" />
+					<rect x="13.5" y="4" width="6.5" height="6.5" rx="1" />
+					<rect x="4" y="13.5" width="6.5" height="6.5" rx="1" />
+					<rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1" />
+				</>,
+			)}
+		</div>
+	);
+}

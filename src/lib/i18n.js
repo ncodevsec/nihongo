@@ -103,6 +103,8 @@ const UI = {
   noResults: { bn: "কিছু পাওয়া যায়নি। অন্য কিছু লিখে খুঁজুন।", en: "No results. Try a different search." },
   loadMore: { bn: "আরও দেখান", en: "Show more" },
   itemsLeft: { bn: "টি বাকি", en: "left" },
+  viewTable: { bn: "টেবিল ভিউ", en: "Table view" },
+  viewGrid: { bn: "গ্রিড ভিউ", en: "Grid view" },
   sortBy: { bn: "সাজান", en: "Sort" },
   sortLesson: { bn: "পাঠ অনুসারে", en: "Lesson" },
   sortWord: { bn: "শব্দ অনুসারে", en: "Word" },
