@@ -59,7 +59,6 @@ export default function Sidebar({
 	const isGrammar = MODULES[moduleKey].kind === "grammar";
 
 	const TABS = [
-		{ key: "home", label: T("tabHome"), icon: "home" },
 		{
 			key: "study",
 			label: isGrammar ? T("tabGrammarContent") : T("tabStudy"),
@@ -102,7 +101,23 @@ export default function Sidebar({
 
 			{/* Level + Module selectors, stacked vertically */}
 			<div className="px-5 pb-5 space-y-2">
-				<div className="flex gap-5 justify-center w-full my-6">
+				<div className="flex gap-4 justify-center items-center w-full my-6">
+					<button
+						type="button"
+						onClick={() => onChange("home")}
+						aria-label={T("tabHome")}
+						title={T("tabHome")}
+						aria-current={active === "home" ? "page" : undefined}
+						className={`rounded-full w-14 h-14 border border-ai-line dark:border-night-line hover:outline outline-slate-200 dark:outline-gray-700 flex items-center justify-center ${
+							active === "home"
+								? "bg-shu text-washi shadow-sm"
+								: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+						}`}
+					>
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true">
+							{ICONS.home}
+						</svg>
+					</button>
 					{LEVEL_ORDER.map((key) => {
 						const lvl = MODULES[moduleKey].levels[key];
 						const isActiveLevel = level === key;

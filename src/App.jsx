@@ -165,6 +165,7 @@ export default function App() {
 								onModuleChange={handleModuleChange}
 								level={level}
 								onLevelChange={handleLevelChange}
+								onHome={() => setTab("home")}
 								settings={settings}
 							/>
 							<TabBar
