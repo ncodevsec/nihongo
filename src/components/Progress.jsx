@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { t, pickLang } from "../lib/i18n.js";
-import { formatDuration, computeStreak } from "../lib/utils.js";
+import { formatDuration } from "../lib/utils.js";
 import Hanko from "./Hanko.jsx";
-import ActivityCalendar from "./ActivityCalendar.jsx";
+import StreakWidget from "./StreakWidget.jsx";
 import {
 	classifyPartOfSpeech,
 	POS_CATEGORIES,
@@ -132,8 +132,6 @@ export default function Progress({
 		isGrammar,
 	]);
 
-	const streak = useMemo(() => computeStreak(activity), [activity]);
-
 	const handleReset = () => {
 		if (!confirmingReset) {
 			setConfirmingReset(true);
@@ -245,19 +243,8 @@ export default function Progress({
 			<h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
 				{T("progressActivity")}
 			</h2>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-4 mb-5">
-				<div className="flex items-center gap-3 mb-4">
-					<Hanko label={`${streak}`} tone="shu" size="sm" />
-					<div>
-						<div className="font-bengali text-sm text-ink dark:text-night-ink font-semibold">
-							{T("progressStreak")}
-						</div>
-						<div className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted">
-							{T("progressStreakSub")}
-						</div>
-					</div>
-				</div>
-				<ActivityCalendar activity={activity} lang={lang} />
+			<div className="mb-5">
+				<StreakWidget activity={activity} lang={lang} />
 			</div>
 
 			{/* Time spent — today / this week / all time, tracked while the
