@@ -1,27 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-// Only ever reads/writes this one small localStorage key — never touches
-// nihongo-progress-v2, nihongo-favorites-v1, or nihongo-settings-v1, so
-// applying an update can never wipe study progress, starred items, or
-// settings. Those all live in plain localStorage, which persists through
-// service-worker cache changes and through everything this hook does.
-const VERSION_KEY = "nihongo-build-version";
-
-function getKnownVersion() {
-  try {
-    return localStorage.getItem(VERSION_KEY);
-  } catch {
-    return null;
-  }
-}
-
-function setKnownVersion(v) {
-  try {
-    localStorage.setItem(VERSION_KEY, v);
-  } catch {
-    // ignore — worst case we just re-check next time
-  }
-}
+// The running build's timestamp is baked into the bundle at build time
+// (__APP_BUILD_TIME__, see vite.config.js). "Update available" simply means
+// the deployed version.json carries a different timestamp than the code that
+// is running right now — no stored state that could drift out of sync with
+// what is actually on screen. Nothing here touches progress, favorites or
+// settings in localStorage.
+const RUNNING_BUILD = typeof __APP_BUILD_TIME__ !== "undefined" ? __APP_BUILD_TIME__ : null;
 
 // Drives the "Check for updates" / "Update now" flow in Settings.
 //
@@ -29,9 +14,9 @@ function setKnownVersion(v) {
 //  1. The service worker lifecycle — a new sw.js installed and is sitting
 //     in `waiting` because a previous version already controls the page.
 //  2. version.json — a tiny build-timestamp file (see vite.config.js)
-//     fetched with cache: "no-store", compared against the timestamp seen
-//     on the last visit. Catches the case where the SW hasn't (yet)
-//     noticed anything but a new deploy clearly exists.
+//     fetched with cache: "no-store" and compared with the timestamp of
+//     the build that is running. Catches the case where the SW hasn't
+//     (yet) noticed anything but a new deploy clearly exists.
 //
 // Applying an update: message the waiting worker to skipWaiting, wait for
 // controllerchange, then reload. If there's no waiting worker (e.g. only
@@ -103,10 +88,7 @@ export function useAppUpdate() {
         });
         if (res.ok) {
           const data = await res.json();
-          const remote = String(data.buildTime);
-          const known = getKnownVersion();
-          if (known && known !== remote) foundNewer = true;
-          if (!known) setKnownVersion(remote);
+          if (RUNNING_BUILD && String(data.buildTime) !== RUNNING_BUILD) foundNewer = true;
         }
       } catch {
         // offline, or version.json not present in dev — ignore
@@ -130,18 +112,6 @@ export function useAppUpdate() {
   }, []);
 
   const applyUpdate = useCallback(async () => {
-    // Record the new build's timestamp as "known" before reloading, so the
-    // freshly-loaded app doesn't immediately think it's out of date again.
-    try {
-      const res = await fetch(`./version.json?t=${Date.now()}`, { cache: "no-store" });
-      if (res.ok) {
-        const data = await res.json();
-        setKnownVersion(String(data.buildTime));
-      }
-    } catch {
-      // ignore — worst case the next check re-detects the same update
-    }
-
     const worker = waitingWorkerRef.current || registrationRef.current?.waiting;
     if (worker) {
       // Triggers the "message" listener in public/sw.js, which calls
@@ -159,18 +129,15 @@ export function useAppUpdate() {
     } catch {
       // ignore
     }
+    // Also refresh the browser's HTTP cache entries for the app shell:
+    // GitHub Pages serves max-age=600, so a plain reload could otherwise
+    // re-serve the old bundle and look like nothing updated.
+    await Promise.all(
+      ["./", "./assets/index.js", "./assets/index.css", "./version.json"].map((u) =>
+        fetch(u, { cache: "reload" }).catch(() => {})
+      )
+    );
     window.location.reload();
-  }, []);
-
-  // Record the current version as "known" once on first successful load,
-  // so the very next check has something to compare against.
-  useEffect(() => {
-    fetch(`./version.json?t=${Date.now()}`, { cache: "no-store" })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data && !getKnownVersion()) setKnownVersion(String(data.buildTime));
-      })
-      .catch(() => {});
   }, []);
 
   // Every time the site loads, quietly check for a newer deploy on its

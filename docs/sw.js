@@ -70,7 +70,10 @@ self.addEventListener("fetch", (event) => {
     // cache-clearing required. Falls back to whatever is cached when
     // offline, so the app still opens without a network connection.
     event.respondWith(
-      fetch(request)
+      // cache: "no-cache" = always revalidate with the server. GitHub Pages
+      // sends max-age=600, and without this the browser's HTTP cache could
+      // hand back a stale index.js for up to 10 minutes after a deploy.
+      fetch(request, { cache: "no-cache" })
         .then((response) => {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));

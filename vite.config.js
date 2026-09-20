@@ -5,6 +5,11 @@ import { resolve } from "node:path";
 
 const pkg = JSON.parse(readFileSync(resolve(process.cwd(), "package.json"), "utf-8"));
 
+// One timestamp per build, shared by version.json (what is deployed) and
+// the JS bundle (what is running), so the app can tell "am I the build
+// that is currently deployed?" without keeping any state of its own.
+const BUILD_TIME = Date.now();
+
 // Writes a tiny version.json (the package.json version + a build
 // timestamp) straight into the output directory on every build. It's
 // fetched at runtime (network-only, never cached — see public/sw.js) by
@@ -21,7 +26,7 @@ function writeVersionFile() {
       const outDir = options.dir || resolve(process.cwd(), "docs");
       writeFileSync(
         resolve(outDir, "version.json"),
-        JSON.stringify({ version: pkg.version, buildTime: Date.now() })
+        JSON.stringify({ version: pkg.version, buildTime: BUILD_TIME })
       );
     },
   };
@@ -48,6 +53,7 @@ export default defineConfig({
   plugins: [react(), writeVersionFile()],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
+    __APP_BUILD_TIME__: JSON.stringify(String(BUILD_TIME)),
   },
   build: {
     outDir: 'docs',
