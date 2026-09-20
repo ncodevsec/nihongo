@@ -18,3 +18,21 @@ export function formatDuration(totalSeconds, hourShort, minuteShort, underMinute
   if (minutes === 0) return `${hours}${hourShort}`;
   return `${hours}${hourShort} ${minutes}${minuteShort}`;
 }
+
+function toDateKey(d) {
+  return d.toISOString().slice(0, 10);
+}
+
+// Consecutive days with any activity, ending today. If nothing is logged
+// today yet, counting starts from yesterday so a still-unbroken streak
+// from previous days doesn't read as zero. `activity` is { "YYYY-MM-DD": count }.
+export function computeStreak(activity) {
+  const cursor = new Date();
+  if (!activity[toDateKey(cursor)]) cursor.setDate(cursor.getDate() - 1);
+  let streak = 0;
+  while (activity[toDateKey(cursor)]) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}

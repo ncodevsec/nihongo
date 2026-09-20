@@ -51,6 +51,7 @@ export default function Header({
 	const T = (k) => t(lang, k);
 	const isGrammar = MODULES[moduleKey].kind === "grammar";
 	const isSettings = active === "settings";
+	const isHome = active === "home";
 
 	return (
 		<header className="relative bg-paper dark:bg-night-paper border-b border-ai-line dark:border-night-line overflow-hidden shadow-card dark:shadow-none">
@@ -66,7 +67,14 @@ export default function Header({
 
 			<div className="relative max-w-4xl mx-auto px-3 sm:px-5 py-3 sm:py-4">
 				<div className="flex items-start justify-between gap-3">
-					<div className="flex items-center gap-3 min-w-0">
+					{/* Logo + name double as the way back to the Home page. */}
+					<button
+						type="button"
+						onClick={() => onChange("home")}
+						aria-label={T("tabHome")}
+						title={T("tabHome")}
+						className="flex items-center gap-3 min-w-0 text-left"
+					>
 						<img
 							src="./icons/logo-mark-96.png"
 							alt="NihonGoSL"
@@ -82,10 +90,10 @@ export default function Header({
 								{T("appSubtitle")}
 							</p>
 						</div>
-					</div>
+					</button>
 
 					<div className="flex items-center gap-3 shrink-0">
-						{!isGrammar && !isSettings && (
+						{!isGrammar && !isSettings && !isHome && (
 							<div className="hidden sm:flex items-center gap-4 font-mono text-xs">
 								<div className="text-right">
 									<div className="text-shu dark:text-shu-glow font-semibold">

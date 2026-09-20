@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MODULES } from "./data/modules.js";
 import { useProgress } from "./hooks/useProgress.js";
 import { useSettings } from "./hooks/useSettings.js";
 import { useFavorites } from "./hooks/useFavorites.js";
 import { useAppUpdate } from "./hooks/useAppUpdate.js";
 import { useTimeTracking } from "./hooks/useTimeTracking.js";
+import { useLastSession } from "./hooks/useLastSession.js";
 import { t, pickLang } from "./lib/i18n.js";
 import { flattenGrammarPoints, grammarCategories } from "./lib/grammarUtils.js";
 import Header from "./components/Header.jsx";
@@ -20,10 +21,13 @@ import GrammarStudy from "./components/grammar/GrammarStudy.jsx";
 import GrammarQuiz from "./components/grammar/GrammarQuiz.jsx";
 import GrammarList from "./components/grammar/GrammarList.jsx";
 import Footer from "./components/Footer.jsx";
+import Home from "./components/home/Home.jsx";
 
 export default function App() {
-	const [tab, setTabRaw] = useState("study");
-	const [lastTab, setLastTab] = useState("study");
+	// Home is the landing page on every launch; everything else is one
+	// tap away from it.
+	const [tab, setTabRaw] = useState("home");
+	const [lastTab, setLastTab] = useState("home");
 	const setTab = (next) => {
 		if (next !== "settings") setLastTab(next);
 		setTabRaw(next);
@@ -44,6 +48,14 @@ export default function App() {
 	const { updateAvailable, checking, lastCheckedAt, checkForUpdate, applyUpdate } =
 		useAppUpdate();
 	const { todaySeconds, weekSeconds, totalSeconds } = useTimeTracking();
+	const { lastSession, saveSession } = useLastSession();
+
+	// Remember the last study context so Home can offer "Continue learning".
+	useEffect(() => {
+		if (["study", "quiz", "reference", "progress"].includes(tab)) {
+			saveSession({ moduleKey, level, tab });
+		}
+	}, [tab, moduleKey, level, saveSession]);
 
 	const mod = MODULES[moduleKey];
 	const isGrammar = mod.kind === "grammar";
@@ -104,6 +116,14 @@ export default function App() {
 		setTab("study");
 	};
 
+	// Jump straight into a module + level + tab (used by the Home page).
+	const launch = (nextModule, nextLevel, nextTab) => {
+		setModuleKey(nextModule);
+		setLevel(nextLevel);
+		setTab(nextTab);
+		window.scrollTo({ top: 0 });
+	};
+
 	return (
 		<div className="min-h-screen bg-washi dark:bg-[#0d0d0d] text-ink dark:text-night-ink lg:flex">
 			<Sidebar
@@ -138,7 +158,7 @@ export default function App() {
 						updateAvailable={updateAvailable}
 					/>
 
-					{tab !== "settings" && (
+					{tab !== "settings" && tab !== "home" && (
 						<div className="pt-3 space-y-2.5">
 							<LevelModuleBar
 								moduleKey={moduleKey}
@@ -164,6 +184,20 @@ export default function App() {
             switching between tabs — previously each panel was conditionally
             rendered, which unmounted and threw away its state every time. */}
 				<main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-10 pt-4 sm:pt-5 lg:pt-10 pb-6 lg:pb-12">
+					<div className={tab === "home" ? "" : "hidden"}>
+						<Home
+							settings={settings}
+							updateSetting={updateSetting}
+							progress={progress}
+							activity={activity}
+							timeToday={todaySeconds}
+							lastSession={lastSession}
+							updateAvailable={updateAvailable}
+							onLaunch={launch}
+							onOpenSettings={() => setTab("settings")}
+							isActive={tab === "home"}
+						/>
+					</div>
 					{isGrammar ? (
 						<>
 							<div className={tab === "study" ? "" : "hidden"}>

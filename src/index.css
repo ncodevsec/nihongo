@@ -50,3 +50,21 @@ html.dark body {
     animation-duration: 0.001ms !important;
   }
 }
+
+/* Home page entrance: a short fade-up. Re-plays each time the Home panel
+   becomes visible again (it toggles display:none while other tabs are
+   open). The reduced-motion rule above already neutralises it. */
+@keyframes home-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.home-rise {
+  animation: home-rise 0.5s ease both;
+}
