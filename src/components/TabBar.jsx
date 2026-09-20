@@ -2,12 +2,6 @@ import { MODULES } from "../data/modules.js";
 import { t } from "../lib/i18n.js";
 
 const ICONS = {
-  home: (
-    <>
-      <path d="M3 10.5L12 3l9 7.5" />
-      <path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5" />
-    </>
-  ),
   study: (
     <path d="M4 5.5a2 2 0 012-2h4.5v13H6a2 2 0 00-2 2v-13zM20 5.5a2 2 0 00-2-2h-4.5v13H18a2 2 0 012 2v-13z" />
   ),
@@ -30,7 +24,6 @@ export default function TabBar({ active, onChange, moduleKey, settings }) {
   const isGrammar = MODULES[moduleKey].kind === "grammar";
 
   const TABS = [
-    { key: "home", label: T("tabHome"), icon: "home", compact: true },
     { key: "study", label: isGrammar ? T("tabGrammarContent") : T("tabStudy"), icon: "study" },
     { key: "quiz", label: T("tabQuiz"), icon: "quiz" },
     { key: "reference", label: T("tabReference"), icon: "reference" },
@@ -62,11 +55,7 @@ export default function TabBar({ active, onChange, moduleKey, settings }) {
               }`}
             >
               <TabIcon name={tabItem.icon} />
-              {tabItem.compact ? (
-                <span className="sr-only min-[400px]:not-sr-only">{tabItem.label}</span>
-              ) : (
-                tabItem.label
-              )}
+              {tabItem.label}
             </button>
           );
         })}
