@@ -41,7 +41,9 @@ export function flattenGrammarPoints(lessons, level) {
         // overwrites the raw "8-5" id from the source data, so it's kept
         // here under its own key for display purposes.
         pointId: point.id,
-        id: grammarItemId(level, point.id),
+        // Lessons in the combined "All" view carry their own level tag so
+        // ids stay identical to the ones N5 / N4 use on their own.
+        id: grammarItemId(lesson._level ?? level, point.id),
       });
     }
   }
@@ -152,6 +154,9 @@ function collectPos(target, level) {
 // and adjective actually taught at that level, and stays in sync if that
 // data changes. See conjugate.js for the actual conjugation rules.
 export function buildTransformationRows(level) {
+  if (level === "all") {
+    return [...buildTransformationRows("n5"), ...buildTransformationRows("n4")];
+  }
   const rows = [];
 
   for (const { reading, meaningBn } of collectPos("verb", level)) {

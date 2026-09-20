@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { MODULES, LEVEL_ORDER } from "../data/modules.js";
+import { MODULES, LEVEL_OPTIONS } from "../data/modules.js";
 
 // Remembers where the learner last was (module, level and which tab) so
 // Home can offer a one-tap "Continue learning". Its own small localStorage
@@ -12,7 +12,7 @@ function isValid(s) {
 	return (
 		s &&
 		MODULES[s.moduleKey] &&
-		LEVEL_ORDER.includes(s.level) &&
+		LEVEL_OPTIONS.includes(s.level) &&
 		VALID_TABS.includes(s.tab)
 	);
 }

@@ -26,6 +26,7 @@ export function buildContentIndex(showJukugo) {
 					.map((k) => k.id);
 			}
 		}
+		index[moduleKey].all = LEVEL_ORDER.flatMap((level) => index[moduleKey][level]);
 	}
 	return index;
 }
@@ -59,6 +60,19 @@ export function computeHomeStats(index, progress) {
 	for (const entry of Object.values(progress)) {
 		seen += entry?.seen || 0;
 		correct += entry?.correct || 0;
+	}
+
+	// Combined "All" figures are sums of the two levels (kept out of the
+	// overall totals above so nothing is counted twice).
+	byLevel.all = { learned: 0, total: 0 };
+	for (const moduleKey of MODULE_ORDER) {
+		const parts = LEVEL_ORDER.map((level) => byModule[moduleKey][level]);
+		byModule[moduleKey].all = {
+			learned: parts.reduce((n, p) => n + p.learned, 0),
+			total: parts.reduce((n, p) => n + p.total, 0),
+		};
+		byLevel.all.learned += byModule[moduleKey].all.learned;
+		byLevel.all.total += byModule[moduleKey].all.total;
 	}
 
 	return {

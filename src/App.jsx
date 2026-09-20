@@ -89,7 +89,8 @@ export default function App() {
 		kanji: "kanji",
 		grammar: "grammar",
 	};
-	const idPrefix = `${idPrefixMap[moduleKey]}-${level}-`;
+	// "All" resets/filters across both levels: "vocab-" matches n5 and n4 ids.
+	const idPrefix = `${idPrefixMap[moduleKey]}-${level === "all" ? "" : `${level}-`}`;
 
 	const { accuracy, masteredCount } = useMemo(() => {
 		if (isGrammar) return { accuracy: 0, masteredCount: 0 };

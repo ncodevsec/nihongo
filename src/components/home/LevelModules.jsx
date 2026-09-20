@@ -1,4 +1,4 @@
-import { MODULES, MODULE_ORDER, LEVEL_ORDER } from "../../data/modules.js";
+import { MODULES, MODULE_ORDER, LEVEL_OPTIONS, levelLabel } from "../../data/modules.js";
 import { pickLang } from "../../lib/i18n.js";
 import Icon from "./icons.jsx";
 import SectionHeading from "./SectionHeading.jsx";
@@ -47,8 +47,8 @@ export default function LevelModules({ lang, T, level, onLevelChange, stats, onL
 					title={T("homeLevelsTitle")}
 					sub={T("homeLevelsSub")}
 				/>
-				<div className="grid grid-cols-2 gap-3 sm:gap-4">
-					{LEVEL_ORDER.map((key) => {
+				<div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+					{LEVEL_OPTIONS.map((key) => {
 						const selected = level === key;
 						const s = stats.byLevel[key];
 						return (
@@ -57,7 +57,7 @@ export default function LevelModules({ lang, T, level, onLevelChange, stats, onL
 								type="button"
 								aria-pressed={selected}
 								onClick={() => onLevelChange(key)}
-								className={`relative flex flex-col text-left rounded-xl border p-3.5 sm:p-5 transition-colors ${
+								className={`relative flex flex-col text-left rounded-xl border p-3.5 sm:p-5 transition-colors ${key === "all" ? "col-span-2 sm:col-span-1 " : ""}${
 									selected
 										? "border-shu dark:border-shu-glow bg-shu-soft dark:bg-night-paper ring-2 ring-shu/15 dark:ring-shu-glow/20"
 										: "border-ai-line dark:border-night-line bg-paper dark:bg-night-paper hover:border-shu/50"
@@ -66,13 +66,13 @@ export default function LevelModules({ lang, T, level, onLevelChange, stats, onL
 								<div className="flex items-start justify-between gap-3">
 									<div className="min-w-0">
 										<div className={`${headFont} text-3xl sm:text-4xl font-bold leading-none ${selected ? "text-shu dark:text-shu-glow" : "text-ink dark:text-night-ink"}`}>
-											{key.toUpperCase()}
+											{key === "all" ? T("levelAll") : key.toUpperCase()}
 										</div>
 										<div className="font-bengali text-sm font-semibold text-ink dark:text-night-ink mt-2">
-											{T(key === "n5" ? "homeLevelN5Name" : "homeLevelN4Name")}
+											{T({ all: "homeLevelAllName", n5: "homeLevelN5Name", n4: "homeLevelN4Name" }[key])}
 										</div>
 										<div className="font-bengali text-[11px] sm:text-xs text-ink-muted dark:text-night-ink-muted mt-0.5">
-											{T(key === "n5" ? "homeLevelN5Desc" : "homeLevelN4Desc")}
+											{T({ all: "homeLevelAllDesc", n5: "homeLevelN5Desc", n4: "homeLevelN4Desc" }[key])}
 										</div>
 									</div>
 									<span
@@ -127,7 +127,7 @@ export default function LevelModules({ lang, T, level, onLevelChange, stats, onL
 											{pickLang(mod, lang)}
 										</h3>
 										<div className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted mt-0.5">
-											{s.total.toLocaleString("en-US")} {T(MODULE_UNIT[key])} · {level.toUpperCase()}
+											{s.total.toLocaleString("en-US")} {T(MODULE_UNIT[key])} · {levelLabel(level)}
 										</div>
 									</div>
 								</div>

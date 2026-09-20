@@ -1,4 +1,4 @@
-import { MODULES, MODULE_ORDER, LEVEL_ORDER } from "../data/modules.js";
+import { MODULES, MODULE_ORDER, LEVEL_OPTIONS } from "../data/modules.js";
 import { t, pickLang } from "../lib/i18n.js";
 
 export default function LevelModuleBar({
@@ -13,7 +13,7 @@ export default function LevelModuleBar({
 
 	return (
 		<div className="max-w-4xl mx-auto px-3 sm:px-5">
-			<div className="flex flex-wrap items-center gap-2 sm:gap-3">
+			<div className="flex flex-wrap items-center gap-1.5 min-[400px]:gap-2 sm:gap-3">
 				<button
 					type="button"
 					onClick={onHome}
@@ -28,20 +28,20 @@ export default function LevelModuleBar({
 				</button>
 
 				<div className="flex rounded-full border border-ai-line dark:border-night-line overflow-hidden bg-washi dark:bg-night">
-					{LEVEL_ORDER.map((key) => {
+					{LEVEL_OPTIONS.map((key) => {
 						const lvl = MODULES[moduleKey].levels[key];
 						const isActiveLevel = level === key;
 						return (
 							<button
 								key={key}
 								onClick={() => onLevelChange(key)}
-								className={`px-3 py-1.5 text-xs font-semibold ${
+								className={`px-2.5 min-[400px]:px-3 py-1.5 text-xs font-semibold ${
 									isActiveLevel
 										? "bg-shu text-washi shadow-sm"
 										: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
 								}`}
 							>
-								{lvl.label}
+								{key === "all" ? t(lang, "levelAll") : lvl.label}
 							</button>
 						);
 					})}
@@ -60,7 +60,7 @@ export default function LevelModuleBar({
 							<button
 								key={key}
 								onClick={() => onModuleChange(key)}
-								className={`px-3 py-1.5 text-xs font-bengali font-semibold ${
+								className={`px-2.5 min-[400px]:px-3 py-1.5 text-xs font-bengali font-semibold ${
 									isActiveModule
 										? "bg-shu text-washi shadow-sm"
 										: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
