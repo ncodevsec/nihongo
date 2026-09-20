@@ -8,7 +8,7 @@ function makeLesson(n) {
   return { key: `lesson${n}`, jp: `第${n}課`, bn: `পাঠ ${n}`, en: `Lesson ${n}` };
 }
 
-const JUKUGO_CATEGORY = {
+export const JUKUGO_CATEGORY = {
   key: "jukugo",
   jp: "熟語",
   bn: "জুকুগো (দুই-কাঞ্জি শব্দ)",

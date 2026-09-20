@@ -4,6 +4,7 @@ import { useHotkeys } from "../hooks/useHotkeys.js";
 import { t, pickLang } from "../lib/i18n.js";
 import Hanko from "./Hanko.jsx";
 import GroupCategoryTabs from "./GroupCategoryTabs.jsx";
+import { RADICAL_CATEGORIES, radicalKeyOf } from "../data/kanji-radicals.js";
 import Furigana from "./Furigana.jsx";
 import LeveledKanji from "./LeveledKanji.jsx";
 import {
@@ -14,6 +15,14 @@ import {
 } from "../lib/vocabClassify.js";
 
 const LETTERS = ["A", "B", "C", "D", "E"];
+
+// Category key of an item under a given grouping scheme.
+function categoryKeyOf(item, groupBy) {
+	if (groupBy === "pos") return classifyPartOfSpeech(item);
+	if (groupBy === "count") return classifyCounting(item);
+	if (groupBy === "radical") return radicalKeyOf(item);
+	return item.category;
+}
 
 function buildQuestions(pool, allData, { isVocab, vocabLang, optionCount }) {
 	const textOf = (d) =>
@@ -107,6 +116,12 @@ export default function Quiz({
 		return COUNTING_CATEGORIES.filter((c) => used.has(c.key));
 	}, [kanjiData, isVocab]);
 
+	const availableRadicalCategories = useMemo(() => {
+		if (isVocab) return [];
+		const used = new Set(kanjiData.map((k) => radicalKeyOf(k)));
+		return RADICAL_CATEGORIES.filter((c) => used.has(c.key));
+	}, [kanjiData, isVocab]);
+
 	// ---- Setup phase state (persists as the new defaults via updateSetting
 	// once the quiz is actually started) ----
 	const [phase, setPhase] = useState("setup");
@@ -133,15 +148,9 @@ export default function Quiz({
 
 	const setupCategoryFiltered = useMemo(() => {
 		if (setupCategories.length === 0) return kanjiData;
-		if (setupGroupBy === "pos")
-			return kanjiData.filter((k) =>
-				setupCategories.includes(classifyPartOfSpeech(k)),
-			);
-		if (setupGroupBy === "count")
-			return kanjiData.filter((k) =>
-				setupCategories.includes(classifyCounting(k)),
-			);
-		return kanjiData.filter((k) => setupCategories.includes(k.category));
+		return kanjiData.filter((k) =>
+			setupCategories.includes(categoryKeyOf(k, setupGroupBy)),
+		);
 	}, [kanjiData, setupCategories, setupGroupBy]);
 
 	const setupAvailableCount =
@@ -151,6 +160,10 @@ export default function Quiz({
 
 	// ---- Active quiz state ----
 	const [selectedCategories, setSelectedCategories] = useState([]); // [] = all
+	// Grouping scheme the running quiz's selectedCategories belong to, so
+	// restarting / weak-words reuse the same filter (their keys are only
+	// meaningful under the scheme they were picked from).
+	const [runGroupBy, setRunGroupBy] = useState("lesson");
 	const [optionCount, setOptionCount] = useState(4);
 	const [mode, setMode] = useState("all");
 	const [runId, setRunId] = useState(0);
@@ -166,8 +179,10 @@ export default function Quiz({
 	const categoryFiltered = useMemo(() => {
 		return selectedCategories.length === 0
 			? kanjiData
-			: kanjiData.filter((k) => selectedCategories.includes(k.category));
-	}, [kanjiData, selectedCategories]);
+			: kanjiData.filter((k) =>
+					selectedCategories.includes(categoryKeyOf(k, runGroupBy)),
+				);
+	}, [kanjiData, selectedCategories, runGroupBy]);
 
 	const applyLength = useCallback((list, len) => {
 		if (len === "all") return list;
@@ -185,8 +200,9 @@ export default function Quiz({
 	);
 
 	const startQuizRun = useCallback(
-		({ cat, len, opts, timed, minutes, nextMode, source }) => {
+		({ cat, groupBy, len, opts, timed, minutes, nextMode, source }) => {
 			setSelectedCategories(cat);
+			setRunGroupBy(groupBy);
 			setOptionCount(opts);
 			setMode(nextMode);
 			const buildOpts = {
@@ -220,6 +236,7 @@ export default function Quiz({
 		updateSetting("timedMinutes", setupMinutes);
 		startQuizRun({
 			cat: setupCategories,
+			groupBy: setupGroupBy,
 			len: setupLength,
 			opts: setupOptionCount,
 			timed: setupTimed,
@@ -235,6 +252,7 @@ export default function Quiz({
 			m === "weak" && weakPool.length >= 4 ? weakPool : categoryFiltered;
 		startQuizRun({
 			cat: selectedCategories,
+			groupBy: runGroupBy,
 			len: settings.quizLength,
 			opts: optionCount,
 			timed: settings.timedQuiz,
@@ -337,7 +355,10 @@ export default function Quiz({
 												{ key: "pos", label: T("groupByPos"), categories: availablePosCategories },
 												{ key: "count", label: T("groupByCount"), categories: availableCountingCategories },
 											]
-										: [{ key: "lesson", label: T("allCategories"), categories: availableCategories }]
+										: [
+												{ key: "lesson", label: T("groupByLesson"), categories: availableCategories },
+												{ key: "radical", label: T("groupByRadical"), categories: availableRadicalCategories },
+											]
 								}
 								active={setupGroupBy}
 								onActiveChange={setSetupGroupBy}
@@ -460,9 +481,14 @@ export default function Quiz({
 			? T("allCategories")
 			: selectedCategories.length === 1
 				? pickLang(
-						availableCategories.find(
-							(c) => c.key === selectedCategories[0],
-						) || {
+						(runGroupBy === "pos"
+							? POS_CATEGORIES
+							: runGroupBy === "count"
+								? COUNTING_CATEGORIES
+								: runGroupBy === "radical"
+									? RADICAL_CATEGORIES
+									: availableCategories
+						).find((c) => c.key === selectedCategories[0]) || {
 							en: selectedCategories[0],
 							bn: selectedCategories[0],
 						},
