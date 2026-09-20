@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { t, pickLang } from "../lib/i18n.js";
-import { StarFilterButton, SortDirectionButton } from "./FilterControls.jsx";
+import { StarFilterButton, SortDirectionButton, ViewModeToggle } from "./FilterControls.jsx";
 import {
 	classifyPartOfSpeech,
 	POS_CATEGORIES,
@@ -12,14 +12,23 @@ import { RADICAL_CATEGORIES, radicalKeyOf } from "../data/kanji-radicals.js";
 import Furigana from "./Furigana.jsx";
 
 const PAGE_SIZE = 60;
+const VIEW_KEY = "nihongo-list-view-v1";
 
-function CheckButton({ learned, onClick, labelOn, labelOff }) {
+function loadView() {
+	try {
+		return localStorage.getItem(VIEW_KEY) === "grid" ? "grid" : "table";
+	} catch {
+		return "table";
+	}
+}
+
+function CheckButton({ learned, onClick, labelOn, labelOff, sizeClass = "w-7 h-7" }) {
 	return (
 		<button
 			onClick={onClick}
 			aria-label={learned ? labelOn : labelOff}
 			title={learned ? labelOn : labelOff}
-			className={`shrink-0 w-7 h-7 flex items-center justify-center rounded-full border ${
+			className={`shrink-0 ${sizeClass} flex items-center justify-center rounded-full border ${
 				learned
 					? "border-take bg-take text-washi dark:border-take-glow dark:bg-take-glow dark:text-night"
 					: "border-ai-line dark:border-night-line text-ink-muted dark:text-night-ink-muted hover:border-take hover:text-take dark:hover:border-take-glow dark:hover:text-take-glow"
@@ -43,14 +52,14 @@ function CheckButton({ learned, onClick, labelOn, labelOff }) {
 	);
 }
 
-function StarButton({ starred, onClick, labelOn, labelOff }) {
+function StarButton({ starred, onClick, labelOn, labelOff, sizeClass = "w-7 h-7" }) {
 	return (
 		<button
 			onClick={onClick}
 			aria-label={starred ? labelOn : labelOff}
 			title={starred ? labelOn : labelOff}
 			// className={`shrink-0 w-7 h-7 flex items-center justify-center rounded-full border border-ai-line dark:border-night-line ${
-			className={`shrink-0 w-7 h-7 flex items-center justify-center rounded-full border border-ai-line dark:border-night-line ${
+			className={`shrink-0 ${sizeClass} flex items-center justify-center rounded-full border border-ai-line dark:border-night-line ${
 				starred
 					? "text-shu-soft bg-shu dark:text-shu-soft dark:bg-shu-glow"
 					: "text-ink-muted/40 dark:text-night-ink-muted/40 dark:hover:text-shu-glow hover:text-shu hover:border-shu-glow dark:hover:border-shu-glow"
@@ -103,6 +112,15 @@ export default function Reference({
 	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 	const [sortBy, setSortBy] = useState("lesson");
 	const [sortDir, setSortDir] = useState("asc");
+	const [view, setView] = useState(loadView); // 'table' | 'grid'
+	const changeView = (v) => {
+		setView(v);
+		try {
+			localStorage.setItem(VIEW_KEY, v);
+		} catch {
+			// ignore — the choice just won't persist
+		}
+	};
 
 	useEffect(() => {
 		const timer = setTimeout(() => setDebouncedQuery(query), 150);
@@ -227,6 +245,32 @@ export default function Reference({
 	const gridCols =
 		"grid-cols-[10rem_1fr_auto_auto] sm:grid-cols-[12rem_1fr_7rem_auto_auto] lg:grid-cols-[14rem_1fr_7rem_auto_auto] xl:grid-cols-[16rem_1fr_7rem_auto_auto]";
 
+	const categoryFor = (k) =>
+		groupBy === "pos"
+			? POS_CATEGORIES.find((c) => c.key === classifyPartOfSpeech(k))
+			: groupBy === "count"
+				? COUNTING_CATEGORIES.find((c) => c.key === classifyCounting(k))
+				: groupBy === "radical"
+					? RADICAL_CATEGORIES.find((c) => c.key === radicalKeyOf(k))
+					: categories.find((c) => c.key === k.category);
+
+	// Size the main text of a grid card to its length so long vocabulary
+	// words still fit on a small card.
+	const wordSize = (text = "") =>
+		text.length <= 2 ? "text-3xl" : text.length <= 4 ? "text-2xl" : text.length <= 7 ? "text-xl" : "text-base";
+
+	const loadMoreButton =
+		visibleCount < sorted.length ? (
+			<div className="p-3 text-center">
+				<button
+					onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+					className="font-bengali text-xs border border-ai-line dark:border-night-line rounded-md px-4 py-1.5 text-ai dark:text-ai-glow hover:bg-ai-soft dark:hover:bg-night-line"
+				>
+					{T("loadMore")} ({sorted.length - visibleCount} {T("itemsLeft")})
+				</button>
+			</div>
+		) : null;
+
 	const SORT_OPTIONS = [
 		{ key: "lesson", label: T("sortLesson") },
 		{ key: "word", label: T("sortWord") },
@@ -290,7 +334,13 @@ export default function Reference({
 					labelAsc={T("sortAsc")}
 					labelDesc={T("sortDesc")}
 				/>
-				<div className="ml-auto">
+				<div className="ml-auto flex items-center gap-2">
+					<ViewModeToggle
+						value={view}
+						onChange={changeView}
+						labelTable={T("viewTable")}
+						labelGrid={T("viewGrid")}
+					/>
 					<StarFilterButton
 						active={onlyStarred}
 						onClick={() => setOnlyStarred((v) => !v)}
@@ -305,6 +355,73 @@ export default function Reference({
 				{T("showingCountShown")}
 			</div>
 
+			{view === "grid" ? (
+				<>
+					<div className="grid grid-cols-2 min-[440px]:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5">
+						{visible.map((k) => {
+							const learned = !!progress[k.id]?.learned;
+							const starred = !!favorites[k.id];
+							const cat = categoryFor(k);
+							const mainText = showWord ? k.kanji : k.reading;
+							return (
+								<div
+									key={k.id}
+									className={`flex flex-col rounded-lg border p-2 shadow-card dark:shadow-none ${
+										learned
+											? "border-take/60 dark:border-take-glow/50 bg-take-soft/60 dark:bg-take/10"
+											: "border-ai-line dark:border-night-line bg-paper dark:bg-night-paper"
+									}`}
+								>
+									<div className="flex items-center justify-between">
+										<CheckButton
+											sizeClass="w-6 h-6"
+											learned={learned}
+											onClick={() => setLearned(k.id, !learned)}
+											labelOn={T("markAsUnlearned")}
+											labelOff={T("markAsLearned")}
+										/>
+										<StarButton
+											sizeClass="w-6 h-6"
+											starred={starred}
+											onClick={() => toggleFavorite(k.id)}
+											labelOn={T("markAsUnstarred")}
+											labelOff={T("markAsStarred")}
+										/>
+									</div>
+									<div className="flex-1 flex flex-col items-center justify-center text-center py-2 min-h-[4.5rem]">
+										<span lang="ja" className={`font-mincho ${wordSize(mainText)} leading-snug text-ink dark:text-night-ink break-words max-w-full`}>
+											{showWord ? (
+												<Furigana
+													text={k.kanji}
+													reading={k.reading}
+													show={settings.showFurigana}
+													level={level}
+												/>
+											) : (
+												k.reading
+											)}
+										</span>
+										{showMeaning && (
+											<span className="font-bengali text-[11px] leading-snug text-ink-muted dark:text-night-ink-muted mt-1.5 line-clamp-2 break-words">
+												{meaningText(k)}
+											</span>
+										)}
+									</div>
+									<span className="font-bengali text-[9px] text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded-full px-2 py-0.5 self-center max-w-full truncate">
+										{pickLang(cat, lang)}
+									</span>
+								</div>
+							);
+						})}
+					</div>
+					{sorted.length === 0 && (
+						<div className="px-3 py-8 text-center font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
+							{T("noResults")}
+						</div>
+					)}
+					{loadMoreButton}
+				</>
+			) : (
 			<div className="border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden bg-paper dark:bg-night-paper">
 				<div
 					className={`grid ${gridCols} gap-2 px-3 py-2 bg-ai-soft dark:bg-night-line/60 border-b border-ai-line dark:border-night-line text-[10px] font-bengali font-semibold text-ai dark:text-ai-glow uppercase tracking-wide`}
@@ -409,6 +526,7 @@ export default function Reference({
 					</div>
 				)}
 			</div>
+			)}
 		</div>
 	);
 }
