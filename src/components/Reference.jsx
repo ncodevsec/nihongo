@@ -8,6 +8,7 @@ import {
 	COUNTING_CATEGORIES,
 } from "../lib/vocabClassify.js";
 import GroupCategoryTabs from "./GroupCategoryTabs.jsx";
+import { RADICAL_CATEGORIES, radicalKeyOf } from "../data/kanji-radicals.js";
 import Furigana from "./Furigana.jsx";
 
 const PAGE_SIZE = 60;
@@ -131,9 +132,16 @@ export default function Reference({
 		return COUNTING_CATEGORIES.filter((c) => used.has(c.key));
 	}, [kanjiData, isVocab]);
 
+	const availableRadicalCategories = useMemo(() => {
+		if (isVocab) return [];
+		const used = new Set(kanjiData.map((k) => radicalKeyOf(k)));
+		return RADICAL_CATEGORIES.filter((c) => used.has(c.key));
+	}, [kanjiData, isVocab]);
+
 	const categoryOf = (item) => {
 		if (groupBy === "pos") return classifyPartOfSpeech(item);
 		if (groupBy === "count") return classifyCounting(item);
+		if (groupBy === "radical") return radicalKeyOf(item);
 		return item.category;
 	};
 
@@ -245,7 +253,10 @@ export default function Reference({
 									{ key: "pos", label: T("groupByPos"), categories: availablePosCategories },
 									{ key: "count", label: T("groupByCount"), categories: availableCountingCategories },
 								]
-							: [{ key: "lesson", label: T("allCategories"), categories: availableCategories }]
+							: [
+								{ key: "lesson", label: T("groupByLesson"), categories: availableCategories },
+								{ key: "radical", label: T("groupByRadical"), categories: availableRadicalCategories },
+							]
 					}
 					active={groupBy}
 					onActiveChange={setGroupBy}
@@ -321,9 +332,13 @@ export default function Reference({
 											(c) =>
 												c.key === classifyCounting(k),
 										)
-									: categories.find(
-											(c) => c.key === k.category,
-										);
+									: groupBy === "radical"
+										? RADICAL_CATEGORIES.find(
+												(c) => c.key === radicalKeyOf(k),
+											)
+										: categories.find(
+												(c) => c.key === k.category,
+											);
 						return (
 							<div
 								key={k.id}
