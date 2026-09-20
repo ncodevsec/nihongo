@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 // Each group: { key, label, categories: [{ key, bn, en }] }. `active` is
 // the current group's key. `selected` is the array of selected category
@@ -15,16 +16,61 @@ export default function GroupCategoryTabs({
 	allLabel,
 }) {
 	const [openKey, setOpenKey] = useState(null);
+	const [pos, setPos] = useState(null); // { left, top, maxHeight } of the open menu
 	const ref = useRef(null);
+	const triggerRefs = useRef({});
+	const panelRef = useRef(null);
+
+	// The menu is rendered in a portal with fixed positioning and clamped to
+	// the visible screen: it can never spill past the right/left edge (the
+	// last tab of a row used to push it off-screen) or be clipped by a parent,
+	// and it flips above the button when there is more room there.
+	const reposition = useCallback(() => {
+		const btn = triggerRefs.current[openKey];
+		const panel = panelRef.current;
+		if (!btn || !panel) return;
+		const r = btn.getBoundingClientRect();
+		const margin = 8;
+		const vw = document.documentElement.clientWidth;
+		const vh = window.innerHeight;
+		const width = Math.min(panel.offsetWidth, vw - margin * 2);
+		const left = Math.min(Math.max(r.left, margin), vw - width - margin);
+		const below = vh - r.bottom - margin - 4;
+		const above = r.top - margin - 4;
+		const openUp = below < 200 && above > below;
+		const maxHeight = Math.max(120, Math.min(320, openUp ? above : below));
+		const height = Math.min(panel.scrollHeight, maxHeight);
+		const top = openUp ? Math.max(margin, r.top - 4 - height) : r.bottom + 4;
+		setPos({ left, top, maxHeight });
+	}, [openKey]);
+
+	useLayoutEffect(() => {
+		if (openKey) reposition();
+		else setPos(null);
+	}, [openKey, reposition, selected, active]);
 
 	useEffect(() => {
 		if (!openKey) return undefined;
 		const onClickOutside = (e) => {
-			if (ref.current && !ref.current.contains(e.target)) setOpenKey(null);
+			const inside =
+				(ref.current && ref.current.contains(e.target)) ||
+				(panelRef.current && panelRef.current.contains(e.target));
+			if (!inside) setOpenKey(null);
+		};
+		const onKey = (e) => {
+			if (e.key === "Escape") setOpenKey(null);
 		};
 		document.addEventListener("mousedown", onClickOutside);
-		return () => document.removeEventListener("mousedown", onClickOutside);
-	}, [openKey]);
+		document.addEventListener("keydown", onKey);
+		window.addEventListener("resize", reposition);
+		window.addEventListener("scroll", reposition, true);
+		return () => {
+			document.removeEventListener("mousedown", onClickOutside);
+			document.removeEventListener("keydown", onKey);
+			window.removeEventListener("resize", reposition);
+			window.removeEventListener("scroll", reposition, true);
+		};
+	}, [openKey, reposition]);
 
 	const label = (c) => (lang === "bn" ? c.bn : c.en) || c.en || c.bn;
 
@@ -67,6 +113,11 @@ export default function GroupCategoryTabs({
 					<div key={group.key} className="relative">
 						<button
 							type="button"
+							ref={(el) => {
+								triggerRefs.current[group.key] = el;
+							}}
+							aria-haspopup="true"
+							aria-expanded={isOpen}
 							onClick={() => handleTabClick(group)}
 							aria-pressed={isActive}
 							className={`font-bengali flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm border ${
@@ -90,8 +141,18 @@ export default function GroupCategoryTabs({
 							</svg>
 						</button>
 
-						{isOpen && (
-							<div className="absolute z-20 mt-1 min-w-[12rem] max-h-80 overflow-y-auto bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-md shadow-lg py-1">
+						{isOpen &&
+							createPortal(
+							<div
+								ref={panelRef}
+								style={{
+									left: pos?.left ?? 0,
+									top: pos?.top ?? 0,
+									maxHeight: pos?.maxHeight ?? 320,
+									visibility: pos ? "visible" : "hidden",
+								}}
+								className="fixed z-50 min-w-[12rem] max-w-[calc(100vw-1rem)] overflow-y-auto bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-md shadow-lg py-1"
+							>
 								<button
 									type="button"
 									onClick={() => onSelectedChange([])}
@@ -121,7 +182,8 @@ export default function GroupCategoryTabs({
 										</label>
 									);
 								})}
-							</div>
+							</div>,
+							document.body,
 						)}
 					</div>
 				);
