@@ -60,7 +60,7 @@ export default function Header({
 				className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-[0.35] dark:opacity-[0.12] blur-2xl"
 				style={{
 					background:
-						"radial-gradient(circle, #e48b8b 0%, transparent 70%)",
+						"radial-gradient(circle, rgb(var(--sakura)) 0%, transparent 70%)",
 				}}
 				aria-hidden="true"
 			/>
@@ -78,7 +78,7 @@ export default function Header({
 						<img
 							src="./icons/logo-mark-96.png"
 							alt="NihonGoSL"
-							className="w-9 h-9 shrink-0"
+							className="brand-logo w-9 h-9 shrink-0"
 							width={36}
 							height={36}
 						/>

@@ -15,6 +15,11 @@ export default {
         ink: "#2e2b27",
         "ink-muted": "#726c62",
 
+        // NOTE: the brand-hue colors below (ai*, shu*, sakura*, kin) are read
+        // from CSS variables (defaults in index.css) so the accent color can
+        // be changed at runtime — see lib/themeColor.js. The hex values in
+        // the comments are those defaults.
+        //
         // The entire palette below is generated from a single hue (0°) —
         // the exact pure red (#FF0000) sampled from the app's own logo —
         // by systematically varying only saturation/lightness per role.
@@ -27,32 +32,32 @@ export default {
         // for structural/secondary accents (Level selector, dropdown
         // focus, progress fills) so it reads as distinct from "shu"
         // (below) while clearly staying in the same color family.
-        ai: "#862727",
-        "ai-soft": "#faefef",
-        "ai-line": "#ebe0e0",
+        ai: "rgb(var(--ai) / <alpha-value>)",
+        "ai-soft": "rgb(var(--ai-soft) / <alpha-value>)",
+        "ai-line": "rgb(var(--ai-line) / <alpha-value>)",
         // Dark-mode-only text/border/fill variant of "ai" — lifted in
         // lightness so it stays crisp against the dark background instead
         // of reading as washed-out.
-        "ai-glow": "#ff5454",
+        "ai-glow": "rgb(var(--ai-glow) / <alpha-value>)",
 
         // "shu" — the primary brand red, a direct professional-strength
         // derivation of the logo's pure red (same hue, tuned saturation/
         // lightness for legible UI use). Used for primary buttons, the
         // module selector, active nav states, and "wrong answer" states.
-        shu: "#bd2828",
-        "shu-soft": "#fbeeee",
+        shu: "rgb(var(--shu) / <alpha-value>)",
+        "shu-soft": "rgb(var(--shu-soft) / <alpha-value>)",
         // "shu-glow": "#e56c6c",
-        "shu-glow": "#ff3434",
+        "shu-glow": "rgb(var(--shu-glow) / <alpha-value>)",
 
         // Cherry-blossom pink — same hue again, pushed toward high
         // lightness for a soft decorative accent (example panels, chips).
         // "sakura-deep" is the light-mode text variant (dark enough for
         // contrast); "sakura" itself doubles as the dark-mode text
         // variant (lighter, for legibility at night).
-        sakura: "#e48b8b",
-        "sakura-soft": "#faefef",
-        "sakura-line": "#efdcdc",
-        "sakura-deep": "#9b3b3b",
+        sakura: "rgb(var(--sakura) / <alpha-value>)",
+        "sakura-soft": "rgb(var(--sakura-soft) / <alpha-value>)",
+        "sakura-line": "rgb(var(--sakura-line) / <alpha-value>)",
+        "sakura-deep": "rgb(var(--sakura-deep) / <alpha-value>)",
 
         // Muted sage green for "correct/mastered" states — the one
         // deliberately different hue in the palette, since it's a
@@ -63,7 +68,14 @@ export default {
         "take-glow": "#78c96c",
 
         // Star/favorite color matches the primary brand red.
-        kin: "#bd2828",
+        kin: "rgb(var(--kin) / <alpha-value>)",
+
+        // Fixed (never theme-shifted) red for error/"wrong"/"revise" states,
+        // so those keep meaning "wrong" whatever accent color is chosen.
+        // Same values the brand red originally had.
+        danger: "#bd2828",
+        "danger-soft": "#fbeeee",
+        "danger-glow": "#ff3434",
 
         // ---- Dark mode surfaces ----
         // True neutral black/gray — deliberately NOT tinted with the brand

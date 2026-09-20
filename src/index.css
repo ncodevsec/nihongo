@@ -2,6 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Brand-hue colors as "r g b" channels so Tailwind can apply opacity
+   (bg-shu/10 …). These are the default red palette; lib/themeColor.js
+   overrides them on <html> when the learner picks another accent color. */
+:root {
+  --shu: 189 40 40;
+  --shu-soft: 251 238 238;
+  --shu-glow: 255 52 52;
+  --ai: 134 39 39;
+  --ai-soft: 250 239 239;
+  --ai-line: 235 224 224;
+  --ai-glow: 255 84 84;
+  --sakura: 228 139 139;
+  --sakura-soft: 250 239 239;
+  --sakura-line: 239 220 220;
+  --sakura-deep: 155 59 59;
+  --kin: 189 40 40;
+  --logo-rotate: 0deg;
+}
+
+/* The logo image is pure red; rotate it along with the accent color. */
+.brand-logo {
+  filter: hue-rotate(var(--logo-rotate, 0deg));
+}
+
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -35,12 +59,12 @@ html.dark body {
 }
 
 :focus-visible {
-  outline: 2px solid #bd2828;
+  outline: 2px solid rgb(var(--shu));
   outline-offset: 2px;
 }
 
 ::selection {
-  background-color: #bd2828;
+  background-color: rgb(var(--shu));
   color: #faf7f2;
 }
 
@@ -67,4 +91,38 @@ html.dark body {
 
 .home-rise {
   animation: home-rise 0.5s ease both;
+}
+
+/* Hue slider for the accent color: the track (a gradient of the actual
+   resulting colors) is set inline; the thumb fills with the current
+   accent. */
+.hue-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 14px;
+  border-radius: 9999px;
+  outline-offset: 4px;
+  cursor: pointer;
+}
+.hue-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  background: rgb(var(--shu));
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+.hue-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 9999px;
+  background: rgb(var(--shu));
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+.hue-slider::-moz-range-track {
+  background: transparent;
 }

@@ -555,14 +555,14 @@ export default function Quiz({
 
 					{missed.length > 0 && (
 						<div className="text-left mb-5">
-							<p className="font-bengali text-xs font-semibold text-shu dark:text-shu-glow mb-2">
+							<p className="font-bengali text-xs font-semibold text-danger dark:text-danger-glow mb-2">
 								{T("quizReviewNeeded")} ({missed.length}):
 							</p>
 							<div className="flex flex-wrap gap-2">
 								{missed.map((m) => (
 									<span
 										key={m.id}
-										className="font-mincho text-base border border-shu/30 dark:border-shu-glow/30 rounded-md px-2 py-1 bg-shu-soft dark:bg-shu/10 text-ink dark:text-night-ink"
+										className="font-mincho text-base border border-danger/30 dark:border-danger-glow/30 rounded-md px-2 py-1 bg-danger-soft dark:bg-danger/10 text-ink dark:text-night-ink"
 										title={`${m.reading} — ${m.meaning}`}
 									>
 										{isVocab ? (
@@ -641,7 +641,7 @@ export default function Quiz({
 					<span
 						className={
 							timeLeft <= 30
-								? "text-shu dark:text-shu-glow font-semibold"
+								? "text-danger dark:text-danger-glow font-semibold"
 								: ""
 						}
 					>
@@ -704,7 +704,7 @@ export default function Quiz({
 								style =
 									"border-take bg-take-soft dark:bg-take/10";
 							else if (idx === selected)
-								style = "border-shu bg-shu-soft dark:bg-shu/10";
+								style = "border-danger bg-danger-soft dark:bg-danger/10";
 							else
 								style =
 									"border-ai-line dark:border-night-line bg-washi dark:bg-night opacity-50";
