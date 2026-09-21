@@ -12,6 +12,7 @@ import {
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton, ShuffleButton, ToggleChip } from "../FilterControls.jsx";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
+import { grammarGroupCounts } from "../../lib/categoryCounts.js";
 import LeveledKanji from "../LeveledKanji.jsx";
 
 // Renders a rule's Bengali explanation with light structure: sub-points
@@ -154,6 +155,10 @@ export default function GrammarStudy({
 		() => flattenGrammarPoints(lessons, level),
 		[lessons, level],
 	);
+	const groupCounts = useMemo(
+		() => grammarGroupCounts(allPoints, transformRows),
+		[allPoints, transformRows],
+	);
 
 	useEffect(() => {
 		setSelectedFilters([]);
@@ -293,9 +298,9 @@ export default function GrammarStudy({
 			<div className="flex flex-wrap items-center gap-2 mb-5">
 				<GroupCategoryTabs
 					groups={[
-						{ key: "lesson", label: T("groupByLesson"), categories: lessonCategories },
-						{ key: "particle", label: T("groupByParticle"), categories: particleCategories },
-						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES },
+						{ key: "lesson", label: T("groupByLesson"), categories: lessonCategories, ...groupCounts.lesson },
+						{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
+						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES, ...groupCounts.transform },
 					]}
 					active={groupBy}
 					onActiveChange={setGroupBy}

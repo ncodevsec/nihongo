@@ -8,6 +8,7 @@ import {
 	COUNTING_CATEGORIES,
 } from "../lib/vocabClassify.js";
 import GroupCategoryTabs from "./GroupCategoryTabs.jsx";
+import { vocabKanjiGroupCounts } from "../lib/categoryCounts.js";
 import { RADICAL_CATEGORIES, radicalKeyOf } from "../data/kanji-radicals.js";
 import Furigana from "./Furigana.jsx";
 
@@ -149,6 +150,11 @@ export default function Reference({
 		);
 		return COUNTING_CATEGORIES.filter((c) => used.has(c.key));
 	}, [kanjiData, isVocab]);
+
+	const groupCounts = useMemo(
+		() => vocabKanjiGroupCounts(kanjiData, isVocab),
+		[kanjiData, isVocab],
+	);
 
 	const availableRadicalCategories = useMemo(() => {
 		if (isVocab) return [];
@@ -293,13 +299,13 @@ export default function Reference({
 					groups={
 						isVocab
 							? [
-									{ key: "lesson", label: T("groupByLesson"), categories: availableCategories },
-									{ key: "pos", label: T("groupByPos"), categories: availablePosCategories },
-									{ key: "count", label: T("groupByCount"), categories: availableCountingCategories },
+									{ key: "lesson", label: T("groupByLesson"), categories: availableCategories, ...groupCounts.lesson },
+									{ key: "pos", label: T("groupByPos"), categories: availablePosCategories, ...groupCounts.pos },
+									{ key: "count", label: T("groupByCount"), categories: availableCountingCategories, ...groupCounts.count },
 								]
 							: [
-								{ key: "lesson", label: T("groupByLesson"), categories: availableCategories },
-								{ key: "radical", label: T("groupByRadical"), categories: availableRadicalCategories },
+								{ key: "lesson", label: T("groupByLesson"), categories: availableCategories, ...groupCounts.lesson },
+								{ key: "radical", label: T("groupByRadical"), categories: availableRadicalCategories, ...groupCounts.radical },
 							]
 					}
 					active={groupBy}
@@ -307,7 +313,7 @@ export default function Reference({
 					selected={selectedCategories}
 					onSelectedChange={setSelectedCategories}
 					lang={lang}
-					allLabel={`${T("allCategories")} (${kanjiData.length})`}
+					allLabel={T("allCategories")}
 				/>
 			</div>
 
