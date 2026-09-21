@@ -186,7 +186,7 @@ function renderPart(part, key, levelSet) {
 			</span>
 			<rp>(</rp>
 			<rt
-				className="font-normal text-ai dark:text-ai-glow opacity-90"
+				className="font-normal text-furigana dark:text-furigana-night"
 				style={{ fontSize: "0.45em" }}
 			>
 				{part.reading}
@@ -282,7 +282,7 @@ export default function Furigana({ text, reading, show, level, className = "" })
 				{colorizePlain(core, levelSet)}
 				<rp>(</rp>
 				<rt
-					className="font-normal text-ai dark:text-ai-glow opacity-90"
+					className="font-normal text-furigana dark:text-furigana-night"
 					style={{ fontSize: "0.45em" }}
 				>
 					{cleanReading}

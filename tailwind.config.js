@@ -14,6 +14,10 @@ export default {
         paper: "#fffdfb",
         ink: "#2e2b27",
         "ink-muted": "#726c62",
+        // Furigana (reading) text: neutral ash in light mode, an off-white a
+        // shade dimmer than the main text in dark mode. Not theme-shifted.
+        furigana: "#6f6a62",
+        "furigana-night": "#c2c2c2",
 
         // NOTE: the brand-hue colors below (ai*, shu*, sakura*, kin) are read
         // from CSS variables (defaults in index.css) so the accent color can

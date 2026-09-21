@@ -100,7 +100,11 @@ export default function GroupCategoryTabs({
 	const activeGroup = groups.find((g) => g.key === active);
 
 	return (
-		<div ref={ref} className="flex flex-wrap gap-2">
+		<div
+			ref={ref}
+			role="group"
+			className="flex w-fit max-w-full rounded-full bg-washi dark:bg-night border border-ai-line dark:border-night-line overflow-hidden"
+		>
 			{groups.map((group) => {
 				const isActive = group.key === active;
 				const isOpen = openKey === group.key;
@@ -122,7 +126,7 @@ export default function GroupCategoryTabs({
 				const shown = isActive ? activeGroup : group;
 
 				return (
-					<div key={group.key} className="relative">
+					<div key={group.key} className="flex min-w-0">
 						<button
 							type="button"
 							ref={(el) => {
@@ -132,25 +136,27 @@ export default function GroupCategoryTabs({
 							aria-expanded={isOpen}
 							onClick={() => handleTabClick(group)}
 							aria-pressed={isActive}
-							className={`font-bengali flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm border ${
+							className={`font-bengali flex min-w-0 items-center gap-1.5 px-3.5 py-2 text-xs font-medium whitespace-nowrap transition-all duration-150 ${
 								isActive
-									? "bg-shu text-washi border-shu"
-									: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted border-ai-line dark:border-night-line hover:border-shu/50"
+									? "bg-shu text-washi"
+									: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line hover:text-shu dark:hover:text-shu-glow"
 							}`}
 						>
-							<span className="truncate max-w-[10rem]">{buttonText}</span>
-							<svg
-								viewBox="0 0 24 24"
-								className={`w-3.5 h-3.5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="2"
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								aria-hidden="true"
-							>
-								<polyline points="6 9 12 15 18 9" />
-							</svg>
+							<span className="truncate max-w-[9rem]">{buttonText}</span>
+							{isActive && (
+								<svg
+									viewBox="0 0 24 24"
+									className={`w-3.5 h-3.5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`}
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="2"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									aria-hidden="true"
+								>
+									<polyline points="6 9 12 15 18 9" />
+								</svg>
+							)}
 						</button>
 
 						{isOpen &&
