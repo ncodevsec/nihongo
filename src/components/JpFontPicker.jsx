@@ -1,6 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { t } from "../lib/i18n.js";
-import { JP_FONTS, JP_FONT_SAMPLE, loadPreviewFonts } from "../lib/jpFonts.js";
+import {
+	JP_FONTS,
+	JP_FONT_SAMPLE_KANA,
+	JP_FONT_SAMPLE_KANJI,
+	checkJpFont,
+	loadPreviewFonts,
+} from "../lib/jpFonts.js";
 
 // Settings list of Japanese typefaces. Each row shows its own sample text
 // set in that font, so the choice is made by eye; picking one applies it
@@ -8,8 +14,21 @@ import { JP_FONTS, JP_FONT_SAMPLE, loadPreviewFonts } from "../lib/jpFonts.js";
 export default function JpFontPicker({ value, onChange, lang }) {
 	const T = (k) => t(lang, k);
 
+	// key -> "loading" | "ok" | "failed", so a font that did not actually
+	// load is reported instead of quietly looking like the others.
+	const [status, setStatus] = useState({});
+
 	useEffect(() => {
 		loadPreviewFonts();
+		let cancelled = false;
+		for (const f of JP_FONTS) {
+			checkJpFont(f.key).then((ok) => {
+				if (!cancelled) setStatus((s) => ({ ...s, [f.key]: ok ? "ok" : "failed" }));
+			});
+		}
+		return () => {
+			cancelled = true;
+		};
 	}, []);
 
 	return (
@@ -65,10 +84,21 @@ export default function JpFontPicker({ value, onChange, lang }) {
 							<div
 								lang="ja"
 								style={{ fontFamily: `${f.family}, serif` }}
-								className="mt-2.5 text-xl leading-relaxed text-ink dark:text-night-ink break-words"
+								className="mt-3 text-ink dark:text-night-ink break-words"
 							>
-								{JP_FONT_SAMPLE}
+								<div className="text-2xl sm:text-3xl leading-snug">{JP_FONT_SAMPLE_KANA}</div>
+								<div className="text-lg sm:text-xl leading-relaxed font-bold">{JP_FONT_SAMPLE_KANJI}</div>
 							</div>
+							{status[f.key] === "failed" && (
+								<div className="mt-2 font-bengali text-[11px] text-danger dark:text-danger-glow">
+									{T("jpFontFailed")}
+								</div>
+							)}
+							{!status[f.key] && (
+								<div className="mt-2 font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted">
+									{T("jpFontLoading")}
+								</div>
+							)}
 						</button>
 					);
 				})}

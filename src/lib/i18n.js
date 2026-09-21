@@ -215,6 +215,8 @@ const UI = {
   sectionTheme: { bn: "থিম", en: "Theme" },
   sectionJpFont: { bn: "জাপানি ফন্ট", en: "Japanese font" },
   jpFontSub: { bn: "অ্যাপজুড়ে জাপানি লেখার জন্য ফন্ট বেছে নিন — স্ক্রিনে পড়ার আরামের কথা ভেবে বাছাই করা।", en: "Choose the typeface for Japanese text across the app — picked for comfortable on-screen reading." },
+  jpFontLoading: { bn: "ফন্ট লোড হচ্ছে…", en: "Loading font…" },
+  jpFontFailed: { bn: "এই ফন্ট লোড করা যায়নি — ইন্টারনেট সংযোগ দেখে আবার চেষ্টা করুন। নমুনাটি অন্য ফন্টে দেখানো হচ্ছে।", en: "Couldn't load this font — check your connection and try again. The sample below is shown in a fallback font." },
   jpFontDefaultTag: { bn: "ডিফল্ট", en: "Default" },
   jpFontDescDefault: { bn: "মার্জিত সেরিফ — অ্যাপের আগের চেহারা", en: "Elegant serif — the app's original look" },
   jpFontDescNotoSans: { bn: "পরিচ্ছন্ন ও নিরপেক্ষ স্যান্স — সবচেয়ে সহজে পাঠযোগ্য", en: "Clean, neutral sans-serif — the most widely readable" },
