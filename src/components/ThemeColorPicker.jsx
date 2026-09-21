@@ -1,7 +1,7 @@
 import { t } from "../lib/i18n.js";
 import { HUE_PRESETS, primaryAt, snapToPreset } from "../lib/themeColor.js";
 
-const PRESET_LABEL = {
+export const PRESET_LABEL = {
 	red: "themeHueRed",
 	blue: "themeHueBlue",
 	green: "themeHueGreen",
@@ -17,13 +17,7 @@ export default function ThemeColorPicker({ hue, onChange, lang }) {
 	const current = snapToPreset(hue);
 
 	return (
-		<div className="border-t border-ai-line dark:border-night-line px-4 py-4 space-y-4">
-			<div>
-				<div className="font-bengali text-sm text-ink dark:text-night-ink">{T("themeColor")}</div>
-				<div className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted mt-0.5">
-					{T("themeColorSub")}
-				</div>
-			</div>
+		<div className="px-4 pb-4 space-y-4">
 
 			<div className="grid grid-cols-5 gap-2" role="radiogroup" aria-label={T("themeColor")}>
 				{HUE_PRESETS.map((p) => {

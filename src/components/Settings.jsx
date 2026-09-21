@@ -1,5 +1,9 @@
 import ThemeColorPicker from "./ThemeColorPicker.jsx";
 import JpFontPicker from "./JpFontPicker.jsx";
+import SettingsAccordion from "./SettingsAccordion.jsx";
+import { HUE_PRESETS, primaryAt, snapToPreset } from "../lib/themeColor.js";
+import { PRESET_LABEL } from "./ThemeColorPicker.jsx";
+import { JP_FONTS } from "../lib/jpFonts.js";
 import { useRef, useState } from "react";
 import { t } from "../lib/i18n.js";
 
@@ -227,7 +231,7 @@ export default function Settings({
 			</div>
 
 			<SectionLabel>{T("sectionTheme")}</SectionLabel>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none mb-5 overflow-hidden">
 				<Row title={T("appTheme")} subtitle={T("appThemeSub")}>
 					<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
 						{THEME_OPTIONS.map((th) => (
@@ -245,20 +249,39 @@ export default function Settings({
 						))}
 					</div>
 				</Row>
-				<ThemeColorPicker
-					hue={settings.themeHue}
-					onChange={(h) => updateSetting("themeHue", h)}
-					lang={lang}
-				/>
-			</div>
-
-			<SectionLabel>{T("sectionJpFont")}</SectionLabel>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none mb-5 overflow-hidden">
-				<JpFontPicker
-					value={settings.jpFont}
-					onChange={(k) => updateSetting("jpFont", k)}
-					lang={lang}
-				/>
+				<SettingsAccordion
+					title={T("themeColor")}
+					subtitle={T("themeColorSub")}
+					summary={
+						<span className="flex items-center gap-1.5 font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted">
+							<span
+								className="w-3.5 h-3.5 rounded-full ring-1 ring-ai-line dark:ring-night-line"
+								style={{ backgroundColor: primaryAt(snapToPreset(settings.themeHue)) }}
+							/>
+							{T(PRESET_LABEL[HUE_PRESETS.find((p) => p.hue === snapToPreset(settings.themeHue))?.key || "red"])}
+						</span>
+					}
+				>
+					<ThemeColorPicker
+						hue={settings.themeHue}
+						onChange={(h) => updateSetting("themeHue", h)}
+						lang={lang}
+					/>
+				</SettingsAccordion>
+				<SettingsAccordion
+					title={T("sectionJpFont")}
+					summary={
+						<span className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted">
+							{(JP_FONTS.find((f) => f.key === settings.jpFont) || JP_FONTS[0]).name}
+						</span>
+					}
+				>
+					<JpFontPicker
+						value={settings.jpFont}
+						onChange={(k) => updateSetting("jpFont", k)}
+						lang={lang}
+					/>
+				</SettingsAccordion>
 			</div>
 
 			<SectionLabel>{T("sectionLanguage")}</SectionLabel>
