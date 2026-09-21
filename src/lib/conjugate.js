@@ -230,7 +230,13 @@ export function conjugateNaAdjective(rawBase) {
   if (!base) return null;
   return {
     past: `${base}だった`,
-    negative: `${base}じゃない`,
+    // Main answer is the polite ～じゃありません; the other two ways to say
+    // it (formal ～ではありません and casual ～じゃない) are kept as
+    // `alternates` and shown in small text under it.
+    negative: `${base}じゃありません`,
     pastNegative: `${base}じゃなかった`,
+    alternates: {
+      negative: [`${base}ではありません`, `${base}じゃない`],
+    },
   };
 }
