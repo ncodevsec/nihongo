@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { DEFAULT_HUE, applyThemeHue, snapToPreset } from "../lib/themeColor.js";
+import { applyJpFont } from "../lib/jpFonts.js";
 
 const STORAGE_KEY = "nihongo-settings-v1";
 
 const DEFAULTS = {
   theme: "system", // 'light' | 'dark' | 'system'
   themeHue: DEFAULT_HUE, // accent color: one of the 5 presets in lib/themeColor.js
+  jpFont: "default", // Japanese typeface key from lib/jpFonts.js
   uiLang: "en", // 'bn' | 'en' — site-wide interface language
   showKanjiBn: true, // show Bengali meaning in the Kanji module
   showVocabKanji: false, // show kanji script in the Vocabulary module
@@ -49,6 +51,7 @@ export function useSettings() {
   useEffect(() => {
     applyTheme(settings.theme);
     applyThemeHue(settings.themeHue);
+    applyJpFont(settings.jpFont);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     } catch {

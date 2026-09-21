@@ -10,7 +10,8 @@ import {
 	TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
-import { StarFilterButton, ShuffleButton, ToggleChip } from "../FilterControls.jsx";
+import { StarFilterButton, ShuffleButton, ToggleChip, SortControl } from "../FilterControls.jsx";
+import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
 import { grammarGroupCounts } from "../../lib/categoryCounts.js";
 import LeveledKanji from "../LeveledKanji.jsx";
@@ -174,6 +175,19 @@ export default function GrammarStudy({
 
 	const isTransform = groupBy === "transform";
 
+	// Sorting shapes the deck in serial mode only (choosing a sort switches to
+	// serial). Options follow the active group: lesson / particle for points,
+	// transformation category for drill rows.
+	const [sortBy, setSortBy] = useState("lesson");
+	const [sortDir, setSortDir] = useState("asc");
+	const sortKeys = grammarSortKeys(isTransform);
+	const effectiveSort = sortKeys.includes(sortBy) ? sortBy : sortKeys[0];
+	const sortLabels = {
+		lesson: T("sortLesson"),
+		particle: T("groupByParticle"),
+		transform: T("groupByTransform"),
+	};
+
 	// Snapshot of which ids belong in the current run, built fresh only
 	// when the filter controls themselves change — deliberately NOT
 	// recomputed just because `progress`/`favorites` change afterward, so
@@ -200,10 +214,21 @@ export default function GrammarStudy({
 			}
 			if (onlyUnread) list = list.filter((p) => !progress[p.id]?.learned);
 			if (onlyStarred) list = list.filter((p) => favorites[p.id]);
+			if (!useShuffled && !(effectiveSort === sortKeys[0] && sortDir === "asc")) {
+				list = [...list].sort(
+					makeGrammarComparator({
+						sortBy: effectiveSort,
+						sortDir,
+						lessonCategories,
+						particleCategories,
+						transformCategories: TRANSFORM_CATEGORIES,
+					}),
+				);
+			}
 			const ids = list.map((p) => p.id);
 			return useShuffled ? shuffle(ids) : ids;
 		},
-		[isTransform, groupBy, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites],
+		[isTransform, groupBy, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites, effectiveSort, sortDir, lessonCategories, particleCategories],
 	);
 
 	const [shuffled, setShuffled] = useState(true);
@@ -221,7 +246,7 @@ export default function GrammarStudy({
 		setIndex(0);
 		setFlipped(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [shuffled]);
+	}, [shuffled, effectiveSort, sortDir]);
 
 	const deck = useMemo(() => {
 		const byId = new Map([
@@ -354,7 +379,25 @@ export default function GrammarStudy({
 						{T("reverseRecall")}
 					</button>
 				)}
-				<ShuffleButton shuffled={shuffled} onToggle={() => setShuffled((v) => !v)} label={T("shuffle")} serialLabel={T("serial")} />
+				<div className="ml-auto flex flex-wrap items-center gap-2">
+					<SortControl
+						label={T("sortBy")}
+						value={effectiveSort}
+						options={sortKeys.map((k) => ({ key: k, label: sortLabels[k] }))}
+						onChange={(v) => {
+							setSortBy(v);
+							setShuffled(false);
+						}}
+						dir={sortDir}
+						onToggleDir={() => {
+							setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+							setShuffled(false);
+						}}
+						labelAsc={T("sortAsc")}
+						labelDesc={T("sortDesc")}
+					/>
+					<ShuffleButton shuffled={shuffled} onToggle={() => setShuffled((v) => !v)} label={T("shuffle")} serialLabel={T("serial")} />
+				</div>
 			</div>
 		</>
 	);

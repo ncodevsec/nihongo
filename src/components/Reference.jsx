@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { t, pickLang } from "../lib/i18n.js";
-import { StarFilterButton, SortDirectionButton, ViewModeToggle } from "./FilterControls.jsx";
+import { StarFilterButton, SortControl, ViewModeToggle } from "./FilterControls.jsx";
+import { makeItemComparator } from "../lib/sortItems.js";
 import {
 	classifyPartOfSpeech,
 	POS_CATEGORIES,
@@ -206,32 +207,15 @@ export default function Reference({
 	]);
 
 	const sorted = useMemo(() => {
-		const dir = sortDir === "asc" ? 1 : -1;
-		const list = [...filtered];
-		list.sort((a, b) => {
-			let cmp = 0;
-			if (sortBy === "word") {
-				cmp = a.kanji.localeCompare(b.kanji, "ja");
-			} else if (sortBy === "reading") {
-				cmp = a.reading.localeCompare(b.reading, "ja");
-			} else if (sortBy === "meaning") {
-				cmp = meaningText(a).localeCompare(
-					meaningText(b),
-					lang === "bn" ? "bn" : "en",
-				);
-			} else if (sortBy === "status") {
-				const la = progress[a.id]?.learned ? 1 : 0;
-				const lb = progress[b.id]?.learned ? 1 : 0;
-				cmp = la - lb;
-			} else {
-				// lesson (default): original textbook order via category index
-				cmp =
-					(categoryIndex.get(a.category) ?? 0) -
-					(categoryIndex.get(b.category) ?? 0);
-			}
-			return cmp * dir;
+		const cmp = makeItemComparator({
+			sortBy,
+			sortDir,
+			lessonIndex: categoryIndex,
+			meaningText,
+			lang,
+			progress,
 		});
-		return list;
+		return [...filtered].sort(cmp);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [filtered, sortBy, sortDir, categoryIndex, lang, progress]);
 
@@ -279,6 +263,12 @@ export default function Reference({
 
 	const SORT_OPTIONS = [
 		{ key: "lesson", label: T("sortLesson") },
+		...(isVocab
+			? [
+					{ key: "pos", label: T("groupByPos") },
+					{ key: "count", label: T("groupByCount") },
+				]
+			: [{ key: "radical", label: T("groupByRadical") }]),
 		{ key: "word", label: T("sortWord") },
 		{ key: "reading", label: T("sortReading") },
 		...(showMeaning ? [{ key: "meaning", label: T("sortMeaning") }] : []),
@@ -318,25 +308,13 @@ export default function Reference({
 			</div>
 
 			<div className="flex flex-wrap items-center gap-2 mb-3">
-				<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted shrink-0">
-					{T("sortBy")}
-				</span>
-				<select
+				<SortControl
+					label={T("sortBy")}
 					value={sortBy}
-					onChange={(e) => setSortBy(e.target.value)}
-					className="font-bengali border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 text-xs bg-paper dark:bg-night-paper text-ink dark:text-night-ink"
-				>
-					{SORT_OPTIONS.map((o) => (
-						<option key={o.key} value={o.key}>
-							{o.label}
-						</option>
-					))}
-				</select>
-				<SortDirectionButton
+					options={SORT_OPTIONS}
+					onChange={setSortBy}
 					dir={sortDir}
-					onClick={() =>
-						setSortDir((d) => (d === "asc" ? "desc" : "asc"))
-					}
+					onToggleDir={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
 					labelAsc={T("sortAsc")}
 					labelDesc={T("sortDesc")}
 				/>

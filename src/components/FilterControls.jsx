@@ -182,3 +182,26 @@ export function ViewModeToggle({ value, onChange, labelTable, labelGrid }) {
 		</div>
 	);
 }
+
+// "Sort by [select] [asc/desc]" — shared by every List and Flashcards tab.
+export function SortControl({ label, value, options, onChange, dir, onToggleDir, labelAsc, labelDesc }) {
+	return (
+		<div className="flex items-center gap-2">
+			<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted shrink-0">
+				{label}
+			</span>
+			<select
+				value={value}
+				onChange={(e) => onChange(e.target.value)}
+				className="font-bengali border border-ai-line dark:border-night-line rounded-md px-2 py-1.5 text-xs bg-paper dark:bg-night-paper text-ink dark:text-night-ink max-w-[9.5rem]"
+			>
+				{options.map((o) => (
+					<option key={o.key} value={o.key}>
+						{o.label}
+					</option>
+				))}
+			</select>
+			<SortDirectionButton dir={dir} onClick={onToggleDir} labelAsc={labelAsc} labelDesc={labelDesc} />
+		</div>
+	);
+}

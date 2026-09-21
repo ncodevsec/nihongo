@@ -1,4 +1,5 @@
 import ThemeColorPicker from "./ThemeColorPicker.jsx";
+import JpFontPicker from "./JpFontPicker.jsx";
 import { useRef, useState } from "react";
 import { t } from "../lib/i18n.js";
 
@@ -247,6 +248,15 @@ export default function Settings({
 				<ThemeColorPicker
 					hue={settings.themeHue}
 					onChange={(h) => updateSetting("themeHue", h)}
+					lang={lang}
+				/>
+			</div>
+
+			<SectionLabel>{T("sectionJpFont")}</SectionLabel>
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none mb-5 overflow-hidden">
+				<JpFontPicker
+					value={settings.jpFont}
+					onChange={(k) => updateSetting("jpFont", k)}
 					lang={lang}
 				/>
 			</div>
