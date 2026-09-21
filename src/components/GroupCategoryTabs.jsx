@@ -6,6 +6,15 @@ import { createPortal } from "react-dom";
 // keys within the active group (empty = all) — switching the active
 // group always resets this to [], matching how the separate toggle-row +
 // dropdown pattern this replaces used to behave.
+// Right-aligned item count shown beside each category.
+function Count({ value }) {
+	return (
+		<span className="ml-auto pl-3 shrink-0 font-mono text-[11px] tabular-nums text-ink-muted dark:text-night-ink-muted">
+			{value}
+		</span>
+	);
+}
+
 export default function GroupCategoryTabs({
 	groups,
 	active,
@@ -109,6 +118,9 @@ export default function GroupCategoryTabs({
 								)
 							: `${group.label} (${selected.length})`;
 
+				// The group whose list this menu shows (the active group once picked).
+				const shown = isActive ? activeGroup : group;
+
 				return (
 					<div key={group.key} className="relative">
 						<button
@@ -156,16 +168,17 @@ export default function GroupCategoryTabs({
 								<button
 									type="button"
 									onClick={() => onSelectedChange([])}
-									className={`w-full text-left px-3 py-1.5 text-sm font-bengali hover:bg-ai-soft dark:hover:bg-night-line ${
+									className={`w-full flex items-center gap-2 text-left px-3 py-1.5 text-sm font-bengali hover:bg-ai-soft dark:hover:bg-night-line ${
 										isAll
 											? "text-shu dark:text-shu-glow font-semibold"
 											: "text-ink dark:text-night-ink"
 									}`}
 								>
-									{allLabel}
+									<span className="truncate">{allLabel}</span>
+									{shown.total != null && <Count value={shown.total} />}
 								</button>
 								<div className="border-t border-ai-line dark:border-night-line my-1" />
-								{(isActive ? activeGroup : group).categories.map((c) => {
+								{shown.categories.map((c) => {
 									const checked = isActive && selected.includes(c.key);
 									return (
 										<label
@@ -179,6 +192,7 @@ export default function GroupCategoryTabs({
 												className="shrink-0"
 											/>
 											<span className="truncate">{label(c)}</span>
+											{shown.counts && <Count value={shown.counts[c.key] ?? 0} />}
 										</label>
 									);
 								})}

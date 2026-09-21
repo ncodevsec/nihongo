@@ -10,6 +10,7 @@ import {
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton } from "../FilterControls.jsx";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
+import { grammarGroupCounts } from "../../lib/categoryCounts.js";
 
 const PAGE_SIZE = 40;
 
@@ -93,6 +94,10 @@ export default function GrammarList({
 	const transformRows = useMemo(
 		() => buildTransformationRows(level),
 		[level],
+	);
+	const groupCounts = useMemo(
+		() => grammarGroupCounts(allPoints, transformRows),
+		[allPoints, transformRows],
 	);
 
 	const [query, setQuery] = useState("");
@@ -191,16 +196,16 @@ export default function GrammarList({
 				/>
 				<GroupCategoryTabs
 					groups={[
-						{ key: "lesson", label: T("groupByLesson"), categories },
-						{ key: "particle", label: T("groupByParticle"), categories: particleCategories },
-						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES },
+						{ key: "lesson", label: T("groupByLesson"), categories, ...groupCounts.lesson },
+						{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
+						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES, ...groupCounts.transform },
 					]}
 					active={groupBy}
 					onActiveChange={setGroupBy}
 					selected={selectedFilters}
 					onSelectedChange={setSelectedFilters}
 					lang={lang}
-					allLabel={`${T("allCategories")} (${isTransform ? transformRows.length : allPoints.length})`}
+					allLabel={T("allCategories")}
 				/>
 				<StarFilterButton
 					active={onlyStarred}

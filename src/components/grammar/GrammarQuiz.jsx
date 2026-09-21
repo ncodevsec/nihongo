@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { t, pickLang } from "../../lib/i18n.js";
 import Hanko from "../Hanko.jsx";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
+import { grammarGroupCounts } from "../../lib/categoryCounts.js";
 import LeveledKanji from "../LeveledKanji.jsx";
 import {
 	flattenGrammarPoints,
@@ -46,6 +47,10 @@ export default function GrammarQuiz({
 	const transformRows = useMemo(
 		() => buildTransformationRows(level),
 		[level],
+	);
+	const groupCounts = useMemo(
+		() => grammarGroupCounts(allPoints, transformRows),
+		[allPoints, transformRows],
 	);
 
 	const [phase, setPhase] = useState("setup");
@@ -254,9 +259,9 @@ export default function GrammarQuiz({
 							</label>
 							<GroupCategoryTabs
 								groups={[
-									{ key: "lesson", label: T("groupByLesson"), categories },
-									{ key: "particle", label: T("groupByParticle"), categories: particleCategories },
-									{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES },
+									{ key: "lesson", label: T("groupByLesson"), categories, ...groupCounts.lesson },
+									{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
+									{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES, ...groupCounts.transform },
 								]}
 								active={setupGroupBy}
 								onActiveChange={setSetupGroupBy}
