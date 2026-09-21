@@ -138,6 +138,7 @@ export default function GrammarList({
 					" " +
 					r.transformedForm +
 					" " +
+					(r.alternates ? r.alternates.join(" ") + " " : "") +
 					r.meaningBn
 				).toLowerCase();
 				return haystack.includes(q);
@@ -279,9 +280,18 @@ export default function GrammarList({
 										{r.mainForm}
 									</span>
 									<span className="min-w-0">
-										<span className="font-mincho text-base text-shu dark:text-shu-glow truncate block">
+										<span className="font-mincho text-base text-shu dark:text-shu-glow block break-all leading-snug">
 											{r.transformedForm}
 										</span>
+										{r.alternates?.map((alt) => (
+											<span
+												key={alt}
+												lang="ja"
+												className="font-mincho text-[11px] text-ink-muted dark:text-night-ink-muted block break-all leading-snug"
+											>
+												{alt}
+											</span>
+										))}
 										<span className="font-bengali text-[10px] text-ink-muted dark:text-night-ink-muted">
 											{pickLang(r.formLabel, lang)}
 										</span>

@@ -486,6 +486,11 @@ export default function GrammarStudy({
 									<div className="font-mincho text-4xl sm:text-5xl text-ink dark:text-night-ink text-center break-words px-4">
 										{point.transformedForm}
 									</div>
+									{point.alternates?.length > 0 && (
+										<div lang="ja" className="font-mincho text-sm text-ink-muted dark:text-night-ink-muted text-center break-words px-4 -mt-1">
+											{point.alternates.join("　／　")}
+										</div>
+									)}
 									{point.meaningBn && (
 										<div className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted mt-1 text-center">
 											{point.meaningBn}

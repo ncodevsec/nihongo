@@ -201,6 +201,7 @@ export function buildTransformationRows(level) {
         category: `na-adj-${key}`,
         mainForm: cleanReading,
         transformedForm: conj[key],
+        alternates: conj.alternates?.[key],
         formLabel: ADJ_FORM_LABELS[key],
         meaningBn,
       });
