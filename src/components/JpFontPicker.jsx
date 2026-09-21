@@ -32,7 +32,7 @@ export default function JpFontPicker({ value, onChange, lang }) {
 	}, []);
 
 	return (
-		<div className="px-4 py-4">
+		<div className="px-4 pb-4">
 			<div className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted mb-3">
 				{T("jpFontSub")}
 			</div>
