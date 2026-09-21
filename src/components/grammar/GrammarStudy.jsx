@@ -416,6 +416,21 @@ export default function GrammarStudy({
 	const starred = !!favorites[point.id];
 	const read = !!progress[point.id]?.learned;
 
+	// Largest size (up to maxRem) at which `text` still fits on ONE line inside
+	// the card: CJK glyphs are about 1em wide, so cap the font size at
+	// (card width) / (character count).
+	const fitStyle = (text, maxRem) => ({
+		fontSize: `min(${maxRem}rem, calc((min(100vw, 42rem) - 5.5rem) / ${Math.max(String(text).length, 1)}))`,
+	});
+
+	// The form tag pill (Negative form, Past form …) — top of the question
+	// face, last line of the answer face.
+	const formTag = point ? (
+		<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-0.5">
+			{pickLang(point.formLabel, lang)}
+		</span>
+	) : null;
+
 	if (isTransform) {
 		return (
 			<div className="max-w-2xl lg:max-w-3xl mx-auto">
@@ -468,34 +483,70 @@ export default function GrammarStudy({
 						onClick={() => setFlipped((f) => !f)}
 						className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
 					>
-						<div className="h-[260px] overflow-y-auto flex flex-col items-center justify-center gap-3 py-8 px-4">
-							<span className="font-bengali text-[11px] bg-ai-soft dark:bg-night-line text-ai dark:text-ai-glow rounded-full px-2.5 py-0.5 mb-1">
-								{pickLang(point.formLabel, lang)}
-							</span>
-							{!flipped !== reverse ? (
+						<div className="h-[260px] overflow-y-auto flex flex-col items-center justify-center gap-2.5 py-8 px-4">
+							{!flipped ? (
 								<>
-									<div className="font-mincho text-4xl sm:text-5xl text-ink dark:text-night-ink text-center break-words px-4">
-										{point.mainForm}
-									</div>
-									<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
-										{T("tapToRevealForm")}
-									</span>
+									{formTag}
+									{reverse ? (
+										<>
+											<div
+												style={fitStyle(point.transformedForm, 3)}
+												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
+											>
+												{point.transformedForm}
+											</div>
+											<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
+												{T("tapToRevealForm")}
+											</span>
+										</>
+									) : (
+										<>
+											<div
+												style={fitStyle(point.mainForm, 3)}
+												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
+											>
+												{point.mainForm}
+											</div>
+											<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
+												{T("tapToRevealForm")}
+											</span>
+										</>
+									)}
 								</>
 							) : (
 								<>
-									<div className="font-mincho text-4xl sm:text-5xl text-ink dark:text-night-ink text-center break-words px-4">
+									{/* 1 — the word this card started from, small, with its meaning */}
+									<div className="flex flex-wrap items-baseline justify-center gap-x-2 text-center">
+										<span lang="ja" className="font-mincho text-base text-ink-muted dark:text-night-ink-muted">
+											{point.mainForm}
+										</span>
+										{point.meaningBn && (
+											<span className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
+												— {point.meaningBn}
+											</span>
+										)}
+									</div>
+									{/* 2 — the transformed word: the focus of the card, always one line */}
+									<div
+										lang="ja"
+										style={fitStyle(point.transformedForm, 2.5)}
+										className="font-mincho font-semibold text-ink dark:text-night-ink text-center whitespace-nowrap"
+									>
 										{point.transformedForm}
 									</div>
+									{/* 3 — other accepted forms, small (only when there are any) */}
 									{point.alternates?.length > 0 && (
-										<div lang="ja" className="font-mincho text-sm text-ink-muted dark:text-night-ink-muted text-center break-words px-4 -mt-1">
-											{point.alternates.join("　／　")}
+										<div lang="ja" className="flex flex-wrap items-baseline justify-center gap-x-3 font-mincho text-[13px] text-ink-muted dark:text-night-ink-muted text-center">
+											{point.alternates.map((alt, i) => (
+												<span key={alt} className="whitespace-nowrap">
+													{i > 0 && <span className="mr-3 opacity-60">／</span>}
+													{alt}
+												</span>
+											))}
 										</div>
 									)}
-									{point.meaningBn && (
-										<div className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted mt-1 text-center">
-											{point.meaningBn}
-										</div>
-									)}
+									{/* 4 — the form tag */}
+									<div className="mt-1">{formTag}</div>
 								</>
 							)}
 						</div>
