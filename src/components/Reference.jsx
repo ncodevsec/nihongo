@@ -372,11 +372,7 @@ export default function Reference({
 							return (
 								<div
 									key={k.id}
-									className={`flex flex-col rounded-lg border p-2 shadow-card dark:shadow-none ${
-										learned
-											? "border-take/60 dark:border-take-glow/50 bg-take-soft/60 dark:bg-take/10"
-											: "border-ai-line dark:border-night-line bg-paper dark:bg-night-paper"
-									}`}
+									className="flex flex-col rounded-lg border p-2 shadow-card dark:shadow-none border-ai-line dark:border-night-line bg-paper dark:bg-night-paper"
 								>
 									<div className="flex items-center justify-between">
 										<CheckButton
