@@ -344,6 +344,7 @@ const RAW = [
   ["お金", "おかね", "টাকা", "Money", "lesson7"],
   ["切符", "きっぷ", "(যানবাহনের) টিকিট", "(Transportation) Ticket", "lesson7"],
   ["クリスマス", "クリスマス", "বড়দিন", "Christmas", "lesson7"],
+  ["年賀状", "ねんがじょう", "নববর্ষের শুভেচ্ছা কার্ড", "New Year's card", "lesson7", "vocab-n5-x2"],
   ["父", "ちち", "বাবা (নিজের)", "(my) father", "lesson7"],
   ["母", "はは", "মা (নিজের)", "(my) mother", "lesson7"],
   ["お父さん", "おとうさん", "বাবা (অন্যের)", "(someone else's) father", "lesson7"],
@@ -354,6 +355,7 @@ const RAW = [
   ["すてきですね", "すてきですね", "দারুণ/চমৎকার, তাই না?", "Wonderful/Nice, isn't it?", "lesson7"],
   ["いらっしゃい", "いらっしゃい", "স্বাগতম", "Welcome", "lesson7"],
   ["どうぞ おあがりください", "どうぞ おあがりください", "অনুগ্রহ করে ভিতরে আসুন", "Please come in", "lesson7"],
+  ["失礼します", "しつれいします", "ঢোকা বা বিদায় নেওয়ার সময় বলা হয় (মাফ করবেন / আসি)", "Excuse me (said when entering or leaving a place)", "lesson7", "vocab-n5-x1"],
   ["～は いかがですか", "～は いかがですか", "～ কেমন হবে?", "How about ~?", "lesson7"],
   ["いただきます", "いただきます", "খাওয়া শুরু করার আগে বলা হয়", "Said before eating", "lesson7"],
   ["ごちそうさまでした", "ごちそうさまでした", "খাবারের জন্য ধন্যবাদ", "Thank you for the meal", "lesson7"],
@@ -1202,8 +1204,13 @@ const RAW = [
   ["～着", "ちゃく", "পোশাকের গণনা", "Counter for clothes", "lesson11"],
 ];
 
-export const N5_VOCAB = RAW.map(([word, reading, bn, en, category], i) => ({
-  id: `vocab-n5-${i}`,
+// Ids are "vocab-n5-<n>" where n counts only the original entries, so
+// progress/favorites saved against them stay valid. An entry added later can
+// sit in its proper place in RAW by carrying an explicit 6th element id
+// (e.g. "vocab-n5-x1") instead of taking — and shifting — an index.
+let nextIndex = 0;
+export const N5_VOCAB = RAW.map(([word, reading, bn, en, category, fixedId]) => ({
+  id: fixedId ?? `vocab-n5-${nextIndex++}`,
   kanji: word,
   reading,
   meaning: bn,
