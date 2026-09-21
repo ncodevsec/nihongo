@@ -55,8 +55,11 @@ export const JP_FONTS = [
 ];
 
 // Text shown in the Settings samples; also the only characters fetched for
-// the preview subsets.
-export const JP_FONT_SAMPLE = "日本語のひらがな・カタカナ・漢字 あいう 山川";
+// the preview subsets. Kana are what set these gothic/rounded/serif faces
+// apart most clearly, so they lead.
+export const JP_FONT_SAMPLE_KANA = "あいうえお さしすせそ ふきそ カタカナ";
+export const JP_FONT_SAMPLE_KANJI = "日本語の漢字 山川雨魚 学習";
+export const JP_FONT_SAMPLE = `${JP_FONT_SAMPLE_KANA} ${JP_FONT_SAMPLE_KANJI}`;
 
 const CACHE_KEY = "nihongo-jpfont-v1";
 const VARS = ["--font-jp-display", "--font-jp-body"];
@@ -67,12 +70,14 @@ const hrefFor = (font, text) =>
 	}&display=swap`;
 
 function ensureStylesheet(id, href) {
-	if (document.getElementById(id)) return;
+	const existing = document.getElementById(id);
+	if (existing) return existing;
 	const link = document.createElement("link");
 	link.id = id;
 	link.rel = "stylesheet";
 	link.href = href;
 	document.head.appendChild(link);
+	return link;
 }
 
 export const isJpFontKey = (key) => JP_FONTS.some((f) => f.key === key);
@@ -99,6 +104,7 @@ export function applyJpFont(key) {
 	// two @font-face sets for one family would fight over which glyphs are
 	// available, so the active font never keeps its sample stylesheet.
 	document.getElementById(`jpfont-preview-${font.key}`)?.remove();
+	document.getElementById(`jpfont-preview-full-${font.key}`)?.remove();
 	const href = hrefFor(font);
 	ensureStylesheet(`jpfont-${font.key}`, href);
 	for (const v of VARS) root.style.setProperty(v, font.family);
@@ -110,13 +116,57 @@ export function applyJpFont(key) {
 }
 
 // Loads a tiny sample-text subset of every font so Settings can show what
-// each one looks like without downloading them in full.
+// each one looks like without downloading them in full. If the subset
+// request fails for any reason, that font falls back to its normal
+// stylesheet (the browser then fetches only the slices the sample needs).
 export function loadPreviewFonts() {
 	if (typeof document === "undefined") return;
 	for (const font of JP_FONTS) {
 		// Skip fonts already loaded in full (see applyJpFont).
-		if (font.google && !document.getElementById(`jpfont-${font.key}`)) {
-			ensureStylesheet(`jpfont-preview-${font.key}`, hrefFor(font, JP_FONT_SAMPLE));
+		if (!font.google || document.getElementById(`jpfont-${font.key}`)) continue;
+		const link = ensureStylesheet(`jpfont-preview-${font.key}`, hrefFor(font, JP_FONT_SAMPLE));
+		link.addEventListener(
+			"error",
+			() => {
+				link.remove();
+				ensureStylesheet(`jpfont-preview-full-${font.key}`, hrefFor(font));
+			},
+			{ once: true },
+		);
+	}
+}
+
+const sheetReady = (link) =>
+	!link || link.sheet
+		? Promise.resolve()
+		: new Promise((resolve) => {
+				link.addEventListener("load", resolve, { once: true });
+				link.addEventListener("error", resolve, { once: true });
+			});
+
+// Resolves true once the font's real glyphs are available for the sample
+// text, false if it could not be loaded (offline, blocked, bad response, or
+// nothing arrived within `timeoutMs`). Lets Settings say so instead of
+// silently showing a fallback font that looks like every other row.
+export async function checkJpFont(key, timeoutMs = 10000) {
+	const font = JP_FONTS.find((f) => f.key === key);
+	if (!font || typeof document === "undefined" || !document.fonts?.load) return true;
+	const work = (async () => {
+		if (font.google) {
+			const find = () =>
+				document.getElementById(`jpfont-${font.key}`) ||
+				document.getElementById(`jpfont-preview-${font.key}`) ||
+				document.getElementById(`jpfont-preview-full-${font.key}`);
+			await sheetReady(find());
+			await sheetReady(find()); // covers the subset -> full fallback swap
 		}
+		const faces = await document.fonts.load(`400 20px ${font.family}`, JP_FONT_SAMPLE);
+		return faces.some((f) => f.status === "loaded");
+	})();
+	const timeout = new Promise((resolve) => setTimeout(() => resolve(false), timeoutMs));
+	try {
+		return await Promise.race([work, timeout]);
+	} catch {
+		return false;
 	}
 }
