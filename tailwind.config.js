@@ -106,8 +106,11 @@ export default {
         "card-lg": "0 2px 4px rgba(20,15,15,0.05), 0 16px 40px -8px rgba(20,15,15,0.16)",
       },
       fontFamily: {
-        mincho: ['"Shippori Mincho"', "serif"],
-        bengali: ['"Noto Sans Bengali"', "sans-serif"],
+        // Japanese display font and the Japanese fallback for body text are
+        // CSS variables so the learner can pick another font (Settings ›
+        // Japanese font, see lib/jpFonts.js). Defaults are in index.css.
+        mincho: ['var(--font-jp-display)', "serif"],
+        bengali: ['"Noto Sans Bengali"', 'var(--font-jp-body)', "sans-serif"],
         mono: ['"JetBrains Mono"', "monospace"],
       },
       borderRadius: {

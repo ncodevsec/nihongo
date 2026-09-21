@@ -6,7 +6,9 @@ import {
 	ToggleChip,
 	StarFilterButton,
 	ShuffleButton,
+	SortControl,
 } from "./FilterControls.jsx";
+import { makeItemComparator, indexMap } from "../lib/sortItems.js";
 import {
 	classifyPartOfSpeech,
 	POS_CATEGORIES,
@@ -49,6 +51,10 @@ export default function Study({
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [reverse, setReverse] = useState(false);
 	const [shuffled, setShuffled] = useState(true);
+	// Sorting only shapes the deck in serial mode (choosing a sort switches
+	// to serial); shuffled decks stay random.
+	const [sortBy, setSortBy] = useState("lesson");
+	const [sortDir, setSortDir] = useState("asc");
 	const [index, setIndex] = useState(0);
 	const [flipped, setFlipped] = useState(false);
 
@@ -59,6 +65,8 @@ export default function Study({
 		setSelectedCategories([]);
 		setOnlyUnlearned(false);
 		setOnlyStarred(false);
+		setSortBy("lesson");
+		setSortDir("asc");
 	}, [kanjiData]);
 
 	const availableCategories = useMemo(() => {
@@ -120,10 +128,22 @@ export default function Study({
 			}
 			if (onlyUnlearned) list = list.filter((k) => !progress[k.id]?.learned);
 			if (onlyStarred) list = list.filter((k) => favorites[k.id]);
+			if (!useShuffled && !(sortBy === "lesson" && sortDir === "asc")) {
+				list = [...list].sort(
+					makeItemComparator({
+						sortBy,
+						sortDir,
+						lessonIndex: indexMap(categories),
+						meaningText,
+						lang,
+						progress,
+					}),
+				);
+			}
 			const ids = list.map((k) => k.id);
 			return useShuffled ? shuffle(ids) : ids;
 		},
-		[kanjiData, selectedCategories, categoryOf, onlyUnlearned, onlyStarred, progress, favorites],
+		[kanjiData, selectedCategories, categoryOf, onlyUnlearned, onlyStarred, progress, favorites, sortBy, sortDir, categories, lang, settings.vocabLang, isVocab],
 	);
 
 	useEffect(() => {
@@ -138,7 +158,7 @@ export default function Study({
 		setIndex(0);
 		setFlipped(false);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [shuffled]);
+	}, [shuffled, sortBy, sortDir]);
 
 	const deck = useMemo(() => {
 		const byId = new Map(kanjiData.map((k) => [k.id, k]));
@@ -209,6 +229,20 @@ export default function Study({
 	const isLearned = card ? !!progress[card.id]?.learned : false;
 	const frontText = card ? (showWord ? card.kanji : card.reading) : "";
 
+	const sortOptions = [
+		{ key: "lesson", label: T("sortLesson") },
+		...(isVocab
+			? [
+					{ key: "pos", label: T("groupByPos") },
+					{ key: "count", label: T("groupByCount") },
+				]
+			: [{ key: "radical", label: T("groupByRadical") }]),
+		{ key: "word", label: T("sortWord") },
+		{ key: "reading", label: T("sortReading") },
+		...(showMeaning ? [{ key: "meaning", label: T("sortMeaning") }] : []),
+		{ key: "status", label: T("sortStatus") },
+	];
+
 	const filterRow = (
 		<div className="flex flex-wrap items-center gap-2 mb-4 text-xs">
 			<GroupCategoryTabs
@@ -278,7 +312,23 @@ export default function Study({
 				{T("reverseRecall")}
 			</button>
 
-			<div className="ml-auto">
+			<div className="ml-auto flex flex-wrap items-center gap-2">
+				<SortControl
+					label={T("sortBy")}
+					value={sortBy}
+					options={sortOptions}
+					onChange={(v) => {
+						setSortBy(v);
+						setShuffled(false);
+					}}
+					dir={sortDir}
+					onToggleDir={() => {
+						setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+						setShuffled(false);
+					}}
+					labelAsc={T("sortAsc")}
+					labelDesc={T("sortDesc")}
+				/>
 				<ShuffleButton shuffled={shuffled} onToggle={() => setShuffled((v) => !v)} label={T("shuffle")} serialLabel={T("serial")} />
 			</div>
 		</div>

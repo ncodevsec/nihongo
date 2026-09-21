@@ -8,7 +8,8 @@ import {
 	TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
-import { StarFilterButton } from "../FilterControls.jsx";
+import { StarFilterButton, SortControl } from "../FilterControls.jsx";
+import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
 import { grammarGroupCounts } from "../../lib/categoryCounts.js";
 
@@ -105,6 +106,8 @@ export default function GrammarList({
 	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'particle' | 'transform'
 	const [selectedFilters, setSelectedFilters] = useState([]); // [] = all
 	const [onlyStarred, setOnlyStarred] = useState(false);
+	const [sortBy, setSortBy] = useState("lesson");
+	const [sortDir, setSortDir] = useState("asc");
 	const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 	const [expanded, setExpanded] = useState(null);
 
@@ -119,7 +122,7 @@ export default function GrammarList({
 
 	const isTransform = groupBy === "transform";
 
-	const filtered = useMemo(() => {
+	const matches = useMemo(() => {
 		const q = debouncedQuery.trim().toLowerCase();
 		if (isTransform) {
 			return transformRows.filter((r) => {
@@ -170,6 +173,28 @@ export default function GrammarList({
 		favorites,
 	]);
 
+	// Optional ordering by category group (default = original order).
+	const sortKeys = grammarSortKeys(isTransform);
+	const effectiveSort = sortKeys.includes(sortBy) ? sortBy : sortKeys[0];
+	const sortLabels = {
+		lesson: T("sortLesson"),
+		particle: T("groupByParticle"),
+		transform: T("groupByTransform"),
+	};
+	const filtered = useMemo(() => {
+		if (effectiveSort === sortKeys[0] && sortDir === "asc") return matches;
+		return [...matches].sort(
+			makeGrammarComparator({
+				sortBy: effectiveSort,
+				sortDir,
+				lessonCategories: categories,
+				particleCategories,
+				transformCategories: TRANSFORM_CATEGORIES,
+			}),
+		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [matches, effectiveSort, sortDir, categories, particleCategories, isTransform]);
+
 	useEffect(() => {
 		setVisibleCount(PAGE_SIZE);
 	}, [debouncedQuery, selectedFilters, onlyStarred]);
@@ -212,6 +237,19 @@ export default function GrammarList({
 					onClick={() => setOnlyStarred((v) => !v)}
 					labelOn={T("onlyStarred")}
 					labelOff={T("onlyStarred")}
+				/>
+			</div>
+
+			<div className="mb-3">
+				<SortControl
+					label={T("sortBy")}
+					value={effectiveSort}
+					options={sortKeys.map((k) => ({ key: k, label: sortLabels[k] }))}
+					onChange={setSortBy}
+					dir={sortDir}
+					onToggleDir={() => setSortDir((d) => (d === "asc" ? "desc" : "asc"))}
+					labelAsc={T("sortAsc")}
+					labelDesc={T("sortDesc")}
 				/>
 			</div>
 

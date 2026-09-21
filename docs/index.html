@@ -42,12 +42,26 @@
       (function () {
         try {
           var raw = localStorage.getItem("nihongo-theme-v1");
-          if (!raw) return;
-          var cache = JSON.parse(raw);
-          var root = document.documentElement;
-          for (var k in cache.vars) root.style.setProperty(k, cache.vars[k]);
-          var meta = document.querySelector('meta[name="theme-color"]');
-          if (meta && cache.meta) meta.setAttribute("content", cache.meta);
+          if (raw) {
+            var cache = JSON.parse(raw);
+            var root = document.documentElement;
+            for (var k in cache.vars) root.style.setProperty(k, cache.vars[k]);
+            var meta = document.querySelector('meta[name="theme-color"]');
+            if (meta && cache.meta) meta.setAttribute("content", cache.meta);
+          }
+        } catch (e) {}
+        // Same for the chosen Japanese font (lib/jpFonts.js).
+        try {
+          var jp = JSON.parse(localStorage.getItem("nihongo-jpfont-v1") || "null");
+          if (jp && jp.href && jp.family) {
+            document.documentElement.style.setProperty("--font-jp-display", jp.family);
+            document.documentElement.style.setProperty("--font-jp-body", jp.family);
+            var l = document.createElement("link");
+            l.id = "jpfont-" + jp.key;
+            l.rel = "stylesheet";
+            l.href = jp.href;
+            document.head.appendChild(l);
+          }
         } catch (e) {}
       })();
     </script>
