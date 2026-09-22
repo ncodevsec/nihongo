@@ -6,6 +6,7 @@ import { KANJI_LESSON_CATEGORIES_N5, KANJI_LESSON_CATEGORIES_N4, JUKUGO_CATEGORY
 import { VOCAB_LESSON_CATEGORIES } from "./vocab-lesson-categories.js";
 import { GRAMMAR_N5 } from "./grammar/n5.js";
 import { GRAMMAR_N4 } from "./grammar/n4.js";
+import { buildTransformationRows, TRANSFORM_CATEGORIES } from "../lib/grammarUtils.js";
 
 // "All" = N5 and N4 combined. Built from the same source arrays (no copies of
 // the content), so ids — and therefore progress and favorites — are exactly
@@ -77,9 +78,21 @@ export const MODULES = {
       all: { key: "all", label: "All", data: ALL_KANJI, categories: ALL_KANJI_CATEGORIES },
     },
   },
+  transform: {
+    key: "transform",
+    bn: "রূপান্তর",
+    en: "Transform",
+    jp: "活用",
+    kind: "transform",
+    levels: {
+      n5: { key: "n5", data: buildTransformationRows("n5"), categories: TRANSFORM_CATEGORIES },
+      n4: { key: "n4", data: buildTransformationRows("n4"), categories: TRANSFORM_CATEGORIES },
+      all: { key: "all", data: buildTransformationRows("all"), categories: TRANSFORM_CATEGORIES },
+    },
+  },
 };
 
-export const MODULE_ORDER = ["vocabulary", "grammar", "kanji"];
+export const MODULE_ORDER = ["vocabulary", "grammar", "kanji", "transform"];
 // The two real JLPT levels (used wherever content is counted per level).
 export const LEVEL_ORDER = ["n5", "n4"];
 // What the level selector offers: everything at once, or a single level.

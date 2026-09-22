@@ -6,12 +6,14 @@ import {
 	grammarParticleCategories,
 	formatGrammarPointId,
 	TRANSFORM_CATEGORIES,
+	VERB_TRANSFORM_CATEGORIES,
+	ADJECTIVE_TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton, SortControl } from "../FilterControls.jsx";
 import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
-import { grammarGroupCounts } from "../../lib/categoryCounts.js";
+import { grammarGroupCounts, transformSubGroupCounts } from "../../lib/categoryCounts.js";
 
 const PAGE_SIZE = 40;
 
@@ -79,6 +81,7 @@ export default function GrammarList({
 	setLearned = () => {},
 	favorites,
 	toggleFavorite,
+	transformOnly = false,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -100,10 +103,14 @@ export default function GrammarList({
 		() => grammarGroupCounts(allPoints, transformRows),
 		[allPoints, transformRows],
 	);
+	const transformGroupCounts = useMemo(
+		() => transformSubGroupCounts(transformRows),
+		[transformRows],
+	);
 
 	const [query, setQuery] = useState("");
 	const [debouncedQuery, setDebouncedQuery] = useState("");
-	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'particle' | 'transform'
+	const [groupBy, setGroupBy] = useState(transformOnly ? "verb" : "lesson"); // 'lesson' | 'particle' (grammar) or 'verb' | 'adjective' (transformOnly)
 	const [selectedFilters, setSelectedFilters] = useState([]); // [] = all
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [sortBy, setSortBy] = useState("lesson");
@@ -120,12 +127,19 @@ export default function GrammarList({
 		setSelectedFilters([]);
 	}, [groupBy]);
 
-	const isTransform = groupBy === "transform";
+	const isTransform = transformOnly || groupBy === "transform";
 
 	const matches = useMemo(() => {
 		const q = debouncedQuery.trim().toLowerCase();
 		if (isTransform) {
-			return transformRows.filter((r) => {
+			const pool = transformOnly
+				? transformRows.filter((r) =>
+						groupBy === "adjective"
+							? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
+							: r.category.startsWith("verb-"),
+					)
+				: transformRows;
+			return pool.filter((r) => {
 				if (
 					selectedFilters.length > 0 &&
 					!selectedFilters.includes(r.category)
@@ -167,6 +181,7 @@ export default function GrammarList({
 		allPoints,
 		transformRows,
 		isTransform,
+		transformOnly,
 		debouncedQuery,
 		selectedFilters,
 		groupBy,
@@ -180,7 +195,11 @@ export default function GrammarList({
 	const sortLabels = {
 		lesson: T("sortLesson"),
 		particle: T("groupByParticle"),
-		transform: T("groupByTransform"),
+		transform: transformOnly
+			? groupBy === "adjective"
+				? T("groupByAdjective")
+				: T("groupByVerb")
+			: T("groupByTransform"),
 	};
 	const filtered = useMemo(() => {
 		if (effectiveSort === sortKeys[0] && sortDir === "asc") return matches;
@@ -202,7 +221,7 @@ export default function GrammarList({
 
 	const visible = filtered.slice(0, visibleCount);
 
-	if (allPoints.length === 0 && !isTransform) {
+	if (!transformOnly && allPoints.length === 0 && !isTransform) {
 		return (
 			<div className="max-w-2xl mx-auto text-center py-16 font-bengali text-ink-muted dark:text-night-ink-muted">
 				{T("grammarComingSoon")}
@@ -221,11 +240,17 @@ export default function GrammarList({
 					className="font-bengali flex-1 border border-ai-line dark:border-night-line rounded-md px-3 py-1.5 text-sm bg-paper dark:bg-night-paper text-ink dark:text-night-ink placeholder:text-ink-muted/60"
 				/>
 				<GroupCategoryTabs
-					groups={[
-						{ key: "lesson", label: T("groupByLesson"), categories, ...groupCounts.lesson },
-						{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
-						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES, ...groupCounts.transform },
-					]}
+					groups={
+						transformOnly
+							? [
+									{ key: "verb", label: T("groupByVerb"), categories: VERB_TRANSFORM_CATEGORIES, ...transformGroupCounts.verb },
+									{ key: "adjective", label: T("groupByAdjective"), categories: ADJECTIVE_TRANSFORM_CATEGORIES, ...transformGroupCounts.adjective },
+								]
+							: [
+									{ key: "lesson", label: T("groupByLesson"), categories, ...groupCounts.lesson },
+									{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
+								]
+					}
 					active={groupBy}
 					onActiveChange={setGroupBy}
 					selected={selectedFilters}

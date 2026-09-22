@@ -41,3 +41,15 @@ export function grammarGroupCounts(points, transformRows) {
 		transform: { counts: tally(transformRows, (r) => r.category), total: transformRows.length },
 	};
 }
+
+// Verb / Adjective counts for the standalone Transform tab.
+export function transformSubGroupCounts(transformRows) {
+	const verb = transformRows.filter((r) => r.category.startsWith("verb-"));
+	const adjective = transformRows.filter(
+		(r) => r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-"),
+	);
+	return {
+		verb: { counts: tally(verb, (r) => r.category), total: verb.length },
+		adjective: { counts: tally(adjective, (r) => r.category), total: adjective.length },
+	};
+}

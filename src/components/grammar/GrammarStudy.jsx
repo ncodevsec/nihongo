@@ -8,12 +8,14 @@ import {
 	grammarParticleCategories,
 	formatGrammarPointId,
 	TRANSFORM_CATEGORIES,
+	VERB_TRANSFORM_CATEGORIES,
+	ADJECTIVE_TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
 import { StarFilterButton, ShuffleButton, ToggleChip, SortControl } from "../FilterControls.jsx";
 import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
-import { grammarGroupCounts } from "../../lib/categoryCounts.js";
+import { grammarGroupCounts, transformSubGroupCounts } from "../../lib/categoryCounts.js";
 import LeveledKanji from "../LeveledKanji.jsx";
 
 // Renders a rule's Bengali explanation with light structure: sub-points
@@ -129,11 +131,15 @@ export default function GrammarStudy({
 	favorites,
 	toggleFavorite,
 	isActive = true,
+	// When true, this renders as the standalone Transform tab: no lesson or
+	// particle grouping, just the two Verb / Adjective category groups over
+	// the same conjugation-drill rows Grammar's old Transform group used.
+	transformOnly = false,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
 
-	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'particle' | 'transform'
+	const [groupBy, setGroupBy] = useState(transformOnly ? "verb" : "lesson"); // 'lesson' | 'particle' (grammar) or 'verb' | 'adjective' (transformOnly)
 	const lessonCategories = useMemo(
 		() => grammarCategories(lessons),
 		[lessons],
@@ -160,6 +166,10 @@ export default function GrammarStudy({
 		() => grammarGroupCounts(allPoints, transformRows),
 		[allPoints, transformRows],
 	);
+	const transformGroupCounts = useMemo(
+		() => transformSubGroupCounts(transformRows),
+		[transformRows],
+	);
 
 	useEffect(() => {
 		setSelectedFilters([]);
@@ -167,13 +177,13 @@ export default function GrammarStudy({
 		setFlipped(false);
 		setOnlyUnread(false);
 		setOnlyStarred(false);
-	}, [lessons]);
+	}, [lessons, level]);
 
 	useEffect(() => {
 		setSelectedFilters([]);
 	}, [groupBy]);
 
-	const isTransform = groupBy === "transform";
+	const isTransform = transformOnly || groupBy === "transform";
 
 	// Sorting shapes the deck in serial mode only (choosing a sort switches to
 	// serial). Options follow the active group: lesson / particle for points,
@@ -185,7 +195,11 @@ export default function GrammarStudy({
 	const sortLabels = {
 		lesson: T("sortLesson"),
 		particle: T("groupByParticle"),
-		transform: T("groupByTransform"),
+		transform: transformOnly
+			? groupBy === "adjective"
+				? T("groupByAdjective")
+				: T("groupByVerb")
+			: T("groupByTransform"),
 	};
 
 	// Snapshot of which ids belong in the current run, built fresh only
@@ -196,7 +210,17 @@ export default function GrammarStudy({
 	const buildSourceIds = useCallback(
 		(useShuffled) => {
 			let list;
-			if (isTransform) {
+			if (transformOnly) {
+				const pool = transformRows.filter((r) =>
+					groupBy === "adjective"
+						? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
+						: r.category.startsWith("verb-"),
+				);
+				list =
+					selectedFilters.length === 0
+						? pool
+						: pool.filter((r) => selectedFilters.includes(r.category));
+			} else if (isTransform) {
 				list =
 					selectedFilters.length === 0
 						? transformRows
@@ -228,7 +252,7 @@ export default function GrammarStudy({
 			const ids = list.map((p) => p.id);
 			return useShuffled ? shuffle(ids) : ids;
 		},
-		[isTransform, groupBy, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites, effectiveSort, sortDir, lessonCategories, particleCategories],
+		[isTransform, transformOnly, groupBy, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites, effectiveSort, sortDir, lessonCategories, particleCategories],
 	);
 
 	const [shuffled, setShuffled] = useState(true);
@@ -272,7 +296,7 @@ export default function GrammarStudy({
 		if (index >= deck.length) setIndex(0);
 	}, [deck.length, index]);
 
-	if (!lessons || lessons.length === 0) {
+	if (!transformOnly && (!lessons || lessons.length === 0)) {
 		return (
 			<div className="max-w-2xl mx-auto text-center py-16 font-bengali text-ink-muted dark:text-night-ink-muted">
 				{T("grammarComingSoon")}
@@ -322,11 +346,17 @@ export default function GrammarStudy({
 		<>
 			<div className="flex flex-wrap items-center gap-2 mb-5">
 				<GroupCategoryTabs
-					groups={[
-						{ key: "lesson", label: T("groupByLesson"), categories: lessonCategories, ...groupCounts.lesson },
-						{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
-						{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES, ...groupCounts.transform },
-					]}
+					groups={
+						transformOnly
+							? [
+									{ key: "verb", label: T("groupByVerb"), categories: VERB_TRANSFORM_CATEGORIES, ...transformGroupCounts.verb },
+									{ key: "adjective", label: T("groupByAdjective"), categories: ADJECTIVE_TRANSFORM_CATEGORIES, ...transformGroupCounts.adjective },
+								]
+							: [
+									{ key: "lesson", label: T("groupByLesson"), categories: lessonCategories, ...groupCounts.lesson },
+									{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
+								]
+					}
 					active={groupBy}
 					onActiveChange={setGroupBy}
 					selected={selectedFilters}

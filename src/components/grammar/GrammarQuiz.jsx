@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { t, pickLang } from "../../lib/i18n.js";
 import Hanko from "../Hanko.jsx";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
-import { grammarGroupCounts } from "../../lib/categoryCounts.js";
+import { grammarGroupCounts, transformSubGroupCounts } from "../../lib/categoryCounts.js";
 import LeveledKanji from "../LeveledKanji.jsx";
 import {
 	flattenGrammarPoints,
@@ -11,6 +11,8 @@ import {
 	buildGrammarQuestions,
 	formatGrammarPointId,
 	TRANSFORM_CATEGORIES,
+	VERB_TRANSFORM_CATEGORIES,
+	ADJECTIVE_TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 	buildTransformQuestions,
 	shuffle,
@@ -31,6 +33,9 @@ export default function GrammarQuiz({
 	settings,
 	updateSetting = () => {},
 	recordQuizResult,
+	// Standalone Transform tab: only Verb / Adjective groups, always the
+	// conjugation-drill rows.
+	transformOnly = false,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -52,9 +57,13 @@ export default function GrammarQuiz({
 		() => grammarGroupCounts(allPoints, transformRows),
 		[allPoints, transformRows],
 	);
+	const transformGroupCounts = useMemo(
+		() => transformSubGroupCounts(transformRows),
+		[transformRows],
+	);
 
 	const [phase, setPhase] = useState("setup");
-	const [setupGroupBy, setSetupGroupBy] = useState("lesson"); // 'lesson' | 'particle' | 'transform'
+	const [setupGroupBy, setSetupGroupBy] = useState(transformOnly ? "verb" : "lesson"); // 'lesson' | 'particle' (grammar) or 'verb' | 'adjective' (transformOnly)
 	const [setupFilters, setSetupFilters] = useState([]); // [] = all
 	const [setupLength, setSetupLength] = useState(settings.quizLength);
 	const [setupTimed, setSetupTimed] = useState(settings.timedQuiz);
@@ -62,17 +71,27 @@ export default function GrammarQuiz({
 
 	useEffect(() => {
 		setPhase("setup");
-		setSetupGroupBy("lesson");
+		setSetupGroupBy(transformOnly ? "verb" : "lesson");
 		setSetupFilters([]);
-	}, [allPoints]);
+	}, [allPoints, level, transformOnly]);
 
 	useEffect(() => {
 		setSetupFilters([]);
 	}, [setupGroupBy]);
 
-	const isSetupTransform = setupGroupBy === "transform";
+	const isSetupTransform = transformOnly || setupGroupBy === "transform";
 
 	const setupPool = useMemo(() => {
+		if (transformOnly) {
+			const pool = transformRows.filter((r) =>
+				setupGroupBy === "adjective"
+					? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
+					: r.category.startsWith("verb-"),
+			);
+			return setupFilters.length === 0
+				? pool
+				: pool.filter((r) => setupFilters.includes(r.category));
+		}
 		if (isSetupTransform) {
 			return setupFilters.length === 0
 				? transformRows
@@ -84,7 +103,7 @@ export default function GrammarQuiz({
 				setupFilters.includes(p.particle || "other"),
 			);
 		return allPoints.filter((p) => setupFilters.includes(p.category));
-	}, [allPoints, transformRows, isSetupTransform, setupFilters, setupGroupBy]);
+	}, [allPoints, transformRows, isSetupTransform, transformOnly, setupFilters, setupGroupBy]);
 	const setupAvailableCount =
 		setupLength === "all"
 			? setupPool.length
@@ -235,7 +254,7 @@ export default function GrammarQuiz({
 		</button>
 	);
 
-	if (allPoints.length === 0) {
+	if (!transformOnly && allPoints.length === 0) {
 		return (
 			<div className="max-w-lg mx-auto text-center py-16 font-bengali text-ink-muted dark:text-night-ink-muted">
 				{T("grammarComingSoon")}
@@ -258,11 +277,17 @@ export default function GrammarQuiz({
 								{T("quizSetupCategory")}
 							</label>
 							<GroupCategoryTabs
-								groups={[
-									{ key: "lesson", label: T("groupByLesson"), categories, ...groupCounts.lesson },
-									{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
-									{ key: "transform", label: T("groupByTransform"), categories: TRANSFORM_CATEGORIES, ...groupCounts.transform },
-								]}
+								groups={
+									transformOnly
+										? [
+												{ key: "verb", label: T("groupByVerb"), categories: VERB_TRANSFORM_CATEGORIES, ...transformGroupCounts.verb },
+												{ key: "adjective", label: T("groupByAdjective"), categories: ADJECTIVE_TRANSFORM_CATEGORIES, ...transformGroupCounts.adjective },
+										]
+										: [
+												{ key: "lesson", label: T("groupByLesson"), categories, ...groupCounts.lesson },
+												{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
+										]
+								}
 								active={setupGroupBy}
 								onActiveChange={setSetupGroupBy}
 								selected={setupFilters}
