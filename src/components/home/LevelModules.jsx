@@ -25,11 +25,13 @@ const MODULE_UNIT = {
 	vocabulary: "homeUnitWords",
 	grammar: "homeUnitPoints",
 	kanji: "homeUnitKanji",
+	transform: "homeUnitForms",
 };
 const MODULE_DESC = {
 	vocabulary: "homeModVocabDesc",
 	grammar: "homeModGrammarDesc",
 	kanji: "homeModKanjiDesc",
+	transform: "homeModTransformDesc",
 };
 
 // Level picker (doubles as N5 / N4 overview) + the three module cards for

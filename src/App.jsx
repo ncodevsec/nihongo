@@ -59,6 +59,7 @@ export default function App() {
 
 	const mod = MODULES[moduleKey];
 	const isGrammar = mod.kind === "grammar";
+	const isTransformKind = mod.kind === "transform";
 	const levelData = mod.levels[level];
 	const rawKanjiData = isGrammar ? [] : levelData.data;
 	const kanjiData = useMemo(() => {
@@ -88,6 +89,7 @@ export default function App() {
 		vocabulary: "vocab",
 		kanji: "kanji",
 		grammar: "grammar",
+		transform: "transform",
 	};
 	// "All" resets/filters across both levels: "vocab-" matches n5 and n4 ids.
 	const idPrefix = `${idPrefixMap[moduleKey]}-${level === "all" ? "" : `${level}-`}`;
@@ -204,6 +206,7 @@ export default function App() {
 						<>
 							<div className={tab === "study" ? "" : "hidden"}>
 								<GrammarStudy
+									key="grammar-study"
 									lessons={grammarLessons}
 									level={level}
 									settings={settings}
@@ -216,6 +219,7 @@ export default function App() {
 							</div>
 							<div className={tab === "quiz" ? "" : "hidden"}>
 								<GrammarQuiz
+									key="grammar-quiz"
 									lessons={grammarLessons}
 									level={level}
 									settings={settings}
@@ -227,6 +231,7 @@ export default function App() {
 								className={tab === "reference" ? "" : "hidden"}
 							>
 								<GrammarList
+									key="grammar-list"
 									lessons={grammarLessons}
 									level={level}
 									settings={settings}
@@ -238,8 +243,85 @@ export default function App() {
 							</div>
 							<div className={tab === "progress" ? "" : "hidden"}>
 								<Progress
+									key={moduleKey}
 									kanjiData={grammarPoints}
 									categories={grammarCats}
+									progress={progress}
+									resetProgress={() =>
+										resetProgress(idPrefix)
+									}
+									onResetCategory={(ids) =>
+										resetProgressForIds(ids)
+									}
+									settings={settings}
+									activity={activity}
+									favorites={favorites}
+									moduleKey={moduleKey}
+									level={level}
+									timeToday={todaySeconds}
+									timeWeek={weekSeconds}
+									timeTotal={totalSeconds}
+								/>
+							</div>
+							<div className={tab === "settings" ? "" : "hidden"}>
+								<Settings
+									settings={settings}
+									updateSetting={updateSetting}
+									resetSettings={resetSettings}
+									resetAllProgress={() => resetProgress()}
+									updateAvailable={updateAvailable}
+									checkingForUpdate={checking}
+									lastCheckedAt={lastCheckedAt}
+									onCheckForUpdate={checkForUpdate}
+									onApplyUpdate={applyUpdate}
+								/>
+							</div>
+						</>
+					) : isTransformKind ? (
+						<>
+							<div className={tab === "study" ? "" : "hidden"}>
+								<GrammarStudy
+									key="transform-study"
+									transformOnly
+									lessons={[]}
+									level={level}
+									settings={settings}
+									progress={progress}
+									setLearned={setLearned}
+									favorites={favorites}
+									toggleFavorite={toggleFavorite}
+									isActive={tab === "study"}
+								/>
+							</div>
+							<div className={tab === "quiz" ? "" : "hidden"}>
+								<GrammarQuiz
+									key="transform-quiz"
+									transformOnly
+									lessons={[]}
+									level={level}
+									settings={settings}
+									updateSetting={updateSetting}
+									recordQuizResult={recordQuizResult}
+								/>
+							</div>
+							<div className={tab === "reference" ? "" : "hidden"}>
+								<GrammarList
+									key="transform-list"
+									transformOnly
+									lessons={[]}
+									level={level}
+									settings={settings}
+									progress={progress}
+									setLearned={setLearned}
+									favorites={favorites}
+									toggleFavorite={toggleFavorite}
+								/>
+							</div>
+							<div className={tab === "progress" ? "" : "hidden"}>
+								<Progress
+									key={moduleKey}
+									kanjiData={kanjiData}
+									categories={categories}
 									progress={progress}
 									resetProgress={() =>
 										resetProgress(idPrefix)
@@ -275,6 +357,7 @@ export default function App() {
 						<>
 							<div className={tab === "study" ? "" : "hidden"}>
 								<Study
+									key={moduleKey}
 									moduleKey={moduleKey}
 									kanjiData={kanjiData}
 									categories={categories}
@@ -289,6 +372,7 @@ export default function App() {
 							</div>
 							<div className={tab === "quiz" ? "" : "hidden"}>
 								<Quiz
+									key={moduleKey}
 									moduleKey={moduleKey}
 									kanjiData={kanjiData}
 									categories={categories}
@@ -304,6 +388,7 @@ export default function App() {
 								className={tab === "reference" ? "" : "hidden"}
 							>
 								<Reference
+									key={moduleKey}
 									moduleKey={moduleKey}
 									kanjiData={kanjiData}
 									categories={categories}
@@ -317,6 +402,7 @@ export default function App() {
 							</div>
 							<div className={tab === "progress" ? "" : "hidden"}>
 								<Progress
+									key={moduleKey}
 									kanjiData={kanjiData}
 									categories={categories}
 									progress={progress}

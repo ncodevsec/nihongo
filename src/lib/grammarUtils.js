@@ -92,6 +92,17 @@ export const TRANSFORM_CATEGORIES = [
   { key: "na-adj-pastNegative", jp: "な形容詞ー過去否定形", bn: "Na-বিশেষণ - অতীত নেতিবাচক রূপ", en: "Na-Adjective - Past negative form" },
 ];
 
+export const VERB_TRANSFORM_CATEGORIES = TRANSFORM_CATEGORIES.filter((c) =>
+  c.key.startsWith("verb-"),
+);
+export const ADJECTIVE_TRANSFORM_CATEGORIES = TRANSFORM_CATEGORIES.filter(
+  (c) => c.key.startsWith("i-adj-") || c.key.startsWith("na-adj-"),
+);
+// Which of the two Transform tab groups a transformation row's category
+// belongs to.
+export const transformGroupOf = (categoryKey) =>
+  categoryKey.startsWith("verb-") ? "verb" : "adjective";
+
 const VERB_FORM_LABELS = {
   dictionary: { bn: "অভিধান রূপ", en: "Dictionary form" },
   te: { bn: "て রূপ", en: "Te form" },

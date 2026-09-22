@@ -11,6 +11,8 @@ import {
 } from "../lib/vocabClassify.js";
 import {
 	TRANSFORM_CATEGORIES,
+	VERB_TRANSFORM_CATEGORIES,
+	ADJECTIVE_TRANSFORM_CATEGORIES,
 	buildTransformationRows,
 } from "../lib/grammarUtils.js";
 
@@ -36,11 +38,12 @@ export default function Progress({
 	const [confirmingCategory, setConfirmingCategory] = useState(null);
 	const isVocab = moduleKey === "vocabulary";
 	const isGrammar = moduleKey === "grammar";
-	const [groupBy, setGroupBy] = useState("lesson"); // 'lesson' | 'pos' | 'count' (vocab) | 'particle' | 'transform' (grammar)
+	const isTransformModule = moduleKey === "transform";
+	const [groupBy, setGroupBy] = useState(isTransformModule ? "verb" : "lesson"); // 'lesson' | 'pos' | 'count' (vocab) | 'particle' (grammar) | 'verb' | 'adjective' (transform)
 
 	const transformRows = useMemo(
-		() => (isGrammar ? buildTransformationRows(level) : []),
-		[isGrammar, level],
+		() => (isGrammar || isTransformModule ? buildTransformationRows(level) : []),
+		[isGrammar, isTransformModule, level],
 	);
 	const particleCategories = useMemo(() => {
 		if (!isGrammar) return [];
@@ -53,8 +56,15 @@ export default function Progress({
 	}, [isGrammar, kanjiData]);
 
 	const stats = useMemo(() => {
-		const isTransform = isGrammar && groupBy === "transform";
-		const dataSource = isTransform ? transformRows : kanjiData;
+		const isTransform = isTransformModule || (isGrammar && groupBy === "transform");
+		const pool = isTransformModule
+			? transformRows.filter((r) =>
+					groupBy === "adjective"
+						? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
+						: r.category.startsWith("verb-"),
+				)
+			: transformRows;
+		const dataSource = isTransform ? pool : kanjiData;
 
 		const relevantIds = new Set(dataSource.map((k) => k.id));
 		const entries = dataSource.map((k) => progress[k.id]);
@@ -69,9 +79,13 @@ export default function Progress({
 		const accuracy = seen ? Math.round((correct / seen) * 100) : 0;
 		const starred = dataSource.filter((k) => favorites[k.id]).length;
 
-		const categoryList = isTransform
-			? TRANSFORM_CATEGORIES
-			: groupBy === "pos"
+		const categoryList = isTransformModule
+			? groupBy === "adjective"
+				? ADJECTIVE_TRANSFORM_CATEGORIES
+				: VERB_TRANSFORM_CATEGORIES
+			: isTransform
+				? TRANSFORM_CATEGORIES
+				: groupBy === "pos"
 				? POS_CATEGORIES
 				: groupBy === "count"
 					? COUNTING_CATEGORIES
@@ -130,6 +144,7 @@ export default function Progress({
 		favorites,
 		groupBy,
 		isGrammar,
+		isTransformModule,
 	]);
 
 	const handleReset = () => {
@@ -329,7 +344,29 @@ export default function Progress({
 						{[
 							{ key: "lesson", label: T("groupByLesson") },
 							{ key: "particle", label: T("groupByParticle") },
-							{ key: "transform", label: T("groupByTransform") },
+						].map((g) => (
+							<button
+								key={g.key}
+								onClick={() => {
+									setGroupBy(g.key);
+									setConfirmingCategory(null);
+								}}
+								className={`px-2.5 py-1 text-[11px] font-bengali font-medium ${
+									groupBy === g.key
+										? "bg-shu text-washi"
+										: "bg-paper dark:bg-night-paper text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+								}`}
+							>
+								{g.label}
+							</button>
+						))}
+					</div>
+				)}
+				{isTransformModule && (
+					<div className="flex rounded-full border border-ai-line dark:border-night-line overflow-hidden">
+						{[
+							{ key: "verb", label: T("groupByVerb") },
+							{ key: "adjective", label: T("groupByAdjective") },
 						].map((g) => (
 							<button
 								key={g.key}
