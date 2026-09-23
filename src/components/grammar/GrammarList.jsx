@@ -8,8 +8,10 @@ import {
 	TRANSFORM_CATEGORIES,
 	VERB_TRANSFORM_CATEGORIES,
 	ADJECTIVE_TRANSFORM_CATEGORIES,
+	VERB_GROUP_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
+import VerbGroupFilter from "../transform/VerbGroupFilter.jsx";
 import { StarFilterButton, SortControl } from "../FilterControls.jsx";
 import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
@@ -111,6 +113,9 @@ export default function GrammarList({
 	const [query, setQuery] = useState("");
 	const [debouncedQuery, setDebouncedQuery] = useState("");
 	const [groupBy, setGroupBy] = useState(transformOnly ? "verb" : "lesson"); // 'lesson' | 'particle' (grammar) or 'verb' | 'adjective' (transformOnly)
+	const [verbGroupFilter, setVerbGroupFilter] = useState(() =>
+		VERB_GROUP_CATEGORIES.map((g) => g.key),
+	);
 	const [selectedFilters, setSelectedFilters] = useState([]); // [] = all
 	const [onlyStarred, setOnlyStarred] = useState(false);
 	const [sortBy, setSortBy] = useState("lesson");
@@ -136,7 +141,7 @@ export default function GrammarList({
 				? transformRows.filter((r) =>
 						groupBy === "adjective"
 							? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
-							: r.category.startsWith("verb-"),
+							: r.category.startsWith("verb-") && verbGroupFilter.includes(r.verbGroup),
 					)
 				: transformRows;
 			return pool.filter((r) => {
@@ -182,6 +187,7 @@ export default function GrammarList({
 		transformRows,
 		isTransform,
 		transformOnly,
+		verbGroupFilter,
 		debouncedQuery,
 		selectedFilters,
 		groupBy,
@@ -243,7 +249,13 @@ export default function GrammarList({
 					groups={
 						transformOnly
 							? [
-									{ key: "verb", label: T("groupByVerb"), categories: VERB_TRANSFORM_CATEGORIES, ...transformGroupCounts.verb },
+									{
+						key: "verb",
+						label: T("groupByVerb"),
+						categories: VERB_TRANSFORM_CATEGORIES,
+						...transformGroupCounts.verb,
+						extra: <VerbGroupFilter value={verbGroupFilter} onChange={setVerbGroupFilter} lang={lang} />,
+					},
 									{ key: "adjective", label: T("groupByAdjective"), categories: ADJECTIVE_TRANSFORM_CATEGORIES, ...transformGroupCounts.adjective },
 								]
 							: [

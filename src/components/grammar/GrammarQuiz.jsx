@@ -13,10 +13,12 @@ import {
 	TRANSFORM_CATEGORIES,
 	VERB_TRANSFORM_CATEGORIES,
 	ADJECTIVE_TRANSFORM_CATEGORIES,
+	VERB_GROUP_CATEGORIES,
 	buildTransformationRows,
 	buildTransformQuestions,
 	shuffle,
 } from "../../lib/grammarUtils.js";
+import VerbGroupFilter from "../transform/VerbGroupFilter.jsx";
 
 const LETTERS = ["A", "B", "C", "D"];
 const LENGTH_OPTIONS = ["all", "10", "20", "50"];
@@ -64,6 +66,9 @@ export default function GrammarQuiz({
 
 	const [phase, setPhase] = useState("setup");
 	const [setupGroupBy, setSetupGroupBy] = useState(transformOnly ? "verb" : "lesson"); // 'lesson' | 'particle' (grammar) or 'verb' | 'adjective' (transformOnly)
+	const [verbGroupFilter, setVerbGroupFilter] = useState(() =>
+		VERB_GROUP_CATEGORIES.map((g) => g.key),
+	);
 	const [setupFilters, setSetupFilters] = useState([]); // [] = all
 	const [setupLength, setSetupLength] = useState(settings.quizLength);
 	const [setupTimed, setSetupTimed] = useState(settings.timedQuiz);
@@ -73,6 +78,7 @@ export default function GrammarQuiz({
 		setPhase("setup");
 		setSetupGroupBy(transformOnly ? "verb" : "lesson");
 		setSetupFilters([]);
+		setVerbGroupFilter(VERB_GROUP_CATEGORIES.map((g) => g.key));
 	}, [allPoints, level, transformOnly]);
 
 	useEffect(() => {
@@ -86,7 +92,7 @@ export default function GrammarQuiz({
 			const pool = transformRows.filter((r) =>
 				setupGroupBy === "adjective"
 					? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
-					: r.category.startsWith("verb-"),
+					: r.category.startsWith("verb-") && verbGroupFilter.includes(r.verbGroup),
 			);
 			return setupFilters.length === 0
 				? pool
@@ -103,7 +109,7 @@ export default function GrammarQuiz({
 				setupFilters.includes(p.particle || "other"),
 			);
 		return allPoints.filter((p) => setupFilters.includes(p.category));
-	}, [allPoints, transformRows, isSetupTransform, transformOnly, setupFilters, setupGroupBy]);
+	}, [allPoints, transformRows, isSetupTransform, transformOnly, verbGroupFilter, setupFilters, setupGroupBy]);
 	const setupAvailableCount =
 		setupLength === "all"
 			? setupPool.length
@@ -280,7 +286,15 @@ export default function GrammarQuiz({
 								groups={
 									transformOnly
 										? [
-												{ key: "verb", label: T("groupByVerb"), categories: VERB_TRANSFORM_CATEGORIES, ...transformGroupCounts.verb },
+												{
+											key: "verb",
+											label: T("groupByVerb"),
+											categories: VERB_TRANSFORM_CATEGORIES,
+											...transformGroupCounts.verb,
+											extra: (
+												<VerbGroupFilter value={verbGroupFilter} onChange={setVerbGroupFilter} lang={lang} />
+											),
+										},
 												{ key: "adjective", label: T("groupByAdjective"), categories: ADJECTIVE_TRANSFORM_CATEGORIES, ...transformGroupCounts.adjective },
 										]
 										: [

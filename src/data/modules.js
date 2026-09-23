@@ -85,9 +85,9 @@ export const MODULES = {
     jp: "活用",
     kind: "transform",
     levels: {
-      n5: { key: "n5", data: buildTransformationRows("n5"), categories: TRANSFORM_CATEGORIES },
-      n4: { key: "n4", data: buildTransformationRows("n4"), categories: TRANSFORM_CATEGORIES },
-      all: { key: "all", data: buildTransformationRows("all"), categories: TRANSFORM_CATEGORIES },
+      n5: { key: "n5", label: "N5", data: buildTransformationRows("n5"), categories: TRANSFORM_CATEGORIES },
+      n4: { key: "n4", label: "N4", data: buildTransformationRows("n4"), categories: TRANSFORM_CATEGORIES },
+      all: { key: "all", label: "All", data: buildTransformationRows("all"), categories: TRANSFORM_CATEGORIES },
     },
   },
 };

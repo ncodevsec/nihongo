@@ -31,6 +31,7 @@ const UI = {
   groupByTransform: { bn: "ট্রান্সফর্ম", en: "Transform" },
   groupByVerb: { bn: "ক্রিয়া", en: "Verb" },
   groupByAdjective: { bn: "বিশেষণ", en: "Adjective" },
+  verbGroupFilterLabel: { bn: "ক্রিয়ার গ্রুপ", en: "Verb group" },
   tabTransform: { bn: "ট্রান্সফর্ম", en: "Transform" },
   homeModTransformDesc: {
     bn: "ক্রিয়া ও বিশেষণের রূপান্তর অনুশীলন — এক জায়গায়, ক্রিয়া ও বিশেষণ আলাদাভাবে সাজানো।",
