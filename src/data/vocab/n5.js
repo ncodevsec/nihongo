@@ -956,6 +956,7 @@ const RAW = [
   // Lesson 21
   ["思う", "おもいます", "মনে করা", "Think", "lesson21"],
   ["言う", "いいます", "বলা", "Say", "lesson21"],
+  ["留学します", "りゅうがくします", "বিদেশে পড়াশোনা করা", "Study abroad", "lesson21", "vocab-n5-x3"],
   ["足る", "たります", "যথেষ্ট হওয়া", "Be enough, be sufficient", "lesson21"],
   ["勝つ", "かちます", "জেতা", "Win", "lesson21"],
   ["負ける", "まけます", "হারা", "Lose, be beaten", "lesson21"],
