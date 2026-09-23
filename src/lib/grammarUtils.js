@@ -5,7 +5,7 @@ import {
   conjugateVerb,
   conjugateIAdjective,
   conjugateNaAdjective,
-  classifyVerbGroup,
+  classifyJlptVerbGroup,
 } from "./conjugate.js";
 
 // JLPT-textbook verb groups (Group 1 "u-verbs"/Godan, Group 2
@@ -18,12 +18,7 @@ export const VERB_GROUP_CATEGORIES = [
   { key: "group3", bn: "গ্রুপ ৩ (অনিয়মিত)", en: "Group 3 (irregular)" },
 ];
 
-function jlptVerbGroup(masu) {
-  const g = classifyVerbGroup(masu);
-  if (g === "ichidan") return "group2";
-  if (g === "irregular-suru" || g === "irregular-kuru") return "group3";
-  return "group1"; // godan, special-honorific
-}
+
 
 // Shared helpers for the Grammar module. Grammar data is structured as
 // lessons -> points -> examples (see data/grammar/n4.js). These utilities
@@ -200,7 +195,7 @@ export function buildTransformationRows(level) {
         transformedForm: conj[key],
         formLabel: VERB_FORM_LABELS[key],
         meaningBn,
-        verbGroup: jlptVerbGroup(reading),
+        verbGroup: classifyJlptVerbGroup(reading),
       });
     }
   }

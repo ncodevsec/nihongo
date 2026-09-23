@@ -88,6 +88,45 @@ function isVowelRowChar(ch, row) {
 const I_ROW = "いきしちにひみりぎじびぴ";
 const E_ROW = "えけせてねへめれげぜでべぺ";
 
+// JLPT-textbook verb grouping (グループ1/2/3), for the Transform tab's Verb
+// group filter — a simpler, teaching-oriented classification than
+// classifyVerbGroup above, given directly by the app's owner:
+//   Group 1: ます-stem ends in an い-row character (書きます, 買います…)
+//   Group 2: ます-stem ends in an え-row character (食べます, 見せます…),
+//            PLUS a fixed list of い-row-ending verbs taught as Group 2
+//            exceptions (かります, たります, おります, あびます, できます,
+//            おきます, きます [着ます, "wear"], います, みます).
+//   Group 3: irregular — します (and other 〜します verbs) and きます
+//            (来ます, "come").
+// きます is ambiguous in kana alone (来ます "come" vs 着ます "wear"); this
+// vocab only ever surfaces one きます entry (来ます), so the Group 3 check
+// below is tried first and takes it — the Group 2 exception entry is kept
+// for completeness in case a distinguishable 着ます is ever added.
+const JLPT_GROUP2_I_ROW_EXCEPTIONS = new Set([
+  "かります",
+  "たります",
+  "おります",
+  "あびます",
+  "できます",
+  "おきます",
+  "きます",
+  "います",
+  "みます",
+]);
+
+export function classifyJlptVerbGroup(masu) {
+  if (!masu.endsWith("ます")) return null;
+  if (masu === "きます") return "group3"; // 来ます (kuru)
+  if (masu.endsWith("します")) return "group3"; // する and 〜する compounds
+  const stem = masu.slice(0, -2);
+  if (!stem) return null;
+  const last = stem[stem.length - 1];
+  if (JLPT_GROUP2_I_ROW_EXCEPTIONS.has(masu)) return "group2";
+  if (isVowelRowChar(last, I_ROW)) return "group1";
+  if (isVowelRowChar(last, E_ROW)) return "group2";
+  return "group1"; // あ/う/お-row stem endings are unambiguously Group 1
+}
+
 // Classifies a ます-form verb's group. Returns null if it doesn't look
 // like a conjugatable verb at all (used to skip non-verb entries safely).
 export function classifyVerbGroup(masu) {
