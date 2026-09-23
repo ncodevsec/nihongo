@@ -77,7 +77,7 @@ const KNOWN_SURU_STEMS = new Set([
   "よしゅう", "ふくしゅう", "ゆしゅつ", "ゆにゅう", "ほんやく", "はつめい",
   "はっけん", "にゅうりょく", "ちょきん", "しょうたい", "むりを", "なかよく",
   "そのままに", "せわを", "しつれい", "おねがい", "コピー", "メモ", "クリック",
-  "リサイクル", "キャンセル", "しんせつに", "はいけん", "ようい",
+  "リサイクル", "キャンセル", "しんせつに", "はいけん", "ようい", "りゅうがく",
 ]);
 
 
@@ -117,7 +117,11 @@ const JLPT_GROUP2_I_ROW_EXCEPTIONS = new Set([
 export function classifyJlptVerbGroup(masu) {
   if (!masu.endsWith("ます")) return null;
   if (masu === "きます") return "group3"; // 来ます (kuru)
-  if (masu.endsWith("します")) return "group3"; // する and 〜する compounds
+  if (masu.endsWith("します")) {
+    const stem = masu.slice(0, -3); // strip します
+    if (KNOWN_SURU_STEMS.has(stem)) return "group3"; // real する-compound
+    // otherwise falls through: an ordinary Godan す-verb (話します → 話す)
+  }
   const stem = masu.slice(0, -2);
   if (!stem) return null;
   const last = stem[stem.length - 1];
