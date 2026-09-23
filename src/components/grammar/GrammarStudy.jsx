@@ -10,8 +10,10 @@ import {
 	TRANSFORM_CATEGORIES,
 	VERB_TRANSFORM_CATEGORIES,
 	ADJECTIVE_TRANSFORM_CATEGORIES,
+	VERB_GROUP_CATEGORIES,
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
+import VerbGroupFilter from "../transform/VerbGroupFilter.jsx";
 import { StarFilterButton, ShuffleButton, ToggleChip, SortControl } from "../FilterControls.jsx";
 import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
@@ -140,6 +142,11 @@ export default function GrammarStudy({
 	const T = (k) => t(lang, k);
 
 	const [groupBy, setGroupBy] = useState(transformOnly ? "verb" : "lesson"); // 'lesson' | 'particle' (grammar) or 'verb' | 'adjective' (transformOnly)
+	// Which JLPT verb groups (1/2/3) are included when the Verb group is
+	// active; all three by default.
+	const [verbGroupFilter, setVerbGroupFilter] = useState(() =>
+		VERB_GROUP_CATEGORIES.map((g) => g.key),
+	);
 	const lessonCategories = useMemo(
 		() => grammarCategories(lessons),
 		[lessons],
@@ -177,6 +184,7 @@ export default function GrammarStudy({
 		setFlipped(false);
 		setOnlyUnread(false);
 		setOnlyStarred(false);
+		setVerbGroupFilter(VERB_GROUP_CATEGORIES.map((g) => g.key));
 	}, [lessons, level]);
 
 	useEffect(() => {
@@ -214,7 +222,7 @@ export default function GrammarStudy({
 				const pool = transformRows.filter((r) =>
 					groupBy === "adjective"
 						? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
-						: r.category.startsWith("verb-"),
+						: r.category.startsWith("verb-") && verbGroupFilter.includes(r.verbGroup),
 				);
 				list =
 					selectedFilters.length === 0
@@ -252,7 +260,7 @@ export default function GrammarStudy({
 			const ids = list.map((p) => p.id);
 			return useShuffled ? shuffle(ids) : ids;
 		},
-		[isTransform, transformOnly, groupBy, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites, effectiveSort, sortDir, lessonCategories, particleCategories],
+		[isTransform, transformOnly, groupBy, verbGroupFilter, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites, effectiveSort, sortDir, lessonCategories, particleCategories],
 	);
 
 	const [shuffled, setShuffled] = useState(true);
@@ -349,7 +357,15 @@ export default function GrammarStudy({
 					groups={
 						transformOnly
 							? [
-									{ key: "verb", label: T("groupByVerb"), categories: VERB_TRANSFORM_CATEGORIES, ...transformGroupCounts.verb },
+									{
+									key: "verb",
+									label: T("groupByVerb"),
+									categories: VERB_TRANSFORM_CATEGORIES,
+									...transformGroupCounts.verb,
+									extra: (
+										<VerbGroupFilter value={verbGroupFilter} onChange={setVerbGroupFilter} lang={lang} />
+									),
+								},
 									{ key: "adjective", label: T("groupByAdjective"), categories: ADJECTIVE_TRANSFORM_CATEGORIES, ...transformGroupCounts.adjective },
 								]
 							: [

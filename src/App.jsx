@@ -23,6 +23,12 @@ import GrammarList from "./components/grammar/GrammarList.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./components/home/Home.jsx";
 
+// Stable reference for the Transform tab's unused "lessons" prop — a
+// fresh [] literal every render would look like a changed prop to
+// GrammarStudy/Quiz/List's effects and reset their state on every tick
+// (e.g. the once-a-second time-tracking re-render).
+const EMPTY_LESSONS = [];
+
 export default function App() {
 	// Home is the landing page on every launch; everything else is one
 	// tap away from it.
@@ -283,7 +289,7 @@ export default function App() {
 								<GrammarStudy
 									key="transform-study"
 									transformOnly
-									lessons={[]}
+									lessons={EMPTY_LESSONS}
 									level={level}
 									settings={settings}
 									progress={progress}
@@ -297,7 +303,7 @@ export default function App() {
 								<GrammarQuiz
 									key="transform-quiz"
 									transformOnly
-									lessons={[]}
+									lessons={EMPTY_LESSONS}
 									level={level}
 									settings={settings}
 									updateSetting={updateSetting}
@@ -308,7 +314,7 @@ export default function App() {
 								<GrammarList
 									key="transform-list"
 									transformOnly
-									lessons={[]}
+									lessons={EMPTY_LESSONS}
 									level={level}
 									settings={settings}
 									progress={progress}

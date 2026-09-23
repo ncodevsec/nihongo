@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-// Each group: { key, label, categories: [{ key, bn, en }] }. `active` is
+// Each group: { key, label, categories: [{ key, bn, en }], extra? }.
+// `extra`, when present, is rendered once at the top of that group's open
+// panel (used by the Transform tab's Verb group for a Group-1/2/3 filter).
+// `active` is
 // the current group's key. `selected` is the array of selected category
 // keys within the active group (empty = all) — switching the active
 // group always resets this to [], matching how the separate toggle-row +
@@ -183,6 +186,12 @@ export default function GroupCategoryTabs({
 									<span className="truncate">{allLabel}</span>
 									{shown.total != null && <Count value={shown.total} />}
 								</button>
+								{shown.extra && (
+									<>
+										<div className="border-t border-ai-line dark:border-night-line my-1" />
+										{shown.extra}
+									</>
+								)}
 								<div className="border-t border-ai-line dark:border-night-line my-1" />
 								{shown.categories.map((c) => {
 									const checked = isActive && selected.includes(c.key);
