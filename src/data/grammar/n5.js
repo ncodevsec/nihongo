@@ -12,7 +12,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "1-1",
-        "particle": "は",
+        "particles": ["wa"],
         "headingBn": "Noun1/Subject + は + Noun2/Object + です",
         "explanationBn": "'は' এটাকে হিরাগানাতে 'হা' লেখা হলেও এটি Particle হিসেবে ব্যবহৃত হলে উচ্চারণ হয় 'ওয়া'। জাপানি ভাষায় প্রতিটি বাক্যের Subject-এর সাথে は Particle বসে। は-এর অর্থ am/is/are (হয়/হই)। は Particle Subject-কে পৃথক বা আলাদা করার জন্য ব্যবহার করা হয়। \nです - Noun যুক্ত হ্যাঁ বোধক বাক্য (affirmative sentence) এর শেষে です বসে বাক্যকে পোলাইট বা সম্মানসূচক করে।",
         "examples": [
@@ -32,7 +32,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "1-2",
-        "particle": "じゃ",
+        "particles": ["wa", "de"],
         "headingBn": "Noun1/Subject + は + Noun2/Object + じゃ/では ありません",
         "explanationBn": "Noun যুক্ত বাক্যকে নাবোধক/Negative Sentence করতে じゃありません। বা では(দেওয়া)ありません বসে। じゃありません/ではありません-এর অর্থ (না)।",
         "examples": [
@@ -52,7 +52,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "1-3",
-        "particle": "か",
+        "particles": ["wa"],
         "headingBn": "Noun1/Subject + は + Noun2/Object + ですか (Interrogative sentence)",
         "explanationBn": "জাপানি ভাষায় প্রশ্ন করতে বাক্যের শেষে か বসে প্রশ্ন করা হয়।",
         "examples": [
@@ -72,7 +72,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "1-4",
-        "particle": "も",
+        "particles": ["mo"],
         "headingBn": "Noun + も",
         "explanationBn": "も Particle-এর অর্থ (ও)। একের অধিক বাক্যে যখন Object/Noun2 একই রকম হয় তখন দ্বিতীয় বাক্য হতে শুরু করে প্রত্যেকটি বাক্যের Subject/Noun1-এর সাথে も পার্টিকেল হবে।",
         "examples": [
@@ -92,7 +92,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "1-5",
-        "particle": "の",
+        "particles": ["no"],
         "headingBn": "Noun1 + の + Noun2",
         "explanationBn": "Particle-এর বাংলা অর্থ (র/এর)। Particle দিয়ে মালিকানা বোঝানো হয়, মূলত যে Noun-এর পরে particle বসে সেই Noun-এর মালিকানা বোঝানো হয় এবং বাংলায় (র/এর) অর্থ প্রকাশ পায়।",
         "examples": [
@@ -112,7 +112,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "1-6",
-        "particle": "さん",
+        "particles": ["san-chan-kun"],
         "headingBn": "さん / ちゃん / くん ব্যবহারের নিয়ম",
         "explanationBn": "さん - ১৮ বছরের উপরে ছেলে-মেয়ে উভয়ের নামের পর ব্যবহার করা হয়। ちゃん - ১৮ বছরের নিচে ছেলে-মেয়ে উভয়ের নামের পর ব্যবহার করা হয়। くん - শুধুমাত্র ছেলেদের নামের পরে বসে (মেয়েরা ব্যবহার করে না)।",
         "examples": [
@@ -138,7 +138,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "2-1",
-        "particle": "これ/それ/あれ",
+        "particles": ["kore-sore-are"],
         "headingBn": "これ/それ/あれ (বস্তু নির্দেশক)",
         "explanationBn": "এগুলো দিয়ে সবসময় বস্তুকে নির্দেশ করা হয় এবং এরপরে সবসময় は Particle বসে।",
         "examples": [
@@ -158,7 +158,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "2-2",
-        "particle": "この/その/あの",
+        "particles": ["kono-sono-ano"],
         "headingBn": "この/その/あの (বস্তু-প্রাণী নির্দেশক)",
         "explanationBn": "এগুলো দিয়ে বস্তু-প্রাণী উভয়কে নির্দেশ করা হয় এবং この/その/あの-এর পরে সবসময় Noun বসে।",
         "examples": [
@@ -178,7 +178,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "2-3",
-        "particle": "の",
+        "particles": ["no"],
         "headingBn": "の (মালিকানা ও প্রশ্নবাচক শব্দ)",
         "explanationBn": "の Particle-এর বাংলা অর্থ র/এর। প্রথম Noun-এর মালিকানা বোঝায় এবং দুটি Noun-কে একসাথে যুক্ত করে।",
         "examples": [
@@ -198,7 +198,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "2-4",
-        "particle": "か",
+        "particles": ["ka"],
         "headingBn": "~か、~か (বিকল্প প্রশ্ন)",
         "explanationBn": "এই গ্রামারটি দুটি বা তার বেশি বিকল্পের মধ্যে কোনটি একটি বেছে নিতে শ্রোতাকে জিজ্ঞাসা করতে ব্যবহৃত হয়। উদাহরণস্বরূপ, 'এটি কি ৯ নাকি ৭?' জিজ্ঞাসা করতে এই গ্রামার ব্যবহার করবেন।",
         "examples": [
@@ -224,7 +224,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "3-1",
-        "particle": "ここ/そこ/あそこ",
+        "particles": ["doko"],
         "headingBn": "ここ / そこ / あそこ / どこ (স্থান নির্দেশক)",
         "explanationBn": "ここ - বক্তার কাছে হলে। そこ - শ্রোতার কাছে হলে। あそこ - বক্তা ও শ্রোতা উভয় থেকে দূরে হলে। こ Series ১ম ব্যক্তির কাছে, そ Series ২য় ব্যক্তির কাছে, あ Series উভয় থেকে দূরে, ど Series প্রশ্নবাচক — এই একই প্যাটার্ন বস্তুতে (これ/それ/あれ/どれ), বস্তু-ব্যক্তিতে (この/その/あの/どの), স্থানে (ここ/そこ/あそこ/どこ) এবং দিক নির্দেশে বিনীত রূপে (こちら/そちら/あちら/どちら) প্রযোজ্য।",
         "examples": [
@@ -244,7 +244,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "3-2",
-        "particle": "は",
+        "particles": ["wa"],
         "headingBn": "Noun (place) + は + Noun/Subject + です",
         "explanationBn": "স্থানকে প্রথমে বসিয়েও বাক্য গঠন করা যায়, যেখানে স্থানটি Subject হয় এবং কী আছে তা Object হিসেবে বসে।",
         "examples": [
@@ -264,7 +264,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "3-3",
-        "particle": "どこ",
+        "particles": ["doko", "dochira"],
         "headingBn": "どこ / どちら দিয়ে প্রশ্ন করা",
         "explanationBn": "どこ দিয়ে প্রশ্ন করলে Subject-এর অবস্থান অনুযায়ী কাছাকাছি হলে ここ/そこ/あそこ দিয়ে উত্তর দিতে হবে। どちら দিয়ে প্রশ্ন করলে こちら/そちら/あちら দিয়ে উত্তর দিতে হবে। জাপানি ভাষায় কিছু শব্দকে সম্মান দেওয়ার জন্য ঐ শব্দের পূর্বে [お] বসে থাকে।",
         "examples": [
@@ -290,7 +290,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "4-1",
-        "particle": "時",
+        "particles": ["toki"],
         "headingBn": "Telling Time, O'Clock ～とき (ঘণ্টা ও মিনিট গণনা)",
         "explanationBn": "সময় বলতে ঘণ্টার জন্য ～じ এবং মিনিটের জন্য ～ふん/～ぷん ব্যবহার হয়। মিনিটের ক্ষেত্রে 2, 5, 7, 9 এ ふん হবে এবং বাকি সব ってん/っぷん হবে।",
         "examples": [
@@ -310,7 +310,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "4-2",
-        "particle": "ます",
+        "particles": ["masu-form"],
         "headingBn": "Verb-ます (ক্রিয়াপদ)",
         "explanationBn": "ます যুক্ত শব্দকে verb বলে। জাপানি ভাষার বাক্যের শেষে সবসময় verb বসে। জাপানি ভাষায় Tense দুই প্রকার: Present/Future এবং Past। Present/Future হ্যাঁবাচক: ～ます, নাবাচক: ～ません। Past হ্যাঁবাচক: ～ました, নাবাচক: ～ませんでした।",
         "examples": [
@@ -330,7 +330,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "4-3",
-        "particle": "に",
+        "particles": ["ni"],
         "headingBn": "Noun(time) + に + verb",
         "explanationBn": "নির্দিষ্ট সময়ে কোন কাজ করা বোঝালে ওই সময়ের পরে に-Particle বসে (সপ্তাহের বার, তারিখ, মাস, বছর)। সপ্তাহের বারের ক্ষেত্রে に-Particle অপশনাল, দিলেও হবে, না দিলেও হবে।",
         "examples": [
@@ -350,7 +350,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "4-4",
-        "particle": "から",
+        "particles": ["kara", "made"],
         "headingBn": "Noun1 から Noun2 まで",
         "explanationBn": "から...まで (থেকে...পর্যন্ত)। একটি জায়গা থেকে আরেকটি জায়গা পর্যন্ত / একটি সময় থেকে আরেকটি সময় পর্যন্ত এমন অর্থ বোঝায়।",
         "examples": [
@@ -370,7 +370,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "4-5",
-        "particle": "と",
+        "particles": ["to"],
         "headingBn": "Noun1 + と + Noun2",
         "explanationBn": "と Particle-এর অর্থ এবং/ও। と Particle দিয়ে দুটি Noun বা নামকে একসাথে যুক্ত করা হয়।",
         "examples": [
@@ -396,7 +396,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "5-1",
-        "particle": "へ",
+        "particles": ["e"],
         "headingBn": "Noun(place) + へ + いきます/きます/かえります",
         "explanationBn": "へ-এর উচ্চারণ এখানে 'エ' (এ) হবে। এটি একটি Particle। কোন স্থানে যাওয়া, আসা বা ফিরা বোঝালে ঐ স্থানের পরে Particle বসে।",
         "examples": [
@@ -416,7 +416,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "5-2",
-        "particle": "も",
+        "particles": ["mo", "e", "doko"],
         "headingBn": "どこ（へ）も + いきません / いきませんでした",
         "explanationBn": "だれも(কেউ), どこも(কোথাও), なにも(কিছুই) — এগুলো থাকলে Sentence নাবাচক হবে।",
         "examples": [
@@ -436,7 +436,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "5-3",
-        "particle": "で",
+        "particles": ["de"],
         "headingBn": "Noun(যানবাহন) + で + いきます/きます/かえります",
         "explanationBn": "এখানে Particle-এর অর্থ দিয়ে/দ্বারা। কোন যানবাহন দিয়ে কোন স্থানে যাওয়া, আসা বা ফিরে যাওয়া বোঝালে ঐ যানবাহনের পরে Particle ব্যবহার হয়।",
         "examples": [
@@ -456,7 +456,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "5-4",
-        "particle": "と",
+        "particles": ["to"],
         "headingBn": "Noun(ব্যক্তি, প্রাণী) + と + verb",
         "explanationBn": "এখানে と Particle-এর অর্থ সাথে (With)। কোন ব্যক্তি বা প্রাণীর সাথে কোন কাজ করা বোঝালে と Particle ব্যবহার হয়।",
         "examples": [
@@ -482,7 +482,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "6-1",
-        "particle": "を",
+        "particles": ["wo"],
         "headingBn": "Noun + を + Verb (Transitive)",
         "explanationBn": "যেসব verb বা ক্রিয়ার কার্য সম্পাদনের জন্য subject ছাড়াও অন্য কিছু বা অন্য কারো প্রয়োজন হয় তাদেরকে Transitive verb বা সকর্মক ক্রিয়া বলা হয়। সাধারণত সকল Verb-এর পূর্বে を Particle বসে; を Particle-এর কোন অর্থ নেই। কিছু ব্যতিক্রমী Verb আছে যাদের পূর্বে に এবং が Particle বসে (যেমন あいます, のります এ に; わかります, できます এ が)।",
         "examples": [
@@ -502,7 +502,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "6-2",
-        "particle": "なに",
+        "particles": ["nani"],
         "headingBn": "なん এবং なに (কি)",
         "explanationBn": "なに-এর সাথে সবসময় (が、も、を) Particle বসবে। বাকি সব Particle なん-এর সাথে বসবে।",
         "examples": [
@@ -522,7 +522,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "6-3",
-        "particle": "で",
+        "particles": ["de"],
         "headingBn": "Noun(Place) + で + Verb (Action of Place)",
         "explanationBn": "একটি নির্দিষ্ট স্থানে যদি কোন কাজ করা বোঝায় ঐ স্থানের পরে で Particle বসে। (Action of Place)-এর ক্ষেত্রে কিছু সময় で Particle-এর অর্থ হয় (থেকে), আবার কিছু সময় এর কোন অর্থই হয় না।",
         "examples": [
@@ -542,7 +542,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "6-4",
-        "particle": "ませんか",
+        "particles": ["masu-form"],
         "headingBn": "V-ます → V-ませんか",
         "explanationBn": "কোন ব্যক্তিকে একসাথে কোন কাজ করার জন্য অফার করার সময় এটি ব্যবহার হয়।",
         "examples": [
@@ -562,7 +562,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "6-5",
-        "particle": "ましょう",
+        "particles": ["masu-form", "volitional"],
         "headingBn": "V-ます → V-ましょう",
         "explanationBn": "একসাথে কোন কাজ করা বোঝালে এটার ব্যবহার হবে।",
         "examples": [
@@ -582,7 +582,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "6-6",
-        "particle": "を(exception)",
+        "particles": ["ga", "ni"],
         "headingBn": "ব্যতিক্রমী Verb: に ও が Particle যুক্ত",
         "explanationBn": "সাধারণত を বসলেও কিছু Verb-এর পূর্বে ব্যতিক্রমভাবে に অথবা が বসে। に-যুক্ত: あいます(দেখা করা), のります(ওঠা), つきます(পৌঁছানো)। が-যুক্ত: わかります(বুঝতে পারা), できます(পারা), あります(থাকা)।",
         "examples": [
@@ -608,7 +608,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "7-1",
-        "particle": "で",
+        "particles": ["de"],
         "headingBn": "Noun(যন্ত্র/means) + で + Verb",
         "explanationBn": "কোন কিছু দিয়ে কোন কাজ করা বোঝাতে (দিয়ে) অর্থে で Particle-এর ব্যবহার হবে।",
         "examples": [
@@ -628,7 +628,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "7-2",
-        "particle": "で",
+        "particles": ["wa", "de", "ndesu"],
         "headingBn": "(word/sentence) + は Country ご + で なんですか",
         "explanationBn": "এই শব্দটি বা বাক্যটি ঐ দেশের ভাষায় কী বলে? — এভাবে জিজ্ঞাসা করতে ব্যবহার হয়।",
         "examples": [
@@ -648,7 +648,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "7-3",
-        "particle": "に(দেওয়া)",
+        "particles": ["ni", "ageru-morau-kureru"],
         "headingBn": "N(person) + に + あげます/かします/おしえます",
         "explanationBn": "あげます(দেওয়া), かします(ধার দেওয়া), おしえます(শিক্ষা দেওয়া) — এই তিনটি Verb-এর অর্থ কাউকে কিছু দেওয়া। যে ব্যক্তির সাথে に Particle বসবে তাকে দেওয়া বোঝাবে এবং に Particle-এর অর্থ হবে 'কে'।",
         "examples": [
@@ -668,7 +668,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "7-4",
-        "particle": "に(পাওয়া)",
+        "particles": ["ni", "ageru-morau-kureru"],
         "headingBn": "N(person) + に + もらいます/かります/ならいます",
         "explanationBn": "もらいます(পাওয়া), かります(ধার পাওয়া), ならいます(শিক্ষা পাওয়া) — এই তিনটি Verb-এর অর্থ কারো থেকে কিছু পাওয়া। যে ব্যক্তির সাথে Particle থাকবে তার থেকে পাওয়া বোঝাবে এবং Particle-এর অর্থ হবে থেকে।",
         "examples": [
@@ -688,7 +688,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "7-5",
-        "particle": "もう",
+        "particles": ["mou"],
         "headingBn": "もう + V-ました",
         "explanationBn": "もう অর্থ ইতিমধ্যে/Already। যদি কোন Sentence-এ もう থাকে ওই Sentence-টি Past হবে।",
         "examples": [
@@ -714,7 +714,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "8-1",
-        "particle": "な",
+        "particles": ["i-adjective", "na-adjective"],
         "headingBn": "Adjective পরিচিতি: な-Adjective ও い-Adjective",
         "explanationBn": "যে সকল শব্দ দ্বারা কোন Noun বা Pronoun-এর দোষ, গুণ, সংখ্যা, পরিমাণ, অবস্থা ইত্যাদি প্রকাশ করা হয় তাদেরকে Adjective বলে। জাপানি ভাষায় Adjective দুই প্রকার: な-Adjective (শেষে な বসে) এবং い-Adjective (শেষে い বসে)।",
         "examples": [
@@ -734,7 +734,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "8-2",
-        "particle": "な",
+        "particles": ["wa", "na-adjective"],
         "headingBn": "Noun/Subject + は + な-Adjective［な］+ です",
         "explanationBn": "এখানে Noun বা Subject-এর দোষ, গুণ, অবস্থা বোঝানো হয়। না-বাচক বাক্যে な-Adjective-কে Noun-এর মতো じゃありません/ではありません দিয়ে না-বাচক করতে হয়।",
         "examples": [
@@ -754,7 +754,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "8-3",
-        "particle": "い",
+        "particles": ["wa", "i-adjective"],
         "headingBn": "Noun/Subject + は + い-Adjective［い］+ です",
         "explanationBn": "এখানে Noun বা subject-এর দোষ, গুণ, অবস্থা বোঝানো হয়। い-Adjective-এর নাবাচক বাক্যে い-Adjective-এর い উঠে くないです যুক্ত হবে।",
         "examples": [
@@ -774,7 +774,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "8-4",
-        "particle": "な(Noun)",
+        "particles": ["wa", "na-adjective"],
         "headingBn": "Noun/Subject + は + な-Adjective［な］+ Noun です",
         "explanationBn": "な-Adjective-এর পরে Noun থাকলে な-Adjective-এর সাথে な বসবে; যদি な-Adjective-এর শেষে Noun না থাকে এবং ওই জায়গাতেই sentence-এর সমাপ্তি হয় তখন な-Adjective-এর সাথে な বসবে না।",
         "examples": [
@@ -794,7 +794,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "8-5",
-        "particle": "とても",
+        "particles": ["adverb-degree"],
         "headingBn": "Adverb: とても / あまり",
         "explanationBn": "Adverb একটি Part of Speech যা Verb, Adjective-কে Modify করে। とても (অনেক) সবসময় হ্যাঁবাচক বাক্যে ব্যবহার হয়। あまり (তেমন না) সবসময় নাবাচক বাক্যে ব্যবহার হয়।",
         "examples": [
@@ -814,7 +814,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "8-6",
-        "particle": "どう",
+        "particles": ["wa"],
         "headingBn": "Noun + は + どうですか",
         "explanationBn": "Noun বা সাবজেক্টটি কেমন তা নিয়ে প্রশ্ন করা হয়।",
         "examples": [
@@ -834,7 +834,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "8-7",
-        "particle": "どんな",
+        "particles": ["wa", "ga", "donna"],
         "headingBn": "Noun1 + は + どんな + Noun2 + ですか / Sentence1が、Sentence2",
         "explanationBn": "どんな দিয়ে এটি কি ধরনের Noun তা প্রশ্ন করা হয়। が এখানে 'কিন্তু' অর্থে ব্যবহৃত হয়, Positive+が+Negative অথবা Negative+が+Positive গঠনে।",
         "examples": [
@@ -860,7 +860,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "9-1",
-        "particle": "が",
+        "particles": ["ga"],
         "headingBn": "Noun + が + あります/わかります",
         "explanationBn": "あります/わかります এই দুটি verb-এর পূর্বে সবসময় が Particle বসবে।",
         "examples": [
@@ -880,7 +880,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "9-2",
-        "particle": "が(adj)",
+        "particles": ["wa", "ga"],
         "headingBn": "Noun1 + は + Noun2 + が + All Adjective です",
         "explanationBn": "Adjective-এর পূর্বে যদি Noun2/object থাকে তখন adjective-এর পূর্বে が particle বসে।",
         "examples": [
@@ -900,7 +900,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "9-3",
-        "particle": "どんな",
+        "particles": ["donna"],
         "headingBn": "どんな + Noun (কি ধরনের)",
         "explanationBn": "どんな দিয়ে কি ধরনের জিজ্ঞাসা করা হয়।",
         "examples": [
@@ -920,7 +920,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "9-4",
-        "particle": "よく",
+        "particles": ["tai", "adverb-degree"],
         "headingBn": "よく/だいたい/たくさん/すこし/あまり/ぜんぜん",
         "explanationBn": "এগুলোকে জাপানি ভাষায় Adverb বলে। Adverb সবসময় Verb-এর পূর্বে বসে Verb-কে Modify করে; すこし/あまり/ぜんぜん মাঝে মাঝে Adjective-এর পূর্বে বসে Adjective-কে modify করে। よく(ভালোই/অধিক), たくさん(অনেক), だいたい(মোটামুটি), すこし(অল্প), あまり(তেমন না, নাবাচক), ぜんぜん(একেবারেই না, নাবাচক)।",
         "examples": [
@@ -940,7 +940,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "9-5",
-        "particle": "から",
+        "particles": ["kara"],
         "headingBn": "Sentence1 + から、+ sentence2",
         "explanationBn": "কোন কারণ বোঝাতে sentence-এর মাঝে এবং শেষে から ব্যবহার হয়। এখানে から অর্থ হলো (জন্য/বলে)।",
         "examples": [
@@ -966,7 +966,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "10-1",
-        "particle": "あります/います",
+        "particles": ["ga"],
         "headingBn": "Noun + が + あります/います",
         "explanationBn": "あります/います-এর পূর্বে সবসময় Particle বসে। あります সবসময় বস্তুর ক্ষেত্রে বসে এবং います সবসময় প্রাণীর বা ব্যক্তির ক্ষেত্রে বসে।",
         "examples": [
@@ -986,7 +986,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "10-2",
-        "particle": "に(place)",
+        "particles": ["ga", "ni"],
         "headingBn": "Noun(Place) + に + Noun2 + が + あります/います",
         "explanationBn": "কোন নির্দিষ্ট Place/স্থানে যদি কোন কিছুর অবস্থান বোঝায় তখন ঐ Place/স্থানের পর Particle বসে।",
         "examples": [
@@ -1006,7 +1006,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "10-3",
-        "particle": "に(subject)",
+        "particles": ["wa", "ni"],
         "headingBn": "Noun1 + は + Noun2 + に + あります/います",
         "explanationBn": "কোন নির্দিষ্ট Place/স্থানে যদি কোন কিছুর অবস্থান বোঝায় তখন ঐ Place/স্থানের পর Particle বসে। যদি Place ছাড়া অন্য কোন Noun থাকে তখন が Particle বসবে।",
         "examples": [
@@ -1026,7 +1026,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "10-4",
-        "particle": "の(position)",
+        "particles": ["ni", "de", "no"],
         "headingBn": "N1(Things/Person/Place) + の + N2(Positional Word) に/で",
         "explanationBn": "কোন নির্দিষ্ট Place-এ যদি কোন কিছুর অবস্থান বোঝায় তখন ঐ Place-এর পর に Particle বসে; কোন নির্দিষ্ট স্থানে যদি কাজ করা বোঝায় তখন ওই স্থানের পরে で Particle বসে।",
         "examples": [
@@ -1046,7 +1046,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "10-5",
-        "particle": "や",
+        "particles": ["ya"],
         "headingBn": "Noun + や + Noun + など",
         "explanationBn": "や Particle-এর অর্থ (ও/এবং), Lesson-4-এর と Particle-এর মতোই ব্যবহার হবে তবে এটি অসম্পূর্ণ তালিকা বোঝায়। など অর্থ ইত্যাদি।",
         "examples": [
@@ -1072,7 +1072,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "11-1",
-        "particle": "どのくらい",
+        "particles": ["donokurai"],
         "headingBn": "どのくらい (কত সময়)",
         "explanationBn": "どのくらい/どのぐらい/どれくらい/どれぐらい সবগুলোর অর্থ কত সময়? ぐらい/くらい অর্থ প্রায়।",
         "examples": [
@@ -1092,7 +1092,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "11-2",
-        "particle": "に(quantifier)",
+        "particles": ["ni"],
         "headingBn": "Quantifier(Time Period) + に + Verb",
         "explanationBn": "একটি নির্দিষ্ট সময়ে কয়েকবার কাজ করা বোঝায়।",
         "examples": [
@@ -1112,7 +1112,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "11-3",
-        "particle": "だけ",
+        "particles": ["dake"],
         "headingBn": "Quantifier/Noun + だけ (Only)",
         "explanationBn": "だけ অর্থ Only/মাত্র/শুধুমাত্র।",
         "examples": [
@@ -1138,7 +1138,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "12-1",
-        "particle": "でした",
+        "particles": ["na-adjective", "tense-change"],
         "headingBn": "Noun এবং な-Adjective-এর Tense-গত পরিবর্তন",
         "explanationBn": "Present Positive: です। Present Negative: じゃありません। Past Positive: でした। Past Negative: じゃありませんでした।",
         "examples": [
@@ -1158,7 +1158,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "12-2",
-        "particle": "かった",
+        "particles": ["i-adjective", "tense-change"],
         "headingBn": "い-Adjective-এর Tense-গত পরিবর্তন",
         "explanationBn": "Present Positive: あついです। Present Negative: あつくないです। Past Positive: あつかったです। Past Negative: あつくなかったです।",
         "examples": [
@@ -1178,7 +1178,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "12-3",
-        "particle": "より",
+        "particles": ["wa", "yori"],
         "headingBn": "Noun1 + は + Noun2 + より + Adjective + です",
         "explanationBn": "より-এর অর্থ চেয়ে/থেকে।",
         "examples": [
@@ -1198,7 +1198,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "12-4",
-        "particle": "どちら",
+        "particles": ["to", "dochira"],
         "headingBn": "Noun1 と Noun2 と どちらが Adjective ですか / いちばん",
         "explanationBn": "দুটি জিনিসের তুলনা করতে どちらが ব্যবহার হয়। তিন বা তার বেশি জিনিসের মধ্যে সবচেয়ে ভালো/খারাপ বোঝাতে Noun+のなかで [なに/どこ/だれ/いつ]が+いちばん+Adjective+ですか ব্যবহার হয়।",
         "examples": [
@@ -1224,7 +1224,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "13-1",
-        "particle": "ほしい",
+        "particles": ["ga"],
         "headingBn": "Noun + が + ほしいです",
         "explanationBn": "কোন Noun-কে চাইতে ほしい বসে। ほしい-এর অর্থ চাওয়া। ほしい-এর পূর্বে সবসময় が Particle বসে। ほしいকে い-Adjective-এর মতো পরিবর্তন করা যায়।",
         "examples": [
@@ -1244,7 +1244,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "13-2",
-        "particle": "たい",
+        "particles": ["masu-form", "tai"],
         "headingBn": "Verb-ます → たいです",
         "explanationBn": "কোন কাজকে করতে চাওয়া বোঝালে Verb-এর Stem বা মূল অংশের সাথে たい যুক্ত হয়ে উক্ত কাজটি করতে চাওয়া বোঝাবে।",
         "examples": [
@@ -1264,7 +1264,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "13-3",
-        "particle": "に(motion purpose)",
+        "particles": ["ni", "e"],
         "headingBn": "Noun(Place) + へ + Noun(V-Stem) に + いきます/きます/かえります",
         "explanationBn": "কোন Place-এ কোন কাজ করার জন্য যাওয়া, আসা এবং ফেরা বোঝায়।",
         "examples": [
@@ -1290,7 +1290,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "14-1",
-        "particle": "て",
+        "particles": ["te-form"],
         "headingBn": "Verb-এর Group পরিচিতি ও て Form গঠন",
         "explanationBn": "N5-এ মোট ৫টি Form শেখা হয়: て Form, ない Form, じしょ Form, た Form, なかった Form। Verb তিনটি Group-এ ভাগ করা হয়। Group-1: ます-এর পূর্বে い কলাম, い/ち/り→って, み/び/に→んで, き→いて, ぎ→いで, し→して। Group-2: ます-এর পূর্বে え কলাম, Stem+て। Group-3: します→して, きます→きて।",
         "examples": [
@@ -1310,7 +1310,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "14-2",
-        "particle": "てください",
+        "particles": ["te-form"],
         "headingBn": "Verb-এর て-Form + ください",
         "explanationBn": "উক্ত কাজটি করার জন্য অনুরোধ করা বোঝায়।",
         "examples": [
@@ -1330,7 +1330,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "14-3",
-        "particle": "ています",
+        "particles": ["te-form"],
         "headingBn": "Verb-এর て-Form + います (চলমান কাজ)",
         "explanationBn": "চলমান কাজ করা বোঝায়, যে কাজটি পূর্বে থেকে শুরু হয়ে এখনো চলমান আছে।",
         "examples": [
@@ -1350,7 +1350,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "14-4",
-        "particle": "ましょうか",
+        "particles": ["masu-form", "volitional"],
         "headingBn": "Verb-ます → ましょうか",
         "explanationBn": "কাউকে সাহায্য করার জন্য অনুমতি চাওয়া বোঝায়।",
         "examples": [
@@ -1370,7 +1370,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "14-5",
-        "particle": "が(exception)",
+        "particles": ["ga"],
         "headingBn": "Noun + が + Verb (ব্যতিক্রমী)",
         "explanationBn": "কিছু এমন ব্যতিক্রমী Verb আছে যাদের পূর্বে が Particle বসে, তার মধ্যে ふります একটি।",
         "examples": [
@@ -1396,7 +1396,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "15-1",
-        "particle": "てもいい",
+        "particles": ["te-form", "temoii"],
         "headingBn": "Verb-て Form + もいいですか",
         "explanationBn": "উক্ত কাজটি করার জন্য অনুমতি চাওয়া বোঝায়।",
         "examples": [
@@ -1416,7 +1416,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "15-2",
-        "particle": "てはいけません",
+        "particles": ["te-form"],
         "headingBn": "Verb-て Form + はいけません",
         "explanationBn": "উক্ত কাজটি করতে নিষেধ করা বোঝায়।",
         "examples": [
@@ -1436,7 +1436,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "15-3",
-        "particle": "ています(state)",
+        "particles": ["te-form"],
         "headingBn": "Verb-て Form + います (অবস্থা/অভ্যাস)",
         "explanationBn": "চলমান কাজ। অতীতে শুরু হওয়া কোন কাজ যা এখনও চলমান আছে, অথবা স্থায়ী অবস্থা/অভ্যাস বোঝায়।",
         "examples": [
@@ -1456,7 +1456,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "15-4",
-        "particle": "に(entry)",
+        "particles": ["ni"],
         "headingBn": "Noun(Place) + に + Verb",
         "explanationBn": "এই Verb-গুলোর পূর্বে সবসময় に Particle বসবে (যেমন はいります, すわります)।",
         "examples": [
@@ -1476,7 +1476,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "15-5",
-        "particle": "を(place)",
+        "particles": ["wo", "ni"],
         "headingBn": "Noun1 + に + Noun2 + を + Verb",
         "explanationBn": "কোন নির্দিষ্ট স্থানে কোন কিছু রাখা/লেখা বোঝাতে এই গঠন ব্যবহার হয়।",
         "examples": [
@@ -1502,7 +1502,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "16-1",
-        "particle": "て(sequence)",
+        "particles": ["te-form", "masu-form"],
         "headingBn": "て Form-এর ধারাবাহিক ব্যবহার (Verb+て、Verb+て、Verb+ます)",
         "explanationBn": "অনেকগুলো কাজ একটির পর একটি, একসাথে করা বোঝালে て Form ধারাবাহিকভাবে ব্যবহার করা হয়।",
         "examples": [
@@ -1522,7 +1522,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "16-2",
-        "particle": "くて",
+        "particles": ["i-adjective"],
         "headingBn": "い-Adjective（い）→ くて（এবং）",
         "explanationBn": "একটি Sentence-এ যদি একের অধিক Adjective থাকে এবং প্রথম Adjective যদি い-Adjective হয়, তাহলে সেই Adjective-টির い উঠে くて হবে। くて-এর অর্থ এবং।",
         "examples": [
@@ -1542,7 +1542,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "16-3",
-        "particle": "で(adj)",
+        "particles": ["de", "na-adjective"],
         "headingBn": "な-Adjective（な）→ で（এবং）/ Noun → で（এবং）",
         "explanationBn": "একটি Sentence-এ যদি একের অধিক Adjective থাকে এবং প্রথম Adjective যদি な-Adjective হয়, তাহলে সেই Adjective-এর な উঠে で হবে। Noun-এর ক্ষেত্রেও একই নিয়মে で যুক্ত হয়।",
         "examples": [
@@ -1562,7 +1562,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "16-4",
-        "particle": "てから",
+        "particles": ["kara", "te-form"],
         "headingBn": "Verb-て Form + から、Verb2",
         "explanationBn": "প্রথম কাজটি করার পর ২য় কাজটি করা বোঝায়।",
         "examples": [
@@ -1582,7 +1582,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "16-5",
-        "particle": "が(object-adj)",
+        "particles": ["wa", "ga"],
         "headingBn": "Noun1/Subject + は + Noun2/Object + が + All Adjective",
         "explanationBn": "Adjective-এর পূর্বে যদি Object থাকে তাহলে এর পূর্বে が Particle বসে।",
         "examples": [
@@ -1608,7 +1608,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "17-1",
-        "particle": "ない",
+        "particles": ["nai-form"],
         "headingBn": "ない Form-এ নেওয়ার পদ্ধতি",
         "explanationBn": "Group-1: ます-এর পূর্বে い কলাম あ কলামে হয়ে যাবে (ব্যতিক্রম: います এর পূর্বে い থাকলে わ হবে, ব্যতিক্রম শব্দ: あります→ない)। Group-2: Stem+ない। Group-3: します→しない, きます→こない।",
         "examples": [
@@ -1628,7 +1628,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "17-2",
-        "particle": "ないでください",
+        "particles": ["nai-form"],
         "headingBn": "Verb-এর ない Form → ないでください",
         "explanationBn": "অনুগ্রহ করে উক্ত কাজটি করবেন না।",
         "examples": [
@@ -1648,7 +1648,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "17-3",
-        "particle": "なければ",
+        "particles": ["nai-form", "nakereba"],
         "headingBn": "Verb ない Form → なければなりません",
         "explanationBn": "উক্ত কাজটি না করলেই নয় বা করতেই হবে।",
         "examples": [
@@ -1668,7 +1668,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "17-4",
-        "particle": "なくても",
+        "particles": ["nai-form", "temoii", "nakutemo"],
         "headingBn": "Verb ない Form → なくてもいいです",
         "explanationBn": "উক্ত কাজটি না করলেও চলবে।",
         "examples": [
@@ -1688,7 +1688,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "17-5",
-        "particle": "は(object-topic)",
+        "particles": ["object-topic"],
         "headingBn": "Object-কে Sentence-এর Topic করা",
         "explanationBn": "Object-কে যদি Subject-এ রূপান্তর করা হয় তখন ঐ Subject-এর পর は Particle হবে এবং Verb-এর পূর্বে Object না থাকায় を Particle না হয়ে এর অর্থ অনুযায়ী Particle বসবে।",
         "examples": [
@@ -1708,7 +1708,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "17-6",
-        "particle": "までに",
+        "particles": ["made"],
         "headingBn": "Noun(Time) + までに + Verb",
         "explanationBn": "までに অর্থ মধ্যে। কোন একটি নির্দিষ্ট সময়ের মধ্যে কোন কাজ করা বোঝায়।",
         "examples": [
@@ -1734,7 +1734,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "18-1",
-        "particle": "じしょ",
+        "particles": ["masu-form", "plain-form"],
         "headingBn": "ます → Dictionary Form / じしょ Form",
         "explanationBn": "Present/Future Sentence-এর Plain Form হচ্ছে Dictionary/じしょ Form। Group-1: ます-এর পূর্বে い কলাম う কলামে হয়ে যাবে। Group-2: Stem+る। Group-3: します→する, きます→くる।",
         "examples": [
@@ -1754,7 +1754,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "18-2",
-        "particle": "ことができます",
+        "particles": ["plain-form", "dekiru-koto", "dekimasu"],
         "headingBn": "Verb-じしょ Form + こと + ができます / Noun + ができます",
         "explanationBn": "Noun+ができます দিয়ে উক্ত Noun-টিকে পারা বোঝায়। Verb-じしょForm+ことができます দিয়ে কোন কাজের সক্ষমতা বা ঐ কাজটি করতে পারা বোঝায়।",
         "examples": [
@@ -1774,7 +1774,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "18-3",
-        "particle": "しゅみ",
+        "particles": ["plain-form"],
         "headingBn": "わたしの しゅみは + Noun / Verb-じしょForm + こと + です",
         "explanationBn": "এই Rule-টি নিজের হবি/শখ বলার ক্ষেত্রে ব্যবহার করা হয়।",
         "examples": [
@@ -1794,7 +1794,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "18-4",
-        "particle": "まえに",
+        "particles": ["no", "plain-form"],
         "headingBn": "Verb1-じしょForm/Noun+の/Quantifier + まえに、Verb2",
         "explanationBn": "প্রথম কাজটি করার পূর্বে ২য় কাজটি করা বোঝায়।",
         "examples": [
@@ -1814,7 +1814,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "18-5",
-        "particle": "なかなか",
+        "particles": ["adverb-degree"],
         "headingBn": "なかなか (Not easily / সহজে না)",
         "explanationBn": "なかなか সাধারণত নাবাচক ক্রিয়ার সাথে ব্যবহৃত হয়ে 'সহজে না' অর্থ প্রকাশ করে।",
         "examples": [
@@ -1834,7 +1834,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "18-6",
-        "particle": "ぜひ",
+        "particles": ["adverb-degree"],
         "headingBn": "ぜひ (অবশ্যই / যেকোন উপায়ে)",
         "explanationBn": "ぜひ দিয়ে দৃঢ় ইচ্ছা বা অনুরোধ প্রকাশ করা হয়।",
         "examples": [
@@ -1860,7 +1860,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "19-1",
-        "particle": "た",
+        "particles": ["ta-form"],
         "headingBn": "ました → た Form",
         "explanationBn": "Past Affirmative Sentence-এর Plain Form হচ্ছে た Form। Lesson-14-এর て Form-এর মতোই নিয়ম, শুধু て-এর স্থানে た এবং で-এর স্থানে だ হবে।",
         "examples": [
@@ -1880,7 +1880,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "19-2",
-        "particle": "たことがあります",
+        "particles": ["ta-form", "keiken"],
         "headingBn": "Verb-た Form + ことがあります",
         "explanationBn": "উক্ত কাজটি করার অভিজ্ঞতা আছে বোঝায়।",
         "examples": [
@@ -1900,7 +1900,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "19-3",
-        "particle": "たり",
+        "particles": ["ta-form"],
         "headingBn": "Verb1-た Formり + Verb2-た Formり + します",
         "explanationBn": "অনেকগুলো কাজ একসাথে একটির পর একটি করতে এই り/たり Form ব্যবহার করা হয়।",
         "examples": [
@@ -1920,7 +1920,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "19-4",
-        "particle": "なります",
+        "particles": ["ni", "narimasu"],
         "headingBn": "い-Adj（い→く）/ な-Adj（な→に）/ Noun（→に）+ なります",
         "explanationBn": "なります অর্থ হওয়া। い-Adjective-এর い উঠে く হবে, な-Adjective-এর な উঠে に হবে, Noun-এর সাথে に হবে।",
         "examples": [
@@ -1946,7 +1946,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "20-1",
-        "particle": "plain",
+        "particles": ["style"],
         "headingBn": "Polite Style এবং Plain Style",
         "explanationBn": "Polite Style (ভদ্র/মার্জিত) বয়সে বড় ও সম্মানিত ব্যক্তিদের ক্ষেত্রে ব্যবহার হয়। Plain Style (চলিত) বয়সে ছোট বা সমবয়সী বন্ধুদের ক্ষেত্রে ব্যবহার হয়। Verb: のみます→のむ→のまない→のんだ→のまなかった। い-Adj: たかいです→たかい। な-Adj: しずかです→しずかだ। Noun: あめです→あめだ।",
         "examples": [
@@ -1966,7 +1966,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "20-2",
-        "particle": "plain-conv",
+        "particles": ["style"],
         "headingBn": "Conversation in the Plain Style",
         "explanationBn": "সমবয়সী বন্ধুদের সাথে কথোপকথনে Plain Style ব্যবহার হয়, প্রশ্নে か বাদ দিয়ে শুধু স্বরের ওঠানামা দিয়ে প্রশ্ন বোঝানো হয়।",
         "examples": [
@@ -1992,7 +1992,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "21-1",
-        "particle": "とおもいます",
+        "particles": ["plain-form", "to-omoimasu"],
         "headingBn": "All Type of Plain Form + とおもいます",
         "explanationBn": "とおもいます অর্থ (বলে মনে হয়)। কোন বিষয় সম্পর্কে কিছু ধারণা করা বা চিন্তা করা হলে, বিষয়টি এমন হতে পারে বা মনে হয়।",
         "examples": [
@@ -2012,7 +2012,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "21-2",
-        "particle": "といいます",
+        "particles": ["plain-form", "to-iimasu"],
         "headingBn": "Plain Form/Sentence + といいます",
         "explanationBn": "বলে বলেছেন বা বলতে হয়। কোন ব্যক্তির বার্তা বহন করে, অন্য কাউকে রিপিট করা বোঝায়।",
         "examples": [
@@ -2032,7 +2032,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "21-3",
-        "particle": "でしょう",
+        "particles": ["plain-form", "deshou"],
         "headingBn": "Plain Form (な-Adj/Noun-এর だ বাদ) + でしょう？",
         "explanationBn": "কোন ব্যক্তি যখন তার মতামত বলেন, অতীত বা ভবিষ্যতের কোন ঘটনা নিয়ে যে সম্ভাব্যতা হবে বা হয়েছে তাই না — এমন Sentence-এ এই Rule ব্যবহার হবে।",
         "examples": [
@@ -2052,7 +2052,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "21-4",
-        "particle": "で(occur)",
+        "particles": ["de"],
         "headingBn": "Noun1(Place) + で + Noun2 + があります",
         "explanationBn": "এখানে あります অর্থ অনুষ্ঠিত হওয়া। কোন একটি নির্দিষ্ট স্থানে কোন ঘটনা, উৎসব, পার্টি, দুর্যোগ ইত্যাদি অনুষ্ঠিত হলে ঐ স্থানের পরে で Particle বসবে।",
         "examples": [
@@ -2072,7 +2072,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "21-5",
-        "particle": "で(occasion)",
+        "particles": ["de"],
         "headingBn": "Noun(Occasion) + で",
         "explanationBn": "কোন Occasion বা প্রোগ্রামে কোন বিষয়ে সিদ্ধান্ত নেওয়া হয় তখন ঐ Occasion(Noun)-টির পর Particle বসে।",
         "examples": [
@@ -2092,7 +2092,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "21-6",
-        "particle": "でも",
+        "particles": ["de", "demo"],
         "headingBn": "Noun + でも + Verb",
         "explanationBn": "でも অর্থ অন্তত। কোন ব্যক্তি যদি কোন কিছু অফার করে তখন এটি ব্যবহার করা হয়।",
         "examples": [
@@ -2112,7 +2112,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "21-7",
-        "particle": "ないと",
+        "particles": ["nai-form"],
         "headingBn": "Verb ない Form → ないと…",
         "explanationBn": "এই নিয়মটি なければなりません-এর মতোই না করলেই নয় বা করতেই হবে বোঝায়।",
         "examples": [
@@ -2138,7 +2138,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "22-1",
-        "particle": "の(noun-mod)",
+        "particles": ["noun-mod"],
         "headingBn": "Noun Modification",
         "explanationBn": "এখানে Noun-কে Modify করা হয়, Noun-এর পূর্বে অন্য Noun/Adjective বসিয়ে।",
         "examples": [
@@ -2158,7 +2158,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "22-2",
-        "particle": "modification-sentence",
+        "particles": ["noun-mod"],
         "headingBn": "Noun Modification Sentence",
         "explanationBn": "Verb, Adjective, Noun দিয়ে বিভিন্নভাবে Noun যুক্ত Sentence-কে Modify করা হয়।",
         "examples": [
@@ -2178,7 +2178,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "22-3",
-        "particle": "が(mod-subject)",
+        "particles": ["ga"],
         "headingBn": "Noun1/Object + が (Modification Clause-এ Subject)",
         "explanationBn": "Sentence-এ Subject যখন Modification Clause-এর ভেতরে থাকে, তখন ঐ Subject-এর পর が Particle বসে।",
         "examples": [
@@ -2198,7 +2198,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "22-4",
-        "particle": "じかん",
+        "particles": ["plain-form"],
         "headingBn": "Verb-Dictionary Form + じかん/やくそく/ようじ",
         "explanationBn": "じかん/やくそく/ようじ-এর পূর্বে যদি Verb বসে অবশ্যই Verb-টির Dictionary Form বসবে।",
         "examples": [
@@ -2224,7 +2224,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "23-1",
-        "particle": "とき",
+        "particles": ["no", "nai-form", "toki"],
         "headingBn": "Verb-Dictionary/ない Form / い-Adj / な-Adj（な）/ Noun の + とき、~",
         "explanationBn": "とき অর্থ সময় বা যখন... তখন। Verb-Dictionary Form+とき দিয়ে প্রথম কাজটির পূর্বে ২য় কাজটি করা বোঝায় (Verb-Dictionary Form+まえに-এর মতোই অর্থ)।",
         "examples": [
@@ -2244,7 +2244,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "23-2",
-        "particle": "たとき",
+        "particles": ["ta-form", "toki"],
         "headingBn": "Verb-た Form + とき、~",
         "explanationBn": "প্রথম কাজটি করার পর, ২য় কাজটি করা বোঝায় (Verb-て Form+から এবং Verb-た Form+あとで-এর মতোই অর্থ)।",
         "examples": [
@@ -2264,7 +2264,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "23-3",
-        "particle": "と(condition)",
+        "particles": ["to", "plain-form"],
         "headingBn": "Verb-Dictionary Form + と、~",
         "explanationBn": "প্রথম কাজটি করলে, ২য় কাজটি হবে। এখানে একটি কাজ আরেকটি কাজের সাথে সম্পৃক্ত থাকে (শর্তমূলক কাজ বোঝায়)।",
         "examples": [
@@ -2284,7 +2284,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "23-4",
-        "particle": "を(motion)",
+        "particles": ["wo"],
         "headingBn": "Noun + を + Motion Verb",
         "explanationBn": "Motion Verb-এর পূর্বে সবসময় を Particle বসে (যেমন さんぽします、わたります)।",
         "examples": [
@@ -2310,7 +2310,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "24-1",
-        "particle": "くれます",
+        "particles": ["ageru-morau-kureru"],
         "headingBn": "あげます vs くれます",
         "explanationBn": "কোন ব্যক্তি যদি আমাকে বা আমার পরিবারের কাউকে কিছু দেয় সে ক্ষেত্রে くれます ব্যবহার হবে। কিন্তু অন্য কাউকে দেওয়ার ক্ষেত্রে あげます ব্যবহার হবে। যেহেতু くれます অর্থ নিজেকে দেওয়া বোঝায়, তাই わたしに ব্যবহার না করলেও চলে।",
         "examples": [
@@ -2330,7 +2330,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "24-2",
-        "particle": "てあげます",
+        "particles": ["te-form", "ageru-morau-kureru"],
         "headingBn": "Verb-て Form + あげます/もらいます/くれます",
         "explanationBn": "あげます: কোন ব্যক্তিকে কোন কাজ করে দেওয়া বোঝায়। もらいます: কোন ব্যক্তি থেকে কোন কাজ করে পাওয়া বোঝায়। くれます: কোন ব্যক্তি আমাকে কোন কাজ করে দিয়েছে এমন অর্থ বোঝায়।",
         "examples": [
@@ -2356,7 +2356,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "25-1",
-        "particle": "たら(if)",
+        "particles": ["moshi-tara"],
         "headingBn": "Plain Sentence-এর Past Form + ら、~ (If/যদি)",
         "explanationBn": "প্রথম কাজটি হলে, দ্বিতীয় কাজটি হবে বা হবে না। Verb, い-Adjective, な-Adjective, Noun সবকিছুর Plain Past Form-এর সাথে ら যুক্ত হয়।",
         "examples": [
@@ -2376,7 +2376,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "25-2",
-        "particle": "たら(when)",
+        "particles": ["ta-form", "moshi-tara"],
         "headingBn": "Verb-た Form + ら、~ (When/After)",
         "explanationBn": "এটি দ্বারা প্রথম কাজটি হওয়ার পর দ্বিতীয় কাজটি করা বোঝায়।",
         "examples": [
@@ -2396,7 +2396,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "25-3",
-        "particle": "ても",
+        "particles": ["de", "mo", "te-form", "nakutemo"],
         "headingBn": "Verb-て/なくても / い-Adj（くて）/ な-Adj・Noun（で）+ も、~",
         "explanationBn": "এখানে অর্থ হলো সত্ত্বেও, অর্থাৎ ১ম Sentence হওয়ার সত্ত্বেও ২য় Sentence হবে বা হবে না।",
         "examples": [
@@ -2416,7 +2416,7 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "25-4",
-        "particle": "もし",
+        "particles": ["moshi-tara"],
         "headingBn": "もし、~ (যদি)",
         "explanationBn": "もし দিয়ে অনুমান বা কল্পনাভিত্তিক শর্ত জোরালোভাবে প্রকাশ করা হয়, সাধারণত たら/と-এর সাথে ব্যবহৃত হয়।",
         "examples": [

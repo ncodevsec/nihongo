@@ -11,6 +11,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "26-1",
+        "particles": ["plain-form", "ndesu"],
         "headingBn": "V/い-adj/な-adj/N Plain form + んです (explains reason/circumstance/situ...",
         "explanationBn": "V/い-adj/な-adj/N Plain form + んです (explains reason/circumstance/situation): কথা বলার সময় ব্যবহার হয়। দেখার সময় 〜のです ব্যবহার হয়।\n   ~んですか প্রশ্নে ব্যবহার হলে অতিরিক্ত ব্যাখ্যা/কারণ জানতে চাওয়া বোঝায়।",
         "examples": [
@@ -33,6 +34,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "26-2",
+        "particles": ["dake", "te-form"],
         "headingBn": "V て-form いただけませんか",
         "explanationBn": "V て-form いただけませんか — Would you be so kind as to...? (নম্রভাবে অনুরোধ):",
         "examples": [
@@ -45,6 +47,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "26-3",
+        "particles": ["ta-form"],
         "headingBn": "Interrogative + V た-form らいいですか",
         "explanationBn": "Interrogative + V た-form らいいですか — What/when/where/which/how/who should I ~? উপদেশ চাওয়ার সময় ব্যবহার হয়:",
         "examples": [
@@ -57,6 +60,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "26-4",
+        "particles": ["wa", "e"],
         "headingBn": "N(object)は すきです/きらいです, じょうずです/へたです",
         "explanationBn": "N(object)は すきです/きらいです, じょうずです/へたです — like/dislike, good at/not good at (object marker は, not を, with these adjectives).",
         "examples": []
@@ -69,12 +73,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "27-1",
+        "particles": ["potential"],
         "headingBn": "Potential Verbs (সম্ভাব্যতা প্রকাশক ক্রিয়া)",
         "explanationBn": "Potential Verbs (সম্ভাব্যতা প্রকাশক ক্রিয়া): N/V dictionary-form + ことができます গঠন ইতিমধ্যে শেখা হয়েছে। এখন আরেকটি সম্ভাবনা প্রকাশক রূপ, \"potential verb\" শেখা হবে।\n   Group I: かきます→かけます, かいます→かえます (এ-দল হয়)\n   Group II: たべます→たべられる, きます(きる)→こられます, します→できます\n   Potential verb Group II verb এর মতই ব্যবহৃত হয়।",
         "examples": []
       },
       {
         "id": "27-2",
+        "particles": ["potential"],
         "headingBn": "Sentences in which potential verbs are used:",
         "explanationBn": "Sentences in which potential verbs are used:\n   ১) Potential verb দ্বারা কাজ করার সামর্থ্য প্রকাশ করা হয়। যদিও transitive verb এর object কে দ্বারা চিহ্নিত হয়, potential verb এর object が দ্বারা চিহ্নিত হয়।\n   ২) Potential verb কারো কাজ করার সামর্থ্য নির্দেশ করে যেমন নয়, বরং কোনো কাজ সম্ভব কিনা বোঝায়:",
         "examples": [
@@ -107,6 +113,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "27-3",
+        "particles": ["volitional"],
         "headingBn": "みえます and きこえます (volitional নয়, স্বাভাবিকভাবে ঘটে এমন কিছু দৃশ্যমান...",
         "explanationBn": "みえます and きこえます (volitional নয়, স্বাভাবিকভাবে ঘটে এমন কিছু দৃশ্যমান/শ্রবণযোগ্য হওয়া বোঝায়):",
         "examples": [
@@ -134,6 +141,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "27-4",
+        "particles": ["de", "dekimasu"],
         "headingBn": "できます verb টি কোনো কিছু তৈরি/সম্পন্ন হওয়া বোঝাতেও ব্যবহৃত হয়:",
         "explanationBn": "できます verb টি কোনো কিছু তৈরি/সম্পন্ন হওয়া বোঝাতেও ব্যবহৃত হয়:",
         "examples": [
@@ -151,6 +159,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "27-5",
+        "particles": ["shika"],
         "headingBn": "しか (কেবল, নেতিবাচক ক্রিয়ার সাথে ব্যবহৃত)",
         "explanationBn": "しか (কেবল, নেতিবাচক ক্রিয়ার সাথে ব্যবহৃত): Noun/quantifier + しか + negative।",
         "examples": [
@@ -168,6 +177,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "27-6",
+        "particles": ["wa"],
         "headingBn": "N は (contract)",
         "explanationBn": "N は (contract): একটি বিষয় পরিহার করে বা কে/を কে একটি বিশেষভাবে বিষয় ও は একত্রিত করে।",
         "examples": [
@@ -180,6 +190,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "27-7",
+        "particles": ["wa"],
         "headingBn": "は used to highlight a word with another particle already attached",
         "explanationBn": "は used to highlight a word with another particle already attached: が/を বাদে অন্য particle এর সাথে は যুক্ত হয়ে সেটিকে highlight করে।",
         "examples": [
@@ -208,6 +219,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "28-1",
+        "particles": ["nagara", "masu-form"],
         "headingBn": "V1 ます-from ながら V2",
         "explanationBn": "V1 ます-from ながら V2: যখন একই ব্যক্তি একই সময়ে দুটি কাজ করে, প্রধান কাজ V2 এর সাথে সাথে চলমান কাজ V1ながら দিয়ে বোঝানো হয় (একসাথে করা)।",
         "examples": [
@@ -225,6 +237,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "28-2",
+        "particles": ["te-form"],
         "headingBn": "V て-form います",
         "explanationBn": "V て-form います: কিছু করতে থাকার অভ্যাসগত আচরণ বোঝাতে ব্যবহার হয় (তাৎক্ষণিক অভ্যাসগত আচরণ)।",
         "examples": [
@@ -242,6 +255,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "28-3",
+        "particles": ["plain-form"],
         "headingBn": "Plain form し、Plain form し、〜",
         "explanationBn": "Plain form し、Plain form し、〜: একাধিক কারণ/বৈশিষ্ট্য তুলে ধরার জন্য ব্যবহৃত হয়।\n   দুই বা ততোধিক কারণ প্রদর্শনের জন্য: ここはねだんもやすいし、さかなもあたらしいし、よくたべにきます。(এখানে দাম কমও এবং মাছও তাজা, তাই প্রায়ই খেতে আসি)\n   কারণ জিজ্ঞাসায়: どうしてこのみせへくるんですか。……ここはねだんもやすいし、さかなもあたらしいし……。(কেন এই দোকানে আসেন? — দাম কম এবং মাছও তাজা...)\n   কারণ বোঝাতে し এর পরিবর্তে から ব্যবহার করাও যায়: どうしてにっぽんのアニメがすきなんですか。……はなしもおもしろいし、おんがくもすてきですから。(জাপানি অ্যানিমে কেন পছন্দ? — কাহিনীও মজার, গানও সুন্দর তাই)",
         "examples": [
@@ -259,6 +273,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "28-4",
+        "particles": ["sorede"],
         "headingBn": "それで (তাই)",
         "explanationBn": "それで (তাই): আগের কথার ফলাফল বা সিদ্ধান্ত বোঝাতে ব্যবহৃত হয়।",
         "examples": [
@@ -276,6 +291,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "28-5",
+        "particles": ["toki"],
         "headingBn": "〜とき + particle",
         "explanationBn": "〜とき + particle: Lesson 23-এ শেখা とき এর পরিবর্তে বা কে noun হিসেবে ব্যবহার করে particle যুক্ত করা যায়।",
         "examples": [
@@ -299,6 +315,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "29-1",
+        "particles": ["te-form"],
         "headingBn": "V て-form います",
         "explanationBn": "V て-form います: এর অর্থ একটি বস্তু যে অবস্থায় আছে তা বুঝানো, যে কোন কাজ বা কোন কিছু আগে থেকে করা আছে এবং তার ফল এখনও বিদ্যমান আছে।\n   あきます、しまります、つきます、きえます、こわれます、われます এই verbs গুলা এই নিয়মে ব্যবহার করা হয়। এদের গুলো বিছিন্ন অবস্থা বা ফলাফল বোঝায়। যখন সামগ্রিকভাবে কারো চেয়ে সামনে পরিস্থিতি বর্ণনা করা হয় তখন subject が দ্বারা নির্দেশিত হয়; যখন subject topic এ বিষয় ধরা হয় তখন particle は ব্যবহার করা হয়।",
         "examples": [
@@ -321,6 +338,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "29-2",
+        "particles": ["te-form", "te-shimau"],
         "headingBn": "V て-from しまいました",
         "explanationBn": "V て-from しまいました: てしまいます কোন কাজ কিভাবে সম্পন্ন হয়েছে, てしまいます দ্বারা বুঝানো কোন কাজ কিভাবে কোন অনিচ্ছাকৃতভাবে সম্পন্ন হয়েছে।\n   てしまいました অনিচ্ছাকৃত ভুল, হারানো, বা অপ্রত্যাশিত অবস্থা প্রকাশ করতেও ব্যবহৃত হয়:",
         "examples": [
@@ -353,6 +371,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "29-3",
+        "particles": ["ni"],
         "headingBn": "N(place)にいきます/きます/かえります",
         "explanationBn": "N(place)にいきます/きます/かえります: に particle এর পরিবর্তে へ (দিক নির্দেশক) ব্যবহার হয়; এছাড়া いきます、きます、かえります এর ক্ষেত্রে উজর/দিকনির্দেশক particle へ or 〜に ব্যবহার হয়।",
         "examples": [
@@ -370,6 +389,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "29-4",
+        "particles": ["kore-sore-are"],
         "headingBn": "それ/その/そう",
         "explanationBn": "それ/その/そう: Lesson 2 এ শেখা কিছুর স্পষ্ট নির্দেশক (demonstratives) বা নির্দেশক ব্যবহার করা হয়।\n   1) In speech (কথায় স্মরণ): それ(১০), その(১২), そう(১৩) — আগের কথায় উল্লেখিত বিষয়ের সাথে সাথে ব্যবহার হয়।\n   2) In writing: その、その বিষয়ে পূর্বে বলা কোন কিছু বোঝাতে।",
         "examples": [
@@ -402,6 +422,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "29-5",
+        "particles": ["arimasu-past"],
         "headingBn": "ありました",
         "explanationBn": "ありました: [কোনো কিছু] পাওয়া গেছে বোঝাতে ব্যবহৃত হয়।",
         "examples": [
@@ -419,6 +440,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "29-6",
+        "particles": ["doko"],
         "headingBn": "どこかで/どこかに",
         "explanationBn": "どこかで/どこかに: কোথাও/কোথাও তে। どこか বা なにか এর পর particle で or に বসিয়ে ব্যবহার হয়।",
         "examples": [
@@ -442,6 +464,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "30-1",
+        "particles": ["te-form"],
         "headingBn": "V て-form あります",
         "explanationBn": "V て-form あります: ইচ্ছাকৃতভাবে করা কোন কাজের ফলাফল বর্তমান থাকাকে নির্দেশ করে (transitive verb এই ফর্মে ব্যবহৃত হয়)।\n   1) N1にN2Vて-form あります: つくえのうえにメモがおいてあります。(টেবিলের উপর মেমো রাখা আছে)\n   2) N2はN1にVて-formあります: যখন N2 মূল বিষয় হিসেবে দেখানো হয় তখন এটিতে particle は লেখা হয়।\n      [নোট] Vて-formいます এর সাথে পার্থক্য: まどがしまっています।(জানালা বন্ধ আছে - intransitive) vs まどがしめてあります।(জানালা বন্ধ করে রাখা আছে - transitive, ইচ্ছাকৃত কাজের ফলাফল বিদ্যমান)",
         "examples": [
@@ -464,6 +487,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "30-2",
+        "particles": ["te-form", "te-oku"],
         "headingBn": "V て-form おきます:",
         "explanationBn": "V て-form おきます:\n   1) কোনো কাজ ভবিষ্যতের প্রয়োজনের জন্য আগে থেকে প্রস্তুতি হিসেবে করে রাখা বোঝাতে।\n   2) পরিবর্তিত কোনো অবস্থা বা বস্তুর বৈশিষ্ট্য বজায় রাখতে ব্যবহৃত হয় — নির্দিষ্ট কাজের পর জিনিস মূল অবস্থায় ফিরিয়ে রাখা।\n   3) কথ্য ভাষায় সংক্ষেপে ~ときます হিসেবেও ব্যবহৃত হয়।",
         "examples": [
@@ -501,6 +525,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "30-3",
+        "particles": ["affirmative"],
         "headingBn": "まだ + affirmative",
         "explanationBn": "まだ + affirmative: এখনও (still)।",
         "examples": [
@@ -518,6 +543,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "30-4",
+        "particles": ["toka"],
         "headingBn": "とか",
         "explanationBn": "とか: Noun/verb-এর পর বসিয়ে উদাহরণ দেখানো হয়, একাধিক উদাহরণের ক্ষেত্রে とか ... とか ... ব্যবহৃত হয়।",
         "examples": [
@@ -530,6 +556,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "30-5",
+        "particles": ["mo"],
         "headingBn": "Particle + も",
         "explanationBn": "Particle + も: কোনো noun-এর সাথে যুক্ত হয়ে জোর দেয়। particle に、で、から、まで এর পরে も যোগ হয়; particle が বা を থাকলে も দিয়ে প্রতিস্থাপিত হয়; particle へ থাকলে も অথবা にも হতে পারে।",
         "examples": [
@@ -553,12 +580,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "31-1",
+        "particles": ["volitional"],
         "headingBn": "Volitional form",
         "explanationBn": "Volitional form: ます-form থেকে volitional form এর পরিবর্তন এর বিষয় আছে (মূল বই এর Exercise A1, Lesson 31)।\n   Group I: এ-column ব 、い-column এ উজাল お-column এবং তার সাথে う যুক্ত হয়। かきます→かこう, よみます→よもう, あそびます→あそぼう\n   Group II: ます-form থেকে ます বাদ দিয়ে よう যুক্ত হয়। たべます→たべよう, みます→みよう\n   Group III: します→しよう, きます→こよう",
         "examples": []
       },
       {
         "id": "31-2",
+        "particles": ["volitional"],
         "headingBn": "Uses of the volitional form",
         "explanationBn": "Uses of the volitional form: Plain-style বাক্যে plain form of 〜ましょう এর মত অর্থ হয় (let's, চলো করি)।\n   V volitional form とおもっています: এই sentence pattern বৌদ্ধ কাজের উদ্দেশ্য, পরিকল্পনা জানাতে ব্যবহার হয়। V volitional form とおもいます একই অর্থে বর্তমান বক্তার নিজস্ব সিদ্ধান্ত নির্দেশ করে; কিছু V volitional form とおもっています তৃতীয় ব্যক্তির পরিকল্পনাও জানাতে পারে।",
         "examples": [
@@ -596,6 +625,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "31-3",
+        "particles": ["nai-form", "plain-form", "tsumori"],
         "headingBn": "V dictionary form/V ない-form ない + つもりです",
         "explanationBn": "V dictionary form/V ない-form ない + つもりです: কোনো কিছু করার ইচ্ছা, উদ্দেশ্য, পরিকল্পনা প্রকাশ করে। V ない-form ない つもりです নেতিবাচক পরিকল্পনা বোঝাতে ব্যবহার হয়।\n   [নোট] V volitional form とおもっています এবং V dictionary form つもりです এর মধ্যে একটু পার্থক্য আছে, কিন্তু পুরোটাই একই বোঝায়।",
         "examples": [
@@ -613,6 +643,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "31-4",
+        "particles": ["no", "plain-form", "yotei"],
         "headingBn": "V dictionary form/N の + よていです",
         "explanationBn": "V dictionary form/N の + よていです: কোনো পরিকল্পিত কাজ বা পরিকল্পনা বোঝাতে ব্যবহৃত হয়।",
         "examples": [
@@ -630,6 +661,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "31-5",
+        "particles": ["te-form"],
         "headingBn": "まだVて-formいません",
         "explanationBn": "まだVて-formいません: এখনও পরিস্থিতি বা অবস্থা বদলায়নি বা কিছু হয়নি বোঝাতে।",
         "examples": [
@@ -647,6 +679,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "31-6",
+        "particles": ["kaerimasu-koso"],
         "headingBn": "かえります → かえり",
         "explanationBn": "かえります → かえり: V ます-form, noun হিসেবে ব্যবহার হয় (যেমন উদাহরণ)।\n   উদাহরণ: あそびます→あそび, こたえます→こたえ, もうしこみます→もうしこみ, らくします(enjoy)→たのしみ",
         "examples": [
@@ -670,6 +703,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "32-1",
+        "particles": ["ta-form", "nai-form", "hougaii"],
         "headingBn": "Vた-form/Vないform ない + ほうがいいです",
         "explanationBn": "Vた-form/Vないform ない + ほうがいいです: পরামর্শ দেওয়ার সময় ব্যবহার হয়।\n   এই sentence pattern দিয়ে কোনো পরামর্শ বা উপদেশ দেওয়া হয়; যদিও Vた-formほうがいいです দুইটি জিনিসের তুলনা করে, বাস্তবে একটি নির্বাচন করার অর্থ নির্দেশ করে। এটি বোঝায় যে কাজের মধ্যে নির্দিষ্ট পদক্ষেপ গ্রহণ করতেই হবে। তার কারণে এমন বাক্যে হবে না কাজকে নিষ্ঠি, তাই নির্দিষ্ট কাজের প্রস্তাব দেওয়ার জন্য 〜たらいい (lesson 26 দেখুন) ব্যবহার করা হয়।",
         "examples": [
@@ -692,6 +726,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "32-2",
+        "particles": ["plain-form", "deshou"],
         "headingBn": "V/い-adj/な-adj/N Plain form + でしょう",
         "explanationBn": "V/い-adj/な-adj/N Plain form + でしょう: নিশ্চিত না হয়ে ভবিষ্যতের কোনো বা অনিশ্চিত কিছু সম্পর্কে তার মতামত প্রকাশ বা অনুমান বুঝাতে でしょう ব্যবহৃত হয়।",
         "examples": [
@@ -709,6 +744,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "32-3",
+        "particles": ["plain-form", "moshi-tara"],
         "headingBn": "V/い-adj/な-adj/N Plain form + かもしれません",
         "explanationBn": "V/い-adj/な-adj/N Plain form + かもしれません: কোনো কিছু হওয়ার সম্ভাবনা (কম সম্ভাবনা হলেও) উল্লেখ করতে চাইলে ব্যবহার হয়।",
         "examples": [
@@ -721,6 +757,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "32-4",
+        "particles": ["masu-form", "volitional"],
         "headingBn": "V ます-form + ましょう",
         "explanationBn": "V ます-form + ましょう: V ます-form থেকে তার অর্থ হয় let, কোনো কিছু করে দিতে বা কিছু করার ইচ্ছা প্রকাশ করা।",
         "examples": [
@@ -733,6 +770,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "32-5",
+        "particles": ["de"],
         "headingBn": "Quantifier + で",
         "explanationBn": "Quantifier + で: একটি সময়সীমা বা অল্প পরিমাণে কিছু সীমারেখা দেখাতে এই sentence pattern ব্যবহার করা হয়।",
         "examples": [
@@ -750,6 +788,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "32-6",
+        "particles": ["nani"],
         "headingBn": "なにか しんぱいな こと",
         "explanationBn": "なにか しんぱいな こと: কোনোকিছু চিন্তার বিষয়। উদাহরণের মত করে অজানা কিছু বোঝাতে なにか/しんぱいな こと ব্যবহার হয়; অন্য অজানা যেমন: なにか〜もの、どこか〜こと、だれか〜ひと、いつか〜とか。",
         "examples": [
@@ -773,12 +812,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "33-1",
+        "particles": ["imperative"],
         "headingBn": "Imperative and prohibitive forms:",
         "explanationBn": "Imperative and prohibitive forms:\n   1) Imperative form: Group I: ます-form এ い এর পরিবর্তে え কলামের sound হয় (かきます→かけ, よみます→よめ)\n      Group II: ます-form এ ます বাদ দিয়ে ろ যুক্ত হয় (たべます→たべろ, みます→みろ)\n      Group III: します→しろ, きます→こい\n   2) Prohibitive form: Dictionary form এর শেষে な যুক্ত হয় (かく→かくな, たべる→たべるな, する→するな, くる→くるな)",
         "examples": []
       },
       {
         "id": "33-2",
+        "particles": ["imperative"],
         "headingBn": "Uses of the imperative and prohibitive forms",
         "explanationBn": "Uses of the imperative and prohibitive forms: রাগে কোনো নির্দেশ জারি করতে, নির্দেশক, উপদেশ দিতে ব্যবহার হয় (সাধারণত পুরুষরা- সৈনিকদের মধ্যে ব্যবহৃত হয়)।\n   2) পুরুষ বন্ধুদের মধ্যে particle よ ব্যবহার হয়: あしたうちへこいよ。(আগামীকাল বাসায় এসো)\n      あまりのむな[よ]。(বেশি পান করো না)\n   3) কোনো দলের নির্দেশক (যেমন কারখানায় কর্মীদের, দুর্ঘটনার সময়, প্রতিকূল পরিস্থিতিতে জরুরি মুহূর্তে) নির্দেশনা দেওয়ার সময়:\n      খেলার প্রশিক্ষক/স্কুলের শিক্ষার্থী নির্দেশ দিতেও ব্যবহার হয়:\n   5) কোনো খেলার উৎসাহ দেওয়ার জন্যেও ব্যবহার হয় (মহিলারা ও মেয়েরা এক্ষেত্রে から form ব্যবহার করে):\n   6) ট্রাফিক সিগন্যাল এবং স্লোগানে:\n      [নোট] Vます-form なさい হলো imperative এর অন্য একটি রূপ, এটি সাধারণত পিতামাতা-সন্তানের কাছে, শিক্ষক-ছাত্রদের ক্ষেত্রে ব্যবহার করে। imperative এর থেকে নরম রূপ হিসেবে ব্যবহৃত হয়।",
         "examples": [
@@ -841,6 +882,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "33-3",
+        "particles": ["toka"],
         "headingBn": "〜とかいてあります/〜とよみます",
         "explanationBn": "〜とかいてあります/〜とよみます: কোনোকিছু লেখা বা পড়া বোঝাতে と ব্যবহার হয়।",
         "examples": [
@@ -858,6 +900,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "33-4",
+        "particles": ["wa"],
         "headingBn": "XはYといういみです",
         "explanationBn": "XはYといういみです: X কোনো কিছু কী বোঝায় বলতে という ব্যবহার হয়।",
         "examples": [
@@ -875,6 +918,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "33-5",
+        "particles": ["plain-form"],
         "headingBn": "S Plain form + といっていました",
         "explanationBn": "S Plain form + といっていました: কেউ কি বলেছিল তা উদ্ধৃত করতে ব্যবহার হয়।",
         "examples": [
@@ -887,6 +931,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "33-6",
+        "particles": ["dake", "plain-form"],
         "headingBn": "S Plain form + とつたえていただけませんか",
         "explanationBn": "S Plain form + とつたえていただけませんか: কাউকে কোনো বার্তা পৌঁছে দিতে নম্রভাবে অনুরোধ করতে ব্যবহার হয়।",
         "examples": [
@@ -910,6 +955,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "34-1",
+        "particles": ["no", "ta-form"],
         "headingBn": "V1た-form/N の + とおりに、V2:",
         "explanationBn": "V1た-form/N の + とおりに、V2:\n   1) V1 た-form とおりに、V2: V1 যে ভাবে বা পদ্ধতিতে করেছে একই ভাবে V2 কে করাতে নির্দেশনা দেওয়ার জন্য এটি ব্যবহার করা হয়।\n   2) N の とおりに、V: এটি পূর্ববর্তী বাক্যে ধারা নির্দেশিত মান বা বিষয় থেকে বিচ্যুত না হয়ে কোনো কাজ বা ক্রিয়া সম্পাদন করাতে নির্দেশ দেওয়ার জন্য ব্যবহার করা হয়।\n      [নোট] যদিও とおり একটি Noun, এটি পূর্বর্তী demonstrative (নির্দেশক) যেমন この、その এবং あの এর সাথে যুক্ত হয়ে ব্যবহৃত হতে পারে এবং এই রকম অর্থ বোঝাতে (demonstrative) (নির্দেশক) এর মত বা একই রকম ভাবে হবে।",
         "examples": [
@@ -942,6 +988,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "34-2",
+        "particles": ["no", "ta-form"],
         "headingBn": "V1た-form/N の + あとで、V2",
         "explanationBn": "V1た-form/N の + あとで、V2: V1 অথবা N দিয়ে চিহ্নিত কাজ বা পরিস্থিতি ঘটার পরে V2 দ্বারা চিহ্নিত কাজটি ঘটে তা নির্দেশ করতে এই ব্যবহার হয়।\n   এই সময়ের প্রেক্ষাপটে আরও কিছু বলে দেয় যে Vて-formから (see lesson 16) এই দুইএর অর্থ একই। কিছু এই ক্ষেত্রে সময় অতিবাহিত হলেও, V1 or N এর মত পূর্বপর্শ্ব বা প্রাকৃতিমূলক পদক্ষেপ এর কোন ও ধারণা নেই V2 এর জন্য।",
         "examples": [
@@ -959,6 +1006,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "34-3",
+        "particles": ["nai-form"],
         "headingBn": "V1-form/V1ない-form ないで + V2:",
         "explanationBn": "V1-form/V1ない-form ないで + V2:\n   1) এটি দ্বারা বুঝানো হয় যে V1 দিয়ে চিহ্নিত কাজটির সাথে V2 দিয়ে চিহ্নিত কাজটি ঘটে; উদাহরণ 8 এবং 9 এর মত খাবার সময় সয়া সস ব্যবহার করে বা উল্লেখ করে V1 এবং V2 এর কাজটি একই সাথে সম্পন্ন হয়।\n   2) V1 ない-form ないで V2 এটি দ্বারা বুঝায় যে আগে বৃত্তান্ত দুটি পারস্পরিক বিকল্প কাজের মধ্যে একটি না করে অন্যটি করা হয়।",
         "examples": [
@@ -987,12 +1035,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "35-1",
+        "particles": ["conditional-ba"],
         "headingBn": "How to create the conditional form (ば-form)",
         "explanationBn": "How to create the conditional form (ば-form): (see Exercise A1, Lesson 35)\n   Group I: ます-form এর い কলামের উজায়ায় え কলাম হয় এবং তার সাথে ば যুক্ত হয়: のみます→のめば\n   Group II: ます-formএর ます এর সাথে れば যুক্ত হয়: たべます→たべれば, きます→くれば\n   Group III: します→すれば、きます→くれば\n   [নোট] খেয়ালরত form করার জন্য ない-formএর সাথে なければ যুক্ত হয়: きます→きなければ\n   い-adj: い এর পরিবর্তে ければ হয়: たかい→たかければ\n   な-adj/な তারা なら হয়: きれい[な]→きれいなら\n   Noun: Noun এর সাথে なら হয়: あめ→あめなら",
         "examples": []
       },
       {
         "id": "35-2",
+        "particles": ["conditional-ba"],
         "headingBn": "Conditional form 〜ば:",
         "explanationBn": "Conditional form 〜ば:\n   1) পরবর্তি মূল বাক্যাংশে কি হবে তার পূর্বশর্ত বা কারণ হিসেবে প্রকাশ করে:\n   2) কেউ কি বলেছে তার প্রতিক্রিয়া বা পরিস্থিতি বাচা বলার জন্যও ব্যবহার হয়:\n   1) 〜と (lesson 23): যদি পূর্ব ক্রিয়া সম্পন্ন হয় বা অবস্থা তৈরি হয় তার পরবর্তি আরেকটি সম্পন্ন হবে বা অবস্থা অবশ্যই তৈরি হবে তা বলার জন্য と ব্যবহার হয়।\n   2) 〜たら (lesson 25): অনুমানমূলক কারণ বা পূর্বশর্ত দেখানোর জন্য এবং কোনো কাজ বা ঘটনা ঘটলে পরবর্তি কার একটি কাজ বা ঘটনা ঘটে তা নির্দেশ করতে ব্যবহার হয়।\n      X とうきょうへくると、ぜひれんらくしてください। (এভাবে ব্যবহার ভুল)",
         "examples": [
@@ -1045,6 +1095,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "35-3",
+        "particles": ["conditional-ba"],
         "headingBn": "Interrogative V conditional form いいですか",
         "explanationBn": "Interrogative V conditional form いいですか: এটি প্রেষণা কোনো কাজ নির্দেশনা চাওয়ার জন্য ব্যবহার হয়। V〜たらいいですか (lesson 26) এর মত ব্যবহার হয়।",
         "examples": [
@@ -1057,6 +1108,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "35-4",
+        "particles": ["nara"],
         "headingBn": "Nなら、〜",
         "explanationBn": "Nなら、〜: N〜তার কথায় সেসম্পর্কে কিছু বোঝাতে ব্যবহার হয়।",
         "examples": [
@@ -1069,6 +1121,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "35-5",
+        "particles": ["negative-question"],
         "headingBn": "〜はありませんか (negative question)",
         "explanationBn": "〜はありませんか (negative question): কোনো প্রস্তাব চাওয়া বা নরম ভাবে জিজ্ঞাসা করার জন্য ব্যবহার হয়।",
         "examples": [
@@ -1087,6 +1140,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "36-1",
+        "particles": ["youni", "nai-form", "plain-form", "you-desu"],
         "headingBn": "V1 dictionary-form/V1ない-form ない + ように、V2",
         "explanationBn": "V1 dictionary-form/V1ない-form ない + ように、V2: এই form টি ~ように দ্বারা নির্দেশ পরিস্থিতি অর্জনের জন্য V2 দ্বারা চিহ্নিত পদক্ষেপ গ্রহণের ইঙ্গিত দেয়। Non-volitional verb (যেমন わかります, みえます, きこえます, なります ইত্যাদি) dictionary form (যেমন potential verb) অথবা verb's negative form (উদাহরণ ২) ように এর পূর্বে ব্যবহার করা হয়।",
         "examples": [
@@ -1104,6 +1158,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "36-2",
+        "particles": ["nai-form", "plain-form", "narimasu"],
         "headingBn": "V dictionary form/ない-form なく + なります",
         "explanationBn": "V dictionary form/ない-form なく + なります: অবস্থা পরিবর্তনের জন্য ব্যবহার হয়।\n   1) なります এর আগে a potential verb, অথবা verb's যেমন わかります এবং みえます ব্যবহার হয়, V dictionary form ようになります এটি বুঝায় কোনো কিছু করার অক্ষম অবস্থা থেকে পরিবর্তিত হয়ে করার সক্ষম অবস্থা আসাত ইঙ্গিত দেয়।\n   2) 〜ようになりましたか প্রশ্নের উত্তর Negative দিতে いいえ ব্যবহার করা হয়। উত্তরটি নিচে দেওয়া হলো:\n      [নোট] এটি নিতে verb টি ব্যবহার হয় যখন বাক্য 2-4 এর আলোচনা করা হয়, যখন এই potential verb, অথবা みえます এর মত verb টি ব্যবহার হয় কোনো কিছু করতে অক্ষম হয়ে যাওয়া থেকে আগে না করা হবে তা বুঝায়।",
         "examples": [
@@ -1131,6 +1186,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "36-3",
+        "particles": ["youni", "nai-form", "plain-form", "you-desu"],
         "headingBn": "V dictionary form/V ない-form ない + ようにします:",
         "explanationBn": "V dictionary form/V ない-form ない + ようにします:\n   1) 〜ようにしています: এটি নির্দেশ করে বক্ত অভ্যাসগত ভাবে একটি নির্দিষ্ট আচরণ চেষ্টা করে:\n   2) 〜ようにしてください: এটি কাউকে একটি নির্দিষ্ট আচরণ অর্জন করার চেষ্টা করতে বলার জন্য ব্যবহৃত হয়। যদিও 〜て/〜ないでください সাধারণত একটি অনুরোধ করে অভিব্যক্তি এবং এটি নিচের ব্যবহার হয়:",
         "examples": [
@@ -1158,6 +1214,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "36-4",
+        "particles": ["adj-adverbial"],
         "headingBn": "はやい→はやく、じょうずな→じょうずに",
         "explanationBn": "はやい→はやく、じょうずな→じょうずに: যখন কোনো Adjective অন্য Adjective অথবা verb কে modifies করে তখন যদি い-adj হয় তার সাথে 〜く form আর な-adj হলে তখন 〜に form যুক্ত হয়।",
         "examples": [
@@ -1176,12 +1233,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "37-1",
+        "particles": ["passive"],
         "headingBn": "Passive Verbs:",
         "explanationBn": "Passive Verbs:\n   Group I: かきます→かかれます (polite)/かかれる (plain)\n   Group II: ほめます→ほめられます/ほめられる\n   Group III: きます→こられます/こられる, します→されます/される\n   Passive Verbs Group II এর verbs হিসেবে নেওয়া হয়। Examples: かかれます→かかれる→かかれ(ない)→かかれて",
         "examples": []
       },
       {
         "id": "37-2",
+        "particles": ["wa", "ni", "passive"],
         "headingBn": "N1(person1)はN2(person2)にpassiveV",
         "explanationBn": "N1(person1)はN2(person2)にpassiveV: এই sentence pattern দ্বারা বুঝায় person1 তার সাথে সম্পর্কিত এবং উপর পরিস্থিতিগত কোনো কাজ বা ক্রিয়া যা (person2) দ্বারা সম্পাদন করা হয়। Person কে বিষয় হিসেবে ধরা হয় এবং (person2) পদক্ষেপ নেওয়া ব্যক্তি টিকে に দ্বারা নির্দেশ করা হয়।",
         "examples": [
@@ -1204,6 +1263,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "37-3",
+        "particles": ["wa", "wo", "ni", "passive"],
         "headingBn": "N1(person1)はN2(person2)にN3を passiveV",
         "explanationBn": "N1(person1)はN2(person2)にN3を passiveV: এই sentence pattern দ্বারা বুঝায় person2, person1 এর মালিকানাধীন কোনো কিছুর N3 উপর (বা N3 হিসেবে) কোনো কাজ করেছে, যা পরিবেশ person1 এর অসুবিধা বা বিরক্তির কারণ হিসেবে দেখে।\n   [নোট ১] বিষয় হিসেবে উল্লেখ্য জিনিসটি তার অধিকারী বা মালিকানাধীন না্ব হতেপারে কিছু সে ব্যক্তি ক্রিয়াটিতে বা কাজটিতে অসুবিধা বা বিরক্তির কারণ হয়।\n   উদাহরণ (৪) উদাহরণপ্রকাশ ক্ষেত্র হয়ি わたしのパソコンはおとうとにこわされました。(আমার পিসি আমার ভাই দ্বারা নষ্ট হয়েছিল)\n   [নোট ২] তেষ্ট বেশি ভাগ ক্ষেত্র এই sentence pattern ব্যবহৃত যে কাজের সাংঘাত ব্যক্তি এটিতে অসুবিধা বা বিরক্তি হিসেবে বিবেচনা করে; তাই এটি ব্যবহার করার সময় অবশ্যই সতর্ক থাকা উচিত; যখন কেউ আপনার জন্য কিছু করছে এবং তার জন্য আপনি কৃতজ্ঞতা প্রকাশ করবেন তখন আপনার〜てもらいます ব্যবহার করা উচিত।\n   X わたしはともだちにじてんしゃをしゅうりされました।",
         "examples": [
@@ -1226,6 +1286,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "37-4",
+        "particles": ["wa", "ga", "passive"],
         "headingBn": "N(tangible/intangible)が/はpassiveV",
         "explanationBn": "N(tangible/intangible)が/はpassiveV: সাধারণত কোনো এমন কিছুর কাজ যার কারো সম্পর্ক হয়েছে তা উল্লেখ করার প্রয়োজন নেই এবং বিষয় পাত অথবা হয় এমন রূপে কাজ করার জন্য Passive Verb ব্যবহার হয়।",
         "examples": [
@@ -1248,6 +1309,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "37-5",
+        "particles": ["de", "kara"],
         "headingBn": "Nから/NでつくりますL কোনো কিছু তৈরি হওয়ার সময় から দিয়ে (যা থেকে বোঝায় না...",
         "explanationBn": "Nから/NでつくりますL কোনো কিছু তৈরি হওয়ার সময় から দিয়ে (যা থেকে বোঝায় না) তৈরি হয়েছে এবং で দিয়ে (যা দিয়ে বোঝায়) তৈরি হয়েছে তা বোঝাতে ব্যবহার হয়।",
         "examples": [
@@ -1265,6 +1327,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "37-6",
+        "particles": ["no"],
         "headingBn": "N1のN2:",
         "explanationBn": "N1のN2:",
         "examples": [
@@ -1277,6 +1340,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "37-7",
+        "particles": ["kono-sono-ano"],
         "headingBn": "この/その/あのN(position)",
         "explanationBn": "この/その/あのN(position): কোনো প্রশ্নের (demonstrative) যেমন この、その অথবা あの noun এর সাথে যুক্ত করে বিষয় বা অবস্থান (যেমন うええ、した、なか、とり) অথবা ちかく,) এটি বস্তু বা অবস্থান নির্দেশ করে।",
         "examples": [
@@ -1295,12 +1359,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "38-1",
+        "particles": ["no"],
         "headingBn": "の a nominaliser",
         "explanationBn": "の a nominaliser: বিভিন্ন অতিরিক্ত nominalising করার কাজ করে। の plain form এ ব্যবহার হয় polite form এ নয় (Nominalising হলো noun এ কল্পকরা)। Nominaliser অতিরিক্ত নিচের আলোচনা বাক্যে ব্যবহার হতে পারে।",
         "examples": []
       },
       {
         "id": "38-2",
+        "particles": ["no", "plain-form"],
         "headingBn": "V dictionary form のは adj です:",
         "explanationBn": "V dictionary form のは adj です:\n   এই sentence pattern টি ে V dictionary form এর সাথে যুক্ত হয়ে বিষয় বা topic, হিসেবে উপস্থিত হয়; Adjective যেমন むずかしい,やさしい,おもしろい,たのしい এবং たいへん এই sentence pattern এ ব্যবহার হয়।\n   অন্য বাক্যের সাথে তুলনায় যেমন: উদাহরণ(১)যেটার মধ্যে の ব্যবহার হয়নি। শুধু মাত্র তেনিস সাধারণত। আর উদাহরণ (২) এবং (৩) আর নির্দিষ্ট করে উল্লেখ করে যে তেনিস খেলা এবং তেনিস দেখার নির্দিষ্ট কাজগুলি দেখানোর।",
         "examples": [
@@ -1313,6 +1379,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "38-3",
+        "particles": ["no", "plain-form"],
         "headingBn": "V dictionary form のが adj です:",
         "explanationBn": "V dictionary form のが adj です:\n   এই উদাহরণগুলোতে V dictionary form এর সাথে বুঝায় Adjective এর বিশেষণ দ্বারা বর্ণিত হয়; Adjective বর্ণনা করে পছন্দ বা অপছন্দ,দক্ষতা বা সামর্থ্য এর মতো বিষয় যেমন すき[な],きらい[な],じょうず[な], はやい এবং おそい এই sentence pattern এর মধ্যে প্রায় ব্যবহৃত হয়।",
         "examples": [
@@ -1335,6 +1402,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "38-4",
+        "particles": ["no", "plain-form"],
         "headingBn": "V dictionary form のをわすれましたわ",
         "explanationBn": "V dictionary form のをわすれましたわ: Forgot to do 〜, করতে ভুলে গেছি\n   V dictionary from の এর object কে যা を দ্বারা চিহ্নিত হয়েছে, উদাহরণে চলছে এমন একটি পদক্ষেপ ভুলে যাওয়ার কাজটির বিষয়ে ভুলে যাওয়ায় হয়েছে বলে উল্লেখ করা হয়েছে।",
         "examples": [
@@ -1357,6 +1425,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "38-5",
+        "particles": ["no", "plain-form", "teimasu"],
         "headingBn": "V plain form のをしっていますか",
         "explanationBn": "V plain form のをしっていますか: Do you know that〜? 〜সম্পর্কে জানেন কিনা?\n   V dictionary form の এর object পরিনত হয়েছে যা を দ্বারা চিহ্নিত হয়েছে। কিছু নির্দিষ্ট একটি সম্পর্কে জানেন কিনা কি জিজ্ঞাসা করার সময় এটি ব্যবহার হয়।",
         "examples": [
@@ -1379,6 +1448,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "38-6",
+        "particles": ["no", "plain-form"],
         "headingBn": "V/い-adj/な-adj Plain form/N1〜だった + のはN2です",
         "explanationBn": "V/い-adj/な-adj Plain form/N1〜だった + のはN2です: এই sentence pattern টি N2 তে জোর দেওয়ার একটি উপায়।\n   〜のは এর পূর্বে বাক্যটির বিষয় は দ্বারা নির্দিষ্ট হয়:",
         "examples": [
@@ -1407,6 +1477,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "39-1",
+        "particles": ["de", "te-form"],
         "headingBn": "〜て(で)、〜",
         "explanationBn": "〜て(で)、〜: এই sentence pattern টি lesson 16 এবং lesson 34 এর মধ্যে আলোচনা হয়েছিল, কিন্তু বর্তমান lesson আলোচনা করা হচ্ছে যে বাক্যটির দ্বিতীয় অংশ কার,ভার দ্বিতীয় অংশে ফলাফল নির্দেশ করে; বাক্যটির দ্বিতীয় অংশটি কেবল মাত্র non-volitional (অ-খচ্ছনীয় অভিব্যক্তি) অথবা অবস্থান এর অভিব্যক্তি প্রকাশ করে।\n   V て-form/V ないform なくて/い-adj(〜く)くて/な-adj[な]/N で\n   বাক্যটির দ্বিতীয় অংশটি সাধারণত নিম্নলিখিত ভাবে এক একটি অভিব্যক্তি প্রকাশ করে:\n   (1) Verbs এবং Adjectives আবেগ প্রকাশ করে: びっくりします、あんしんします、こまります、さびしい、うれしい、ざんねん[な]ইত্যাদি।\n   (2) কারো (Verbs) এবং অভিব্যক্তি (expressions) সম্পাদনা বা অবস্থান এর প্রকাশ করে:\n      [নোট]যখন বাক্যটির দ্বিতীয় অংশটি একটি উদ্দেশ্য, আদেশ,আমন্ত্রণ বা অনুরোধ ইত্যাদি বুঝাত তখন 〜からব্যবহার হয়:\n   2) NでL N দ্বারা প্রাকৃতিক দুর্ঘটনা বা ঘটনা এর সাথে ব্যবহার হয় (যেমন じこ (দুর্ঘটনা), じしん(ভূমিকম্প), এবং かじ (আগুন)):",
         "examples": [
@@ -1459,6 +1530,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "39-2",
+        "particles": ["node", "plain-form"],
         "headingBn": "V/い-adj/な-adj/N Plain form/〜だ→〜な + ので、〜",
         "explanationBn": "V/い-adj/な-adj/N Plain form/〜だ→〜な + ので、〜: Lesson 9 আলোচিত 〜から এর মত, 〜ので も কারণ বা কাজ নির্দেশ করে; দিন্তু ので সহজভাবে কোনো পরিস্থিতি (কারণ এবং ফলাফল) এবং কোনো কারণ থেকে প্রাপ্ত ফলাফলকে দেখার বৈশিষ্ট্য থাকে। কোন কিছুর জন্য অনুমতি চাওয়ার সময় কোন কারণ বা ন্যায্যতা প্রকাশ করার জন্য ব্যবহৃত হয়।",
         "examples": [
@@ -1476,6 +1548,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "39-3",
+        "particles": ["en-route"],
         "headingBn": "とちゅうで",
         "explanationBn": "とちゅうで: とちゅう এর অর্থ 'নির্দিষ্ট সময় মধ্যে' বা 'যাওয়ার পথ' এটি ব্যবহার হয় Verb dictionary form অথবা N の সাথে যুক্ত হয়ে।",
         "examples": [
@@ -1499,6 +1572,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "40-1",
+        "particles": ["plain-form", "ka"],
         "headingBn": "V/い-adj/な-adj/N Plain form(〜だ→〜) + か、〜",
         "explanationBn": "V/い-adj/な-adj/N Plain form(〜だ→〜) + か、〜: এই sentence pattern টি প্রশ্ন করার সময় বাক্যটির উপাদান হিসেবে প্রশ্নসূচক (an interrogative) অন্তর্ভুক্ত করে। [প্রশ্নকরে একই বাক্যে উত্তর দেওয়া থেকে এই sentence pattern বুঝতে হয়]:\n   যেহেতু প্রশ্নসূচক একটি বিশেষ্য (noun) তাই এটি প্রশ্নসূচক か(interrogative か) এই ফর্মে যুক্ত করে।",
         "examples": [
@@ -1521,6 +1595,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "40-2",
+        "particles": ["plain-form"],
         "headingBn": "V/い-adj/な-adj/N Plain form(〜だ) + かどうか、〜",
         "explanationBn": "V/い-adj/な-adj/N Plain form(〜だ) + かどうか、〜: এই sentence pattern টি প্রশ্ন করার সময় বাক্যটির উপাদান হিসেবে প্রশ্নসূচক (an interrogative) অন্তর্ভুক্ত করে না। একটু লক্ষ রাখতে হবে, どうか এর মধ্যে plain form এর পরে か যুক্ত হয়।\n   まちがいがないかどうか বুঝায় হয়েছে মচিগাই আছে কিনা যা। কারণ উদাহরণ(৬) বাক্যা নির্দিষ্ট চায় যে কোনো ভুল হয়েছে কিনা, কিছু ভুল আছে কিনা।",
         "examples": [
@@ -1543,6 +1618,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "40-3",
+        "particles": ["te-form"],
         "headingBn": "V て-form みます",
         "explanationBn": "V て-form みます: এই sentence pattern টি কোনো কাজ করার চেষ্টা করা হয়ে তা বোঝাতে ব্যবহার হয়:\n   〜てみたい ব্যবহার করা যায়, যেমন উদাহরণ (৯) এ 〜たい ব্যবহার করা হয়েছে কিছুটা বেশি প্রকাশ করে।",
         "examples": [
@@ -1565,6 +1641,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "40-4",
+        "particles": ["adj-adverbial"],
         "headingBn": "い-adj(〜い)→〜さ",
         "explanationBn": "い-adj(〜い)→〜さ: い-adj বা noun রূপান্তরের করার জন্য শেষে い এর পরিবর্তে さ হয়।\n   উদাহরণ: たかい→たかさ, ながい→ながさ, はやい→はやさ",
         "examples": [
@@ -1582,6 +1659,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "40-5",
+        "particles": ["deshou"],
         "headingBn": "〜でしょうか",
         "explanationBn": "〜でしょうか: প্রশ্নবোধক বাক্যে 〜でしょうか (see lesson 32) যুক্ত করা হয় যখন নির্দিষ্ট উত্তর দাবি না করে, প্রশ্ন করা হয়।",
         "examples": [
@@ -1600,6 +1678,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "41-1",
+        "particles": ["ageru-morau-kureru"],
         "headingBn": "Expression for giving and receiving",
         "explanationBn": "Expression for giving and receiving: Lesson 7 এবং 24 এর মধ্যে বিনিময় এবং গ্রহণ প্রদান এবং গ্রহণের অভিব্যক্তি চালু আলোচনা করা হয়েছিল। এই Lesson এর মধ্যে আলোচনা করা হয়েছে বিনিময় এবং গ্রহণ কাজ প্রদান এবং গ্রহণের কিছু বিষয় অতিরিক্ত নিয়ে যেখানের মধ্যে প্রতিফলিত হয় প্রশংসাবাদী এই বৈশিষ্ট্যের মধ্যে সম্পর্ক:\n   1) N1(person)にN2をいただきます: যখন বক্তা কোনকিছু প্রধান(N2) করে তাকে বড় উক্ত ফলে কারো কাছথেকে(N1) তখন もらいます এর পরিবর্তে いただきます ব্যবহার করা হয়।\n   2) [わたしに]Nをくださいます: যখন বক্তা থেকে কেউ কিছু বক্তাকে কোনো কিছু প্রদান করে তখন くれます এর পরিবর্তে くださいました ব্যবহার করা হয়।\n      [নোট] প্রাপক বা গ্রহন কারীর সাথে বক্তার সম্পর্ক থাকলেও いただきます এবং くださいます ব্যবহৃত হয়:\n   3) N1にN2をやります: যখন প্রাপক বা গ্রহণকারী নিম্ন স্তরের কেউ, প্রাণী, বা উদ্ভিদ তখন あげます ব্যবহার করা উচিত কিছু আজকাল অনেকেই এই あげます ব্যবহার করে।",
         "examples": [
@@ -1637,6 +1716,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "41-2",
+        "particles": ["ageru-morau-kureru"],
         "headingBn": "Giving and receiving of actions",
         "explanationBn": "Giving and receiving of actions: いただきます、くださいます এবং やります দিয়ে কোন কাজ করে দেওয়া বা কোন কাজ করে দেওয়া প্রকাশ করা হয়, উদাহরণ স্বরূপ নিম্নে দেওয়া হলো:\n   1) V て-form いただきます: わたしはかちょうにてがみのまちがいをなおしていただきました。(আমার চিঠিতে আমার লেখা ভুল সংশোধন করিয়েছিলাম)\n   2) V て-form くださいます: ぶちょうのおくさんが[わたしに]おちゃをおしえてくださいました。(আমার বিভাগীয় প্রধানের স্ত্রী চায়ের আয়োজন শিক্ষা দিয়েছিলেন)\n   3) V-form やります: わたしはむすこにかみひこうきをつくってやりました(あげました)。(আমি আমার ছেলেকে কাগজের প্লেন তৈরি করে দিয়েছিলাম)",
         "examples": [
@@ -1664,6 +1744,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "41-3",
+        "particles": ["te-form"],
         "headingBn": "Vて-form くださいませんか",
         "explanationBn": "Vて-form くださいませんか: এটি 〜てください এর চেয়ে বেশি নম্র ভাবে অনুরোধ করতে ব্যবহার হয়, কিছু 〜ていただけませんか এর চেয়ে বেশি নম্র না। (see 26 Lesson এ আলোচনা হয়েছিল)",
         "examples": [
@@ -1681,6 +1762,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "41-4",
+        "particles": ["ni"],
         "headingBn": "NにV",
         "explanationBn": "NにV: নিম্নলিখিত দুইটি উদাহরণে \"The particle に\" এর অর্থ \"কোনো কিছু মনে করা অথবা \"অথবা\" বরণ বা স্মৃতি হিসেবে বর্ণিত হয়েছে:",
         "examples": [
@@ -1704,6 +1786,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "42-1",
+        "particles": ["no", "plain-form"],
         "headingBn": "V dictionary form/N の + ために、〜",
         "explanationBn": "V dictionary form/N の + ために、〜: in order to V উদ্দেশ্য, for N জন্য।\n   ために একটি উদ্দেশ্য নির্দেশ করে: Nのために \"N এর সুবিধার জন্য\" অর্থে ব্যবহার করা যেতে পারে যেমন উদাহরণ (৪)।\n   [নোট১] এরই রকম অভিব্যক্তি 〜ように lesson 36 আলোচনা হয়েছে কিছু dictionary form of a non-volitional verb অথবা verb এর Negative form এর ব্যবহার হয় ように এর আগে, যুইট sentence এর তুলনায় নিয়ে দেখা যায়, (১) তেখানে বলতে তার নিজের কোনার দোকান জন্য সঞ্চয় করছেতে হয়:\n      (১) じぶんのみせをもつために、ちょきんしています。(নিজের দোকান রাখার জন্য টাকা জমাচ্ছি)\n      (৫) じぶんのみせがもてるように、ちょきんしています。(নিজের দোকান রাখতে সক্ষম হওয়ার জন্য টাকা জমাচ্ছি)\n   [নোট ২] なります volitional verb এবং non-volitional verb উভয় ক্ষেত্রেই ব্যবহার করা হয়:",
         "examples": [
@@ -1741,6 +1824,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "42-2",
+        "particles": ["ni", "plain-form"],
         "headingBn": "V dictionary form/N + に + 〜",
         "explanationBn": "V dictionary form/N + に + 〜: এই sentence pattern টি つかいます、いいます、べんりです、やくにたちます এবং [じかん]がかかります এর সাথে একত্রে বসে কোনো কাজের প্রয়োজন বা উদ্দেশ্য নির্দেশ করে।",
         "examples": [
@@ -1763,6 +1847,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "42-3",
+        "particles": ["wa", "mo"],
         "headingBn": "Quantifier は/も",
         "explanationBn": "Quantifier は/も: যখন particle は quantifier এর সাথে সংযুক্ত থাকে, তখন এটি ইঙ্গিত দেয় যে বক্তা মনে করে যে উল্লেখিত পরিমাণটি অত্যন্ত অল্প বা কম; যখন particle も quantifier এর সাথে সংযুক্ত থাকে তখন এটি ইঙ্গিত দেয় যে বক্তা মনে করে যে উল্লেখিত পরিমাণটি বেশি।",
         "examples": [
@@ -1780,6 +1865,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "42-4",
+        "particles": ["ni", "niyotte"],
         "headingBn": "〜によって",
         "explanationBn": "〜によって: যখন verb এর অতিরিক্ত কোনো বিশেষ বা অতিরিক্ত বৃক্তার (かきます、はつめいします、はっけんします ইত্যাদি) এর Passive বৃত্তার হয়ে থাকে, তার আরিকরণ কে よって দিয়ে নির্দেশ করে, に দিয়ে নয়।",
         "examples": [
@@ -1798,6 +1884,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "43-1",
+        "particles": ["sou-desu"],
         "headingBn": "〜そうです (look like, মনে হচ্ছে):",
         "explanationBn": "〜そうです (look like, মনে হচ্ছে):\n   1) V ます-form + そうです: এই sentence pattern দিয়ে বক্তার বিষয়ভিত্তিক প্রকাশ করে যা Verb দ্বারা নির্দেশিত পরিবর্তন বা মোবামেন্ট ঘটতে চলেছে বা ঘটতে পারে। এটির সাথে কিছু Adverb যেমন (いまにも,もうすぐ অথবা これから) যুক্ত হতে পারে যা ভবিষ্যত সম্পর্কে নির্দেশ করে।\n   2) い-adj(〜い)/な-adj[な] + そうです: এই sentence pattern কোনো বিষয় অবস্থান বা বাস্তবতা দেখে অনুমানের কার সময় ব্যবহার করা হয়। কিছু প্রকৃতপক্ষে অনুমান সত্য কিনা সে বিষয়ে নিশ্চিত হওয়া যায়নি।\n      [নোট] অনুভূতির অভিব্যক্তি এর Adjective (うれしい,かなしい,さびしい ইত্যাদি পরিবর্তন ছাড়া ব্যবহৃত হয় না, যখন অন্য অনুভূতি প্রকাশ করা হয় তখন Adjective এর সাথে আধ্যাংশ そうです ব্যবহার করা হয়, যাতে বোঝা যায় যে বলা যাক্তির ব্যক্তির চেহারা থেকে অনুমান করা হচ্ছে):",
         "examples": [
@@ -1840,6 +1927,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "43-2",
+        "particles": ["te-form"],
         "headingBn": "V て-form きます:",
         "explanationBn": "V て-form きます:\n   1) V て-form ইঙ্গিত দেয় কোথাও থেকে যাওয়া কিছু করে এবং ফিরে আসতে:\n      উদাহরণ (৮) নিদর্শ করেছে বক্তা কিন্তু কাজ সম্পাদন করতে চলেছে (১) কোথাও যাবে যেখানে সিগারেট বিক্রিয়া হয়, (২) সেখানে কিছু সিগারেট কিনবে(৩) কিরে ফিরে আসবে।\n      যেখানে কাজ সম্পাদন হয় Verb て-form সম্পাদন করে এমন ছাত্রি て দ্বারা চিহ্নিত করা হয়, যেমন উদাহরণ (৯), তবে から ব্যবহার করা হয় যখন সেই ছাত্রি を দ্বারা দেওয়া হয় যেমন উদাহরণ (১০): Verb যেমন もってきます এবং こんできます ব্যবহার হয়ে পারে অগ্রাত্র とってきます verb যখন から এর সাথে ব্যবহার হয়।\n   2) N(place)へいってきます: いきます এর verb এর て-from ব্যবহার হয় যা きます এর পূর্বে বুঝানো হয় কাজ যাদের যাবেন এবং তারপর ফিরে আসবেন।\n   3) でかけてきます: でかけます verb এর て-formব্যবহার হয় きます এর পূর্বে যখন বক্তা কাজ কোথাও বাহিরে যাচ্ছেন এবং তারপর কোথাও যাবেন তা কিছু কোথাও যাবেন তা কিছু কোথাও যাবেন তা কিছু কোথাও যাবেন তা কি ফিরে আসবেন তা।",
         "examples": [
@@ -1872,6 +1960,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "43-3",
+        "particles": ["te-form"],
         "headingBn": "V て-form くれませんか",
         "explanationBn": "V て-form くれませんか: Could you〜? তুমি কি করতে পারবে?\n   এটি 〜てください এর চেয়ে কম আনুষ্ঠানিক কিছু 〜ていただけませんか(see lesson 26) অথবা 〜てくださいませんか(see lesson 41) এর চেয়ে বেশি নম্র নয়। এটি কারো সমান বা নিম্নে কারো কারো সাথে কথা বলতে ব্যবহার হয়।",
         "examples": [
@@ -1890,6 +1979,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "44-1",
+        "particles": ["masu-form"],
         "headingBn": "V ます-form/い-adj(〜い)/な-adj[な] + すぎます",
         "explanationBn": "V ます-form/い-adj(〜い)/な-adj[な] + すぎます: নির্দেশ করে যে কোনো কাজ, ক্রিয়া বা অবস্থান এর পরিমাণ অত্যাধিক বা অতিরিক্ত এবং সাধারনত যখন ক্রিয়া বা অবস্থাটি অনাকাঙ্ক্ষিত হয় তখন এটিব্যবহার করা হয়।\n   [নোট] 〜すぎますG-II এর verb হিসেবে বিবেচনা করা হয়: উদাহরণ: のみすぎる→のみすぎ(ない)→のみすぎた",
         "examples": [
@@ -1917,6 +2007,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "44-2",
+        "particles": ["masu-form"],
         "headingBn": "V ます- + やすいです/にくいです:",
         "explanationBn": "V ます- + やすいです/にくいです:\n   1) যখন Volitional verb এর V ます-form 〜やすい হয় তখন এর অর্থ হলো কাজটি চালিয়ে যাওয়া সহজ বা করা সহজ। যখন 〜にくい হয় অর্থ হয়ে যাওয়া বা করা কঠিন।\n      উদাহরণ (৫) বাকা মহাসম জানাচ্ছে যে পিচ সহজ বা ব্যবহার করা হয়। উদাহরণ (৬) অবহায় বুঝায়, তার মান, যেমন টোকিওতে বসবাস করা কঠিন হবে।\n   2) Non-Volitional verb এর V ます-form, 〜やすい এর অর্থ বুঝায়, verb দিয়ে নির্দেশিত অবস্থা সহবতে ঘটতে পারে আর 〜にくい অর্থ বুঝায় Verb দিয়ে নির্দেশিত কাজটি হওয়া কঠিন।\n      [নোট] 〜やすい এবং〜にくい এক い-adjective হিসেবে ধরা হয়:",
         "examples": [
@@ -1954,6 +2045,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "44-3",
+        "particles": ["wo", "ni"],
         "headingBn": "N1を/い-adj(〜い)→〜く/な-adj{な}→〜に + N2に + します:",
         "explanationBn": "N1を/い-adj(〜い)→〜く/な-adj{な}→〜に + N2に + します:\n   যখন 〜く/になります হয় (তে lesson 19 আলোচিত হয়েছে) এই বাক্যটির subject এর একটি পরিবর্তন বুঝ, 〜く/にします এর object(N1) এর পরিবর্তে ইঙ্গিত দেয়।",
         "examples": [
@@ -1976,6 +2068,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "44-4",
+        "particles": ["ni"],
         "headingBn": "N に します",
         "explanationBn": "N に します: Sentence pattern এটি পছন্দ বা সিদ্ধান্ত নির্দেশ করে।",
         "examples": [
@@ -1999,6 +2092,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "45-1",
+        "particles": ["no", "ta-form", "nai-form", "plain-form"],
         "headingBn": "V dictionary form/V ない-form ない/V た-form/い-adj(〜い)な/な-adj な/N の + ばあいは、〜",
         "explanationBn": "V dictionary form/V ない-form ない/V た-form/い-adj(〜い)な/な-adj な/N の + ばあいは、〜: 〜ばあい এমন একটি অবিরাচি বা পরিস্থিতি সম্পর্কে বলা জন্য ব্যবহার হয়। তার পরবর্তী বাকাটি কীভাবে পরিস্থিতি বা এর পরিবর্তন ঘটলা মোকাবেলা করে পারে তা নির্দেশ করে। যদিও এটি একটি noun, এটি noun modifier এর মতোরও একইভাবে সংযুক্ত হয়।",
         "examples": [
@@ -2031,6 +2125,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "45-2",
+        "particles": ["noni", "plain-form"],
         "headingBn": "V/い-adj/な-adj plain form/N 〜だ→〜な + のに、〜",
         "explanationBn": "V/い-adj/な-adj plain form/N 〜だ→〜な + のに、〜: のに ব্যবহার করা হয় যখন বাক্যটির প্রথম অংশে যা বলা হয় তার প্রথম অংশে যেটা প্রত্যাশা করা হয় তার বিপরীত হয়। বেশিরভাগ ক্ষেত্রে এটি আশ্চর্য, অসন্তোষ বা তুর্গতির প্রকাশ করে।\n   উদাহরণ (৬) প্রকাশ করে এক আশ্চর্য বা অসন্তোষ, যেখানে সাধারণ ভাবে আশাকরা হয়েছিল যে সে আসবে/বাক্যে(ঘেষ্ট ছিল) তার উপরে ভিত্তি করে, কিন্তু তা আশানুরূপ হয়নি (উদাহরণ ৭) のに প্রকাশ করে অসন্তোষ,বক্তা কাজকরতে হবে,যদিও প্রথম বাক্যাংশে (বলা হয়েছে দিনটি রবিবার),যেখানে সাধারণত রবিবারে বন্ধ থাকে।\n   [নোট ১] 〜のに এবং〜が এর মধ্যে পার্থক্য: যদি উদাহরণ(৬)এবং(৭)のに এর পরিবর্তে が হতো এই তবে এই কোনও আশ্চর্য বা অসন্তোষ প্রকাশ করতো না।\n   [নোট ২] 〜のに এবং〜ても এর মধ্যে পার্থক্য: のに প্রকৃত পক্ষে ঘটছিল এমন সম্পর্কে বক্তার অনুভূতি প্রকাশ করে। এটি একটি অনুমানমূলক পরিস্থিতির একটি বিশেষ্য উপসংহার প্রকাশ করার জন্য 〜ても এর মত conjunction হিসেবে ব্যবহার করা যায় না।\n      X あしたあめがふるのに、サッカーをします。 (ভুল)",
         "examples": [
@@ -2069,6 +2164,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "46-1",
+        "particles": ["te-form", "ta-form", "plain-form", "tokoro"],
         "headingBn": "V dictionary form/V て-form いる/V た-form + ところです",
         "explanationBn": "V dictionary form/V て-form いる/V た-form + ところです: এই Lesson আলোচিত ところ ব্যবহার করা হয় যখন কোনও কাজ বা তাদের কোনও দৃশ্য বা দিক বর্ণনা করা হয়।\n   1) V dictionary form + ところです: এটি নির্দেশ করে একটি কাজ এইমাত্র শেষ হয়েছে। এটি প্রায়ই adverbs যেমন これから,[ちょうど]いまから, ইত্যাদি এর সাথে ব্যবহার হয়।\n   2) V て-form いる + ところです: এটি নির্দেশ করে কাজটি চলমান বা চলছে। এটি প্রায়ই いま এর সাথে ব্যবহার হয়।\n   3) V た-form + ところです: এটি নির্দেশ করে কাজটি মাত্র শেষ বা সম্পন্ন হয়েছে। এটি প্রায়ই adverb たったいま এর সাথে ব্যবহার হয়।\n      [নোট] 〜ところです nominal clause হিসেবে বিভিন্ন sentence pattern এর সাথে সংযুক্ত হতে পারে।",
         "examples": [
@@ -2106,6 +2202,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "46-2",
+        "particles": ["bakari", "ta-form"],
         "headingBn": "V た-form + ばかりです",
         "explanationBn": "V た-form + ばかりです: এই sentence pattern বক্তার অনুভূতিতে প্রকাশ করে যে কোনও কাজ সম্পাদন বা কোনও ঘটনা মাত্র ঘটে গেছে পর খুব বেশি সময় অতিবাহিত হয়নি। যদিও এই Vた-formところです এর মত, কিছু বক্তার কাজ অতিরিক্ত হয়েছে তার নিরিখিত থাকে না, বরং যদি মনে করে বকা মাত্র শেষ হয়েছে বুঝাতে ব্যবহার করা হয়।\n   [নোট] 〜ばかり nominal clause হিসেবে বিভিন্ন sentence pattern এর সাথে সংযুক্ত হতে পারে।",
         "examples": [
@@ -2128,6 +2225,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "46-3",
+        "particles": ["no", "ta-form", "nai-form", "plain-form", "hazu"],
         "headingBn": "V dictionary form/V ない-form ない/V た-form/い-adj(〜い)/な-adj な/N の + はずです",
         "explanationBn": "V dictionary form/V ない-form ない/V た-form/い-adj(〜い)/な-adj な/N の + はずです: এই sentence pattern টি তখন ব্যবহার করা হয় যখন বক্তা সিদ্ধি বিষয়ে উপর ভিত্তি করে নির্ভরিত কোনও সিদ্ধান্তের উপর পৌঁছেছেন। [অন্তর্ভাবে বলা যায় কোনও কিছু হবেই এই ব্যবহার করা হয়।]\n   উদাহরণ (১০) বক্তা কারণ কি হয়েছিল মি. মিলারের সাথে তার উপর ভিত্তি করে সিদ্ধান্ত নিয়েছেন তিনি আসবেন এবং বক্তা〜はずです ব্যবহার করেছেন তার সিদ্ধান্তের সঠিক ও সম্পর্কে তিনি নূরত অভূক্ত করেছেন তা জানাতে।",
         "examples": [
@@ -2146,6 +2244,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "47-1",
+        "particles": ["plain-form", "sou-desu"],
         "headingBn": "Plain form + そうです (They say that 〜, এটি বলে যেয়ে〜)",
         "explanationBn": "Plain form + そうです (They say that 〜, এটি বলে যেয়ে〜): এটি নিজের মতামত না দিয়ে অন্য কোনও উৎসের কথা পৌঁছে দেওয়া একটি অভিব্যক্তি। যখন তথ্যর উৎস বলা হয় বাক্যটির এটি দেওয়া হয় এবং 〜に よると দ্বারা নির্দেশ করা হয়।\n   [Note 1] Lesson 43 এ আলোচিত 〜そうです এর সাথে এটির অর্থ বিভিন্নতা পূথক, তা নিচের এর উদাহরণ থেকে তুলে ধরা হয়েছে:\n   [Note 2] 〜そうです এবং 〜といっていました (See Lesson 33) এর পার্থক্য:\n      উদাহরণ (৯) এর মধ্যে মি. মিলার তথর উৎস, কিছু উদাহরণ (৮) তথর উৎস মি.মিলার নয় অন্য কিছু বা কেউ।",
         "examples": [
@@ -2198,6 +2297,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "47-2",
+        "particles": ["no", "plain-form", "you-desu"],
         "headingBn": "V/い-adj/な-adj/N Plain form(〜だ→〜な/〜だ→の) + ようです (It seems that〜, মনে...",
         "explanationBn": "V/い-adj/な-adj/N Plain form(〜だ→〜な/〜だ→の) + ようです (It seems that〜, মনে হচ্ছে〜): 〜そうです হলো এমন অভিব্যক্তি যা কোনও পরিস্থিতি পর্যবেক্ষণ থেকে বকা কী সিদ্ধান্ত নিয়েছেন তা বর্ণনা করার জন্য ব্যবহৃত হয়। বকা তার সিদ্ধান্তের উপর জোর প্রয়োগের জন্য ইচ্ছুক হলে মাঝে মাঝে adverb どうも এর সাথে এটি ব্যবহার করেন:\n   [নোট] 〜そうです এবং 〜ようです এর মধ্যে পার্থক্য:\n      উদাহরণ (১২) কেবলমাত্র মি. মিলার বাহ্যিক দিক বর্ণনা করে। উদাহরণ (১৩) এমন একটি সিদ্ধান্ত প্রকাশ করে যা বকা তার পর্যবেক্ষণ ভিত্তিতে সিদ্ধান্ত নেওয়েন (হতে পারে মিলার যোগাযোগ করেছিল বা তিনি বলে দিয়েছিল আসেননি কিছু তিনি আসেননি)।",
         "examples": [
@@ -2225,6 +2325,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "47-3",
+        "particles": ["ni", "smell-sound"],
         "headingBn": "こえ/おと/におい/あじがします:",
         "explanationBn": "こえ/おと/におい/あじがします:\n   এটি এমন একটি কর্তব্য বা অচেনা শব্দ, গন্ধ বা অন্যান্য কোন সংবেদনশীলতাকে বর্ণনা করে যা বকা তার সংবেদনশীল অঙ্গলি ব্যবহার করে অনুমান করে।",
         "examples": [
@@ -2243,12 +2344,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "48-1",
+        "particles": ["causative"],
         "headingBn": "Causative verbs:",
         "explanationBn": "Causative verbs:\n   Group I: いきます→いかせます(polite)/いかせる(plain)\n   Group II: たべます→たべさせます/たべさせる\n   Group III: きます→こさせます/こさせる, します→させます/させる\n   Causative verbs কে Group II এর verbs হিসেবে ধরা হয়। উদাহরণ: かかせます→かかせる→かかせ(ない)→かかせて",
         "examples": []
       },
       {
         "id": "48-2",
+        "particles": ["causative"],
         "headingBn": "Causative-verb Sentences:",
         "explanationBn": "Causative-verb Sentences:\n   1) N(person)を + causative verb (intransitive) — make/let a person verb (intransitive)\n      কিছু causative verb এর subject কে দ্বারা নির্দেশিত হয়। যখন অন্য আর হয় তখন কে দ্বারা নির্দেশিত হয়। নিয়ম অনুযায়ী যদি মূল Verb intransitive হয় তাহলে কে হয় যেমন নিচের ১) আর যদি মূল Verb transitive হয় তাহলে に হয়, যেমন নিচের নিয়ম ২)\n      [নোট] যখন intransitive verb'N(please)を' কোন sentence এ বক্তব্য হয়, তখন に দ্বারা নির্দেশিত হয়:\n   2) N1(person)にN2を + causative verb (transitive) — make/let a person verb (transitive)",
         "examples": [
@@ -2281,6 +2384,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "48-3",
+        "particles": ["causative"],
         "headingBn": "How to use causative verbs",
         "explanationBn": "How to use causative verbs: Causative verbs বাধ্যবাধকতা বা অনুমতি নিদের্শ করে। এধরনো ব্যবহার করা হয় উপরের ক্ষেত্রে কেউ কিছুর ক্ষেত্রে কারো সাথে (যেমন মা-বাবার বাচ্চাদের সাথে, বড় ভাই ছোট ভাইকে সাথে, অথবা ব্যবস্থাপক কর্মিসদের সাথে) কিছু করতে বাধ্য বা অনুমতি দেওয়া হয়। উদাহরণ (১), (৩) এবং (৪) কিছু করার বাধ্যবাধকতা আর উদাহরণ (২) এবং (৩) কিছু করার অনুমতি দেওয়া হয়েছে।\n   [নোট] দিন ক্ষেত্রে কেউ উক্ত কারো এই ব্যবহার করা। কারণ দিন ক্ষেত্রে করার কোনো কিছু বিষয় বা অনুমতি দেওয়া কোন সমার্থক থাকলে। উদাহরণ (৬) ইতুকরত মর্যাদা কাজে যে সেবাপাইছি নিচের উদাহরণ (৬) কিছু করা জন্য বলার সময় বক্তা একটি বাক্যাংশ ব্যবহার করছেন যে চেয়ে থেকে কোন অনুরুধ বা সুবিধা চাও তখন ও কিনা এটি ব্যবহার করতে পারেন। যেমন নিচের উদাহরণ (৭)",
         "examples": [
@@ -2298,6 +2402,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "48-4",
+        "particles": ["dake", "te-form", "causative"],
         "headingBn": "Causative verb て-form いただけませんか (Would you please let me do〜?)",
         "explanationBn": "Causative verb て-form いただけませんか (Would you please let me do〜?): দয়াকরে আপনি কি আমাকে করতে দিবেন〜?\n   V て-form いただけませんか।(lesson 26 আলোচনা করা হয়েছিল যখন কারো কাছথেকে কিছু চাওয়া হয়)। Causative verb て-form いただけませんか ব্যবহারকরা হয় যখন কারো থেকে নয় কিছু করার অনুমতি চাওয়া হয়।",
         "examples": [
@@ -2321,12 +2426,14 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "49-1",
+        "particles": ["honorific"],
         "headingBn": "けいご (Honorific expressions, সম্মানিত অভিব্যক্তি)",
         "explanationBn": "けいご (Honorific expressions, সম্মানিত অভিব্যক্তি): けいご (honorific expressions) ব্যবহার করা হয় শ্রোতার প্রতি বা যাকে উল্লেখ করা হয়েছে তাকে সম্মান জানানোর জন্য। এধরনো ব্যবহার কিনা তা নির্ভরিত হয় শ্রোতা বা উল্লেখিত ব্যক্তির সম্পর্ক উপর। খুবত এধরনো এমন পরিস্থিতিতে ব্যবহার করা হয় যেখানে (১) উচ্চ নিজের চেয়ে উচ্চতর মর্যাদা বা বয়সে অথবা চেনার না পরিচিত নয় এমন, (২) যখন উচ্চতর মর্যাদার কারো সাথে কথা বলা এবং (৩) যখন নিজের মৌখিক বা বিধিবু কথা বলা হয় তখন। এর বাদেও এবং けいご এতটা সন্মানিত (respectful expressions) কথা প্রকাশের প্রতি উচিত lesson 49 এ আলোচিত হবে এবং একই মধ্যে けんじょうご (humble expressions) নিয়ে প্রকাশের প্রতি অভিব্যক্তি lesson 50 এ আলোচিত হবে।",
         "examples": []
       },
       {
         "id": "49-2",
+        "particles": ["honorific"],
         "headingBn": "そんけいご (Respectful expressions, শ্রোতার অভিব্যক্তি)",
         "explanationBn": "そんけいご (Respectful expressions, শ্রোতার অভিব্যক্তি): Respectful expressions শ্রোতার (অভিব্যক্তি)রূপ সম্পাদনকারী ব্যক্তির প্রতি শ্রদ্ধা বা উল্লিখিত অবস্থার প্রতি সম্মান প্রদর্শন করে।\n   1) Verbs\n      এধরনো ব্যবহার নিদের্শিত ক্রিয়া বা কাজ সম্পাদনকারী ব্যক্তির প্রতি শ্রদ্ধা প্রদর্শন করে।\n      (1) Respectful verb শ্রদ্ধাসূচক ক্রিয়া (See Exercise A1, Main Text)\n         এধরনো passive verb এর মতোই হয় এবং একেবারে G II এর Verb হিসেবে ধরা হয়। উদাহরণ: かかれます→かかれる→かかれ(ない)→かかれて\n      (2) おVます-form এই ধরণী সাধারণত respectful verb এর চেয়ে বেশি নম্র এটি আলোচিত হয়েছে (১) Group III এর verb এবং যে সবার verb ますーformএকটি মাত্র সিলেবল, যেমন みます এবং ねます এধরনো এই form টি হয় না। যদি কোন Verb এর respectful equivalent থাকে যেমন নিচের (৩) এর মত এধরনো ব্যবহার হয়।\n      (3) Special respectful verbs বিশেষ শ্রদ্ধাশীল ক্রিয়া (See Experience A4, Lesson 49, Main Text)\n         দেশ কয়েকটি Verb এর respectful equivalent verb আছে (২)এর মতো তাদের সম্মান দেখায়।\n         [নোট] いらっしゃいます (dictionary form: いらっしゃる) くださいます(dictionary form: くださる) এবং おっしゃいます (dictionary form: おっしゃる) এধরনো Group I Verb এর মতো সাধারণত মিলিত হবার ব্যতিক্রম হয়।\n         উদাহরণ: いらっしゃいます (Xいらっしゃります) いらっしゃる, いらっしゃらない, いらっしゃった, いらっしゃらなかった\n      (4) お〜ください\n         এটি V て-form ください (see lesson14) এর respectful equivalent (শ্রদ্ধাসূচক সমকক্ষ); Group I এবং Group এর Verb এর ক্ষেত্রে এর お V ます-form ください, আর যখন Group Verbs এর (N します) কে ক্ষেত্রে ご Nください এর form টি হয়।\n         যেসকল Verb ব ますとれますহয় যেমো: ます-form একটি syllable, এধরনো এর অর্থে ব্যবহার হয় না। যে সকল Verb এর (৩) এর মতো special respectful verb থাকে তাদের ক্ষেত্রে ください যুক্ত হয় বুঝাত।\n   2) Nouns, adjective and adverbs\n      বিশেষণ (adjective) বা ক্রিয়া বিশেষণ(adverb) দ্বারা বর্ণিত বা বর্ণিত কর্তার উপস্থিতি নির্দেশক নিদর্শন প্রকাশ করার জন্য Nouns, adjective এবং adverbs এর সাথে ও উপসর্গ যুক্ত হয়। সাধারণত কতক জাপানি শব্দের ক্ষেত্রে お উপসর্গ আর সকল শব্দের মূল চীন জাতের ক্ষেত্রে ご উপসর্গ যুক্ত হয়:\n      Nouns: ごかぞく, ごいけん, ごりょこう (おくに, おなまえ, おしごと, おやくそく, おでんわ)\n      な-adj: ごねっしん, ごしんせつ (おげんき, おじょうず, おひま)\n      い-adj: おいそがしい, おわかい\n      adverb: ごじゆうに\n      [নোট 2] けいご এধরনো আরো ও ব্যবহার Verb এর সাথে বৃক্তাগত হয় তারা যে বং সেন্টেন্স এর অন্য শব্দের মূল শব্দ সাথেও বৃক্তাগত হতে দেখতে পারে।",
         "examples": [
@@ -2379,6 +2486,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "49-3",
+        "particles": ["honorific"],
         "headingBn": "Honorific expressions and sentence style",
         "explanationBn": "Honorific expressions and sentence style: কারো সম্পর্কে বলার সময় শ্রদ্ধা প্রকাশ করতে, শ্রোতার প্রতি শ্রদ্ধা প্রকাশ প্রয়োজন না হলে, けいご একই সাথে Plain-style sentence হিসেবে ব্যবহার করা যেতে পারে। যেমন উদাহরণ (১০)।",
         "examples": [
@@ -2391,6 +2499,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "49-4",
+        "particles": ["mashite"],
         "headingBn": "〜まして",
         "explanationBn": "〜まして: বিনীতভাবে কথা বলা হয় V て-form পরিবর্তন হয়ে V ます-form まして হয়ে যায়।",
         "examples": [
@@ -2403,6 +2512,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "49-5",
+        "particles": ["node"],
         "headingBn": "〜ますので",
         "explanationBn": "〜ますので: Plain form ので এর জায়গায় বেশি নম্র করার জন্য 〜ますので ব্যবহার করা যেতে পারে।",
         "examples": [
@@ -2421,6 +2531,7 @@ export const GRAMMAR_N4 = [
     "points": [
       {
         "id": "50-1",
+        "particles": ["humble"],
         "headingBn": "けんじょうごI (Humble expression I",
         "explanationBn": "けんじょうごI (Humble expression I - verbs, বিনয় প্রকাশক I-ক্রিয়া): Humble expression I হলো এমন একটি অভিব্যাক্তি যা বকা বা বকার সাথে সম্পর্ক যুক্ত কেউ কিছু করার মাধ্যমে অন্য কারো প্রতি (যে শ্রোতা হতে পারে বা নাও হতে পারে) বিনয় জানাতে ব্যবহার হয়\n   1) お/ご〜します\n      (1) お V(Group I এবং II) ます-formします\n         উদাহরণ (১) উল্লেখ করা ভারী জিনিসপত্র বহন করা চেষ্টা করা ব্যক্তির প্রতি বকা প্রকাশ করেছে,(কে,এই ক্ষেত্রে শ্রোতা যাকেবকা রক্ষা প্রকাশ করেছে), উদাহরণ(২) বকা সেই ব্যক্তির প্রতি রক্ষা দেখায়েছে যাকে 'তিনি বলবেন' তিনটি ছাড়া দিতেস করেছে,(কে এই ক্ষেত্রে রক্ষাপ্রকাশ), উদাহরণ (৩) বকা যে সকল ব্যক্তির নিয়ে চেষ্টা হয়েছে তার প্রতি রক্ষা প্রকাশ দেখেছে (কে, এই ক্ষেত্রে বকা যে ব্যক্তিকে সঙ্খন করেছেন তিনি)।\n         এই ধরণী তে সকল Verb এর ますーfrom এর syllable এর যেমন みま এবং ねます এর ক্ষেত্রে ব্যবহার করা হয় না।\n      (2) ご V(Group III)\n         এই ধরণী Group III Verbs, しょうかいします,そうだんします এবং れんらくします তে উদাহরণ উপরে দিয়ে দেখানো সবব্যবহার হয়। যাইহবে কিছু verb でんわします এবং やくそくします এধরণের ব্যক্তিক্রম,তাদের ক্ষেত্রে ご না হয়ে お হয়।\n   2) Special humble Verb (বিশেষ বিনয়ি ক্রিয়া)(See Exercise A3, Lesson 50, Main Text)\n      একটি বড় সংখ্যক Verb এর Special humble equivalent হয়েছে।",
         "examples": [
@@ -2463,6 +2574,7 @@ export const GRAMMAR_N4 = [
       },
       {
         "id": "50-2",
+        "particles": ["humble"],
         "headingBn": "けんじょうごII (Humble expressions II",
         "explanationBn": "けんじょうごII (Humble expressions II - verbs, বিনয় প্রকাশক II-ক্রিয়া): এধরনো বকা বা তার সহযোগীদের শ্রোতার প্রতি ভদ্রতা প্রকাশ করতে ব্যবহার করে।\n   উদাহরণ (৮) もうします ব্যবহার করা হয়েছে (যা いいます এর humble equivalent) এবং উদাহরণ(৯) まいりました ব্যবহার করা হয়েছে (যা きました এর humble equivalent) অতিরিক্ত humble equivalent いたします এবং [〜て]おります এর যুক্ত করে।",
         "examples": [

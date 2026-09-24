@@ -165,9 +165,11 @@ export default function GrammarList({
 		}
 		return allPoints.filter((p) => {
 			if (selectedFilters.length > 0) {
-				const key =
-					groupBy === "particle" ? p.particle || "other" : p.category;
-				if (!selectedFilters.includes(key)) return false;
+				if (groupBy === "particle") {
+					if (!(p.particles || []).some((k) => selectedFilters.includes(k))) return false;
+				} else if (!selectedFilters.includes(p.category)) {
+					return false;
+				}
 			}
 			if (onlyStarred && !favorites[p.id]) return false;
 			if (!q) return true;

@@ -106,7 +106,7 @@ export default function GrammarQuiz({
 		if (setupFilters.length === 0) return allPoints;
 		if (setupGroupBy === "particle")
 			return allPoints.filter((p) =>
-				setupFilters.includes(p.particle || "other"),
+				(p.particles || []).some((k) => setupFilters.includes(k)),
 			);
 		return allPoints.filter((p) => setupFilters.includes(p.category));
 	}, [allPoints, transformRows, isSetupTransform, transformOnly, verbGroupFilter, setupFilters, setupGroupBy]);
