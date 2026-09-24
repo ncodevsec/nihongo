@@ -1,6 +1,8 @@
 import { N5_VOCAB } from "../data/vocab/n5.js";
 import { N4_VOCAB } from "../data/vocab/n4.js";
 import { classifyPartOfSpeech } from "./vocabClassify.js";
+import { GRAMMAR_ELEMENT_CATEGORIES } from "../data/grammar-elements.js";
+export { GRAMMAR_ELEMENT_CATEGORIES };
 import {
   conjugateVerb,
   conjugateIAdjective,
@@ -73,17 +75,19 @@ export function grammarCategories(lessons) {
   }));
 }
 
-// Distinct particle/marker tags across all points, in first-seen order —
-// powers the "By Particle" grouping view (parallel to vocab's "By PoS").
+// Every grammar-element category actually used by at least one point at
+// this level, in the canonical order — powers the "By Particle" grouping
+// view. A point can carry several elements (see `particles` on each point
+// and flattenGrammarPoints below), so this list only needs to include a
+// category once even though many points share it.
 export function grammarParticleCategories(lessons) {
-  const seen = new Map();
+  const used = new Set();
   for (const lesson of lessons) {
     for (const point of lesson.points) {
-      const key = point.particle || "other";
-      if (!seen.has(key)) seen.set(key, { key, bn: key, en: key });
+      for (const key of point.particles || []) used.add(key);
     }
   }
-  return Array.from(seen.values());
+  return GRAMMAR_ELEMENT_CATEGORIES.filter((c) => used.has(c.key));
 }
 
 // The ten categories for the "By Transformation" grouping view — every

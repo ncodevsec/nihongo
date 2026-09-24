@@ -237,7 +237,7 @@ export default function GrammarStudy({
 				list =
 					selectedFilters.length === 0
 						? allPoints
-						: allPoints.filter((p) => selectedFilters.includes(p.particle || "other"));
+						: allPoints.filter((p) => (p.particles || []).some((k) => selectedFilters.includes(k)));
 			} else {
 				list =
 					selectedFilters.length === 0

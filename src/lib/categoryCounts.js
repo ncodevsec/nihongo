@@ -15,6 +15,19 @@ function tally(items, keyFn) {
 	return counts;
 }
 
+// Like tally, but for a group where one item can belong to several
+// categories at once (grammar points and their `particles` array) — each
+// item is counted once per category it carries.
+function tallyMulti(items, keysFn) {
+	const counts = {};
+	for (const item of items) {
+		for (const key of keysFn(item) || []) {
+			counts[key] = (counts[key] || 0) + 1;
+		}
+	}
+	return counts;
+}
+
 // Vocabulary: lesson / part of speech / counting. Kanji: lesson / radical.
 // `total` is the size of the whole dataset (the "All categories" number).
 export function vocabKanjiGroupCounts(items, isVocab) {
@@ -37,7 +50,7 @@ export function vocabKanjiGroupCounts(items, isVocab) {
 export function grammarGroupCounts(points, transformRows) {
 	return {
 		lesson: { counts: tally(points, (p) => p.category), total: points.length },
-		particle: { counts: tally(points, (p) => p.particle || "other"), total: points.length },
+		particle: { counts: tallyMulti(points, (p) => p.particles), total: points.length },
 		transform: { counts: tally(transformRows, (r) => r.category), total: transformRows.length },
 	};
 }

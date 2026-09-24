@@ -13,6 +13,7 @@ import {
 	TRANSFORM_CATEGORIES,
 	VERB_TRANSFORM_CATEGORIES,
 	ADJECTIVE_TRANSFORM_CATEGORIES,
+	GRAMMAR_ELEMENT_CATEGORIES,
 	buildTransformationRows,
 } from "../lib/grammarUtils.js";
 
@@ -47,12 +48,9 @@ export default function Progress({
 	);
 	const particleCategories = useMemo(() => {
 		if (!isGrammar) return [];
-		const seen = new Map();
-		for (const item of kanjiData) {
-			const key = item.particle || "other";
-			if (!seen.has(key)) seen.set(key, { key, bn: key, en: key });
-		}
-		return Array.from(seen.values());
+		const used = new Set();
+		for (const item of kanjiData) for (const k of item.particles || []) used.add(k);
+		return GRAMMAR_ELEMENT_CATEGORIES.filter((c) => used.has(c.key));
 	}, [isGrammar, kanjiData]);
 
 	const stats = useMemo(() => {
@@ -96,13 +94,16 @@ export default function Progress({
 			if (isTransform) return item.category;
 			if (groupBy === "pos") return classifyPartOfSpeech(item);
 			if (groupBy === "count") return classifyCounting(item);
-			if (groupBy === "particle") return item.particle || "other";
 			return item.category;
 		};
+		// A grammar point can carry several grammar-element tags at once, so
+		// "matches category X" means X is one of them — not strict equality.
+		const matchesCategory = (item, key) =>
+			groupBy === "particle" ? (item.particles || []).includes(key) : categoryOf(item) === key;
 
 		const byCategory = categoryList
 			.map((c) => {
-				const items = dataSource.filter((k) => categoryOf(k) === c.key);
+				const items = dataSource.filter((k) => matchesCategory(k, c.key));
 				const done = items.filter(
 					(k) => progress[k.id]?.learned,
 				).length;

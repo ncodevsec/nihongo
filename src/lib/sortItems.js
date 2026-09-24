@@ -80,7 +80,18 @@ export function makeItemComparator({ sortBy, sortDir, lessonIndex, meaningText, 
 //   sortBy: lesson | particle (points) — transform (drill rows)
 export function makeGrammarComparator({ sortBy, sortDir, lessonCategories, particleCategories, transformCategories }) {
 	if (sortBy === "particle") {
-		return makeGroupComparator((p) => p.particle || "other", indexMap(particleCategories), sortDir);
+		// A point can carry several particles; sort by whichever one comes
+		// first in the category list (its "primary" element for ordering).
+		const particleIndex = indexMap(particleCategories);
+		const primaryParticle = (p) => {
+			let best;
+			for (const key of p.particles || []) {
+				const i = particleIndex.get(key);
+				if (i !== undefined && (best === undefined || i < best.i)) best = { key, i };
+			}
+			return best?.key;
+		};
+		return makeGroupComparator(primaryParticle, particleIndex, sortDir);
 	}
 	if (sortBy === "transform") {
 		return makeGroupComparator((r) => r.category, indexMap(transformCategories), sortDir);
