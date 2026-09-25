@@ -22,6 +22,14 @@ import { RADICAL_CATEGORIES, radicalKeyOf } from "../data/kanji-radicals.js";
 import Furigana from "./Furigana.jsx";
 import LeveledKanji from "./LeveledKanji.jsx";
 
+// Largest size (up to maxRem) at which `text` still fits the flashcard on
+// ONE line, the same approach the Transform tab's cards use: CJK glyphs
+// are about 1em wide, so cap the font size at (card width) / (character
+// count) instead of letting long vocabulary words wrap to several lines.
+const fitStyle = (text, maxRem) => ({
+	fontSize: `min(${maxRem}rem, calc((min(100vw, 32rem) - 4.5rem) / ${Math.max(String(text).length, 1)}))`,
+});
+
 export default function Study({
 	moduleKey,
 	kanjiData,
@@ -413,11 +421,10 @@ export default function Study({
 						// Normal mode shows this first; reverse mode shows it after flip.
 						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 py-8">
 							<div
-								className={`font-mincho text-ink dark:text-night-ink text-center px-4 break-words ${
-									isVocab
-										? "text-4xl sm:text-5xl"
-										: "text-6xl sm:text-7xl"
+								className={`font-mincho text-ink dark:text-night-ink text-center px-4 ${
+									isVocab ? "whitespace-nowrap" : "break-words text-6xl sm:text-7xl"
 								}`}
+								style={isVocab ? fitStyle(frontText, 3) : undefined}
 							>
 								{showWord && (isVocab || reverse) ? (
 									<Furigana
