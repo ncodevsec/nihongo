@@ -6,7 +6,12 @@
 // Pages deploy), so those files are treated as "always re-check with the
 // network" below rather than "cache forever," which is what previously
 // made deploys invisible until a manual cache clear.
-const CACHE_NAME = "nihongo-cache-v2";
+// Bumped to v3: some installed copies got stuck serving a stale app shell
+// indefinitely (the update-check kept reporting "latest" while running an
+// old build) — this forces every existing installed copy to drop
+// whatever it has cached, once, the next time its service worker
+// activates, as a one-time unstick independent of whatever caused it.
+const CACHE_NAME = "nihongo-cache-v3";
 const CORE_ASSETS = ["./", "./index.html"];
 
 self.addEventListener("install", (event) => {

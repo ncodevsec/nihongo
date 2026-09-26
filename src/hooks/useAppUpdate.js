@@ -80,7 +80,12 @@ export function useAppUpdate() {
         // offline or unsupported — fall through to the version.json check
       }
 
-      // Signal 2: compare the live build timestamp to the last one seen.
+      // Signal 2: compare the live build against the one running right now.
+      // Two independent checks, either one is enough: the build timestamp
+      // (the precise signal) and the plain version string (a coarser but
+      // unmistakable fallback — "1.16.0" served while "1.19.1" is running
+      // can never match by coincidence, unlike a timestamp that could in
+      // principle be compared against a stale cached copy of itself).
       let foundNewer = false;
       try {
         const res = await fetch(`./version.json?t=${Date.now()}`, {
@@ -89,6 +94,13 @@ export function useAppUpdate() {
         if (res.ok) {
           const data = await res.json();
           if (RUNNING_BUILD && String(data.buildTime) !== RUNNING_BUILD) foundNewer = true;
+          if (
+            typeof __APP_VERSION__ !== "undefined" &&
+            data.version &&
+            String(data.version) !== __APP_VERSION__
+          ) {
+            foundNewer = true;
+          }
         }
       } catch {
         // offline, or version.json not present in dev — ignore
@@ -120,12 +132,26 @@ export function useAppUpdate() {
       worker.postMessage({ type: "SKIP_WAITING" });
       return;
     }
-    // No waiting worker (e.g. only version.json moved) — still clear the
-    // cache bucket directly so a reload can't serve anything stale. This
-    // only touches Cache Storage, never localStorage, so progress,
-    // favorites, and settings are all untouched.
+    // No waiting worker (e.g. only version.json moved, or this copy is
+    // stuck and never noticed a waiting worker at all) — clear every
+    // Cache Storage bucket this origin has directly, whatever it's named,
+    // so a reload can't serve anything stale from any of them. This only
+    // touches Cache Storage, never localStorage, so progress, favorites,
+    // and settings are all untouched.
     try {
-      await caches.delete("nihongo-cache-v2");
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    } catch {
+      // ignore
+    }
+    // Last resort for a copy that is stuck for a reason more fundamental
+    // than a stale cache entry (e.g. its own service worker registration
+    // itself is wedged): drop the registration so the next load registers
+    // sw.js completely fresh, as if the app were being installed for the
+    // first time.
+    try {
+      const reg = registrationRef.current || (await navigator.serviceWorker?.getRegistration());
+      await reg?.unregister();
     } catch {
       // ignore
     }
