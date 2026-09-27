@@ -112,6 +112,14 @@ export default function Home({
 
 	return (
 		<div className="space-y-8 sm:space-y-10 lg:space-y-14">
+			<Rise i={0}>
+				<ExamCountdown
+					exams={settings.exams}
+					onChange={(exams) => updateSetting("exams", exams)}
+					lang={lang}
+				/>
+			</Rise>
+
 			<Banners
 				T={T}
 				updateAvailable={updateAvailable}
@@ -121,7 +129,7 @@ export default function Home({
 				onInstall={promptInstall}
 			/>
 
-			<Rise i={0}>
+			<Rise i={1}>
 				<HomeHero
 					lang={lang}
 					T={T}
@@ -149,7 +157,7 @@ export default function Home({
 				</HomeHero>
 			</Rise>
 
-			<Rise i={1}>
+			<Rise i={2}>
 				<StatsStrip
 					T={T}
 					personal={stats.hasProgress}
@@ -164,18 +172,6 @@ export default function Home({
 						T("timeUnderMinute"),
 					)}
 					counts={counts}
-				/>
-			</Rise>
-
-			<Rise i={2}>
-				<ExamCountdown
-					examName={settings.examName}
-					examDate={settings.examDate}
-					onSave={({ examName, examDate }) => {
-						updateSetting("examName", examName);
-						updateSetting("examDate", examDate);
-					}}
-					lang={lang}
 				/>
 			</Rise>
 

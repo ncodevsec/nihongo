@@ -306,6 +306,7 @@ const UI = {
   examCountdownSave: { bn: "সংরক্ষণ করুন", en: "Save" },
   examCountdownEdit: { bn: "সম্পাদনা", en: "Edit" },
   examCountdownClear: { bn: "মুছে ফেলুন", en: "Clear" },
+  examCountdownAdd: { bn: "পরীক্ষা যোগ করুন", en: "Add exam" },
   examDaysLeft: { bn: "দিন বাকি", en: "days left" },
   examDayLeft: { bn: "দিন বাকি", en: "day left" },
   examToday: { bn: "আজই পরীক্ষা!", en: "Exam is today!" },

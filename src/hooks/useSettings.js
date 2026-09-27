@@ -18,8 +18,7 @@ const DEFAULTS = {
   timedMinutes: 10,
   showJukugo: true, // include 2-kanji compound words (熟語) in the Kanji module
   showFurigana: false, // show reading hints (ruby text) above kanji app-wide
-  examName: "", // Home page exam countdown: name the student picked
-  examDate: "", // Home page exam countdown: "YYYY-MM-DD", "" = not set
+  exams: [], // Home page exam countdown(s): [{ id, name, date: "YYYY-MM-DD" }]
 };
 
 function loadSettings() {
@@ -27,7 +26,11 @@ function loadSettings() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULTS;
     const parsed = JSON.parse(raw);
-    return { ...DEFAULTS, ...parsed, themeHue: snapToPreset(parsed.themeHue ?? DEFAULT_HUE) };
+    const merged = { ...DEFAULTS, ...parsed, themeHue: snapToPreset(parsed.themeHue ?? DEFAULT_HUE) };
+    if (!parsed.exams && parsed.examDate) {
+      merged.exams = [{ id: "legacy", name: parsed.examName || "", date: parsed.examDate }];
+    }
+    return merged;
   } catch {
     return DEFAULTS;
   }
