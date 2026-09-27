@@ -25,8 +25,8 @@ function Banner({ icon, title, sub, actionLabel, onAction }) {
 
 // Only rendered when there is something to act on: a new deploy is waiting,
 // or the browser is offering to install the app.
-export default function Banners({ T, updateAvailable, canInstall, onOpenSettings, onInstall }) {
-	if (!updateAvailable && !canInstall) return null;
+export default function Banners({ T, updateAvailable, canInstall, showBackupReminder, onOpenSettings, onInstall }) {
+	if (!updateAvailable && !canInstall && !showBackupReminder) return null;
 	return (
 		<div className="space-y-3">
 			{updateAvailable && (
@@ -44,6 +44,15 @@ export default function Banners({ T, updateAvailable, canInstall, onOpenSettings
 					sub={T("homeInstallSub")}
 					actionLabel={T("homeInstallBtn")}
 					onAction={onInstall}
+				/>
+			)}
+			{showBackupReminder && (
+				<Banner
+					icon="archive"
+					title={T("backupReminderTitle")}
+					sub={T("backupReminderSub")}
+					actionLabel={T("backupReminderBtn")}
+					onAction={onOpenSettings}
 				/>
 			)}
 		</div>

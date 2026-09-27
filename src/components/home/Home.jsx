@@ -18,6 +18,7 @@ import Features from "./Features.jsx";
 import Faq from "./Faq.jsx";
 import CtaBand from "./CtaBand.jsx";
 import Banners from "./Banners.jsx";
+import ExamCountdown from "./ExamCountdown.jsx";
 import SectionHeading from "./SectionHeading.jsx";
 import StreakWidget from "../StreakWidget.jsx";
 
@@ -74,6 +75,20 @@ export default function Home({
 	}, [isActive]);
 
 	const isReturning = stats.hasProgress || !!lastSession;
+
+	// Nudge to back up once there's real progress worth protecting and it's
+	// been a while (or never) since the last export — browser data can be
+	// cleared at any time, and this is the only copy of that progress.
+	const showBackupReminder = useMemo(() => {
+		if (!stats.hasProgress || stats.learned < 15) return false;
+		let last = 0;
+		try {
+			last = Number(localStorage.getItem("nihongo-last-export-v1")) || 0;
+		} catch {
+			// ignore
+		}
+		return Date.now() - last > 14 * 24 * 60 * 60 * 1000;
+	}, [stats.hasProgress, stats.learned]);
 	const prefersDark =
 		typeof window !== "undefined" &&
 		!!window.matchMedia &&
@@ -101,6 +116,7 @@ export default function Home({
 				T={T}
 				updateAvailable={updateAvailable}
 				canInstall={canInstall}
+				showBackupReminder={showBackupReminder}
 				onOpenSettings={onOpenSettings}
 				onInstall={promptInstall}
 			/>
@@ -152,6 +168,18 @@ export default function Home({
 			</Rise>
 
 			<Rise i={2}>
+				<ExamCountdown
+					examName={settings.examName}
+					examDate={settings.examDate}
+					onSave={({ examName, examDate }) => {
+						updateSetting("examName", examName);
+						updateSetting("examDate", examDate);
+					}}
+					lang={lang}
+				/>
+			</Rise>
+
+			<Rise i={3}>
 				<section aria-labelledby="home-streak">
 					<SectionHeading
 						id="home-streak"
@@ -171,7 +199,7 @@ export default function Home({
 				</section>
 			</Rise>
 
-			<Rise i={3}>
+			<Rise i={4}>
 				<div className="space-y-8 sm:space-y-10 lg:space-y-14">
 					<LevelModules
 						lang={lang}
@@ -184,19 +212,19 @@ export default function Home({
 				</div>
 			</Rise>
 
-			<Rise i={4}>
+			<Rise i={5}>
 				<HowItWorks lang={lang} T={T} onOpen={(tab) => onLaunch(resumeModule, level, tab)} />
 			</Rise>
 
-			<Rise i={5}>
+			<Rise i={6}>
 				<Features lang={lang} T={T} />
 			</Rise>
 
-			<Rise i={6}>
+			<Rise i={7}>
 				<Faq lang={lang} T={T} />
 			</Rise>
 
-			<Rise i={7}>
+			<Rise i={8}>
 				<CtaBand lang={lang} T={T} onStart={startFresh} />
 			</Rise>
 		</div>

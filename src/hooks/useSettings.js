@@ -18,6 +18,8 @@ const DEFAULTS = {
   timedMinutes: 10,
   showJukugo: true, // include 2-kanji compound words (熟語) in the Kanji module
   showFurigana: false, // show reading hints (ruby text) above kanji app-wide
+  examName: "", // Home page exam countdown: name the student picked
+  examDate: "", // Home page exam countdown: "YYYY-MM-DD", "" = not set
 };
 
 function loadSettings() {

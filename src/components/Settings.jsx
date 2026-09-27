@@ -138,6 +138,11 @@ export default function Settings({
 		a.click();
 		document.body.removeChild(a);
 		URL.revokeObjectURL(url);
+		try {
+			localStorage.setItem("nihongo-last-export-v1", String(Date.now()));
+		} catch {
+			// ignore — worst case the backup-reminder banner keeps showing
+		}
 	};
 
 	const handleImportClick = () => {
