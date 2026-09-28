@@ -584,16 +584,16 @@ export default function Study({
 				</button>
 			</div>
 
-			<div className="grid grid-cols-2 gap-2.5 mt-4">
+			<div className="grid grid-cols-2 gap-5 mt-4">
 				<button
 					onClick={() => mark(false)}
-					className="flex items-center justify-center font-bengali text-sm font-semibold bg-danger dark:bg-danger-glow text-washi dark:text-white rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
+					className="flex items-center justify-center font-bengali text-md font-semibold border border-red-600 dark:border-red-400 text-red-600 dark:text-red-400 rounded-full py-2 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
 				>
 					{T("reviewAgain")}
 				</button>
 				<button
 					onClick={() => mark(true)}
-					className="flex items-center justify-center font-bengali text-sm font-semibold bg-take dark:bg-take-glow text-washi dark:text-night rounded-lg py-3 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
+					className="flex items-center justify-center font-bengali text-md font-semibold border border-take dark:border-take text-take dark:text-take-glow rounded-full py-2 shadow-sm hover:opacity-90 active:scale-[0.98] transition-all"
 				>
 					{T("markLearned")}
 				</button>

@@ -5,7 +5,7 @@ export const PRESET_LABEL = {
 	red: "themeHueRed",
 	blue: "themeHueBlue",
 	green: "themeHueGreen",
-	purple: "themeHuePurple",
+	cyan: "themeHueCyan",
 	orange: "themeHueOrange",
 };
 
@@ -18,8 +18,11 @@ export default function ThemeColorPicker({ hue, onChange, lang }) {
 
 	return (
 		<div className="px-4 pb-4 space-y-4">
-
-			<div className="grid grid-cols-5 gap-2" role="radiogroup" aria-label={T("themeColor")}>
+			<div
+				className="grid grid-cols-5 gap-2"
+				role="radiogroup"
+				aria-label={T("themeColor")}
+			>
 				{HUE_PRESETS.map((p) => {
 					const active = current === p.hue;
 					return (
@@ -40,7 +43,16 @@ export default function ThemeColorPicker({ hue, onChange, lang }) {
 								style={{ backgroundColor: primaryAt(p.hue) }}
 							>
 								{active && (
-									<svg viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4" aria-hidden="true">
+									<svg
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="#fff"
+										strokeWidth="3"
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										className="w-4 h-4"
+										aria-hidden="true"
+									>
 										<path d="M5 12.5l4.5 4.5L19 7.5" />
 									</svg>
 								)}
@@ -72,7 +84,9 @@ export default function ThemeColorPicker({ hue, onChange, lang }) {
 				<div className="mt-3">
 					<div className="flex justify-between font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted mb-1">
 						<span>{T("themePreviewProgress")}</span>
-						<span className="font-mono text-shu dark:text-shu-glow">64%</span>
+						<span className="font-mono text-shu dark:text-shu-glow">
+							64%
+						</span>
 					</div>
 					<div className="h-1.5 rounded-full bg-ai-line dark:bg-night-line overflow-hidden">
 						<div className="h-full w-[64%] rounded-full bg-shu dark:bg-shu-glow" />

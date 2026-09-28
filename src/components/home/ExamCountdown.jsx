@@ -6,7 +6,11 @@ import Icon from "./icons.jsx";
 function daysLabel(days, T) {
 	if (days === 0) return T("examToday");
 	if (days === 1) return `1 ${T("examDayLeft")}`;
-	return `${days} ${T("examDaysLeft")}`;
+	return (
+		<span className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted shrink-0">
+			<span className="font-bold text-shu dark:text-shu-glow">{days}</span> {T("examDaysLeft")}
+		</span>
+	);
 }
 
 // Inline add/edit form — shared by the main card and the "+ add" tag, so
@@ -81,11 +85,16 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 	const { main, others } = upcomingExams(exams);
 
 	const save = (id, data) => {
-		const withId = { id: id === "new" ? `exam-${Date.now()}` : id, ...data };
+		const withId = {
+			id: id === "new" ? `exam-${Date.now()}` : id,
+			...data,
+		};
 		const next =
 			id === "new"
 				? [...(exams || []), withId]
-				: (exams || []).map((e) => (e.id === id ? { ...e, ...data } : e));
+				: (exams || []).map((e) =>
+						e.id === id ? { ...e, ...data } : e,
+					);
 		onChange(next);
 		setEditingId(null);
 	};
@@ -99,7 +108,11 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 		return (
 			<div className="rounded-lg border border-ai-line dark:border-night-line bg-paper dark:bg-night-paper shadow-card dark:shadow-none p-4">
 				{editingId === "new" ? (
-					<ExamForm T={T} onSave={(d) => save("new", d)} onCancel={() => setEditingId(null)} />
+					<ExamForm
+						T={T}
+						onSave={(d) => save("new", d)}
+						onCancel={() => setEditingId(null)}
+					/>
 				) : (
 					<button
 						type="button"
@@ -143,7 +156,11 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 							{main.days}
 						</span>
 						<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted whitespace-nowrap">
-							{T(main.days === 1 ? "examDayLeft" : "examDaysLeft")}
+							{T(
+								main.days === 1
+									? "examDayLeft"
+									: "examDaysLeft",
+							)}
 						</span>
 					</div>
 					<div className="w-px self-stretch bg-ai-line dark:bg-night-line shrink-0" />
@@ -169,7 +186,9 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 
 			{/* Every other upcoming exam, as small tags — tap one to edit it in
 			    place, right below the spotlight card. */}
-			{(others.length > 0 || editingId === "new" || (others.length === 0 && !mainEditing)) && (
+			{(others.length > 0 ||
+				editingId === "new" ||
+				(others.length === 0 && !mainEditing)) && (
 				<div className="mt-3 pt-3 border-t border-ai-line dark:border-night-line flex flex-wrap items-center gap-2">
 					{others.map((e) =>
 						editingId === e.id ? (
@@ -192,15 +211,17 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 								<span className="font-bengali text-xs font-medium text-ink dark:text-night-ink truncate max-w-[8rem]">
 									{e.name || T("examCountdownTitle")}
 								</span>
-								<span className="font-mono text-[11px] text-shu dark:text-shu-glow shrink-0">
-									{daysLabel(e.days, T)}
-								</span>
+								{daysLabel(e.days, T)}
 							</button>
 						),
 					)}
 					{editingId === "new" ? (
 						<div className="w-full">
-							<ExamForm T={T} onSave={(d) => save("new", d)} onCancel={() => setEditingId(null)} />
+							<ExamForm
+								T={T}
+								onSave={(d) => save("new", d)}
+								onCancel={() => setEditingId(null)}
+							/>
 						</div>
 					) : (
 						<button

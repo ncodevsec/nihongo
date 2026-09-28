@@ -126,10 +126,10 @@ export function primaryAt(hue) {
 // The five offered accent colors (hue = position on the OKLCH hue wheel).
 export const HUE_PRESETS = [
 	{ key: "red", hue: DEFAULT_HUE },
-	{ key: "blue", hue: 255 },
-	{ key: "green", hue: 150 },
-	{ key: "purple", hue: 300 },
-	{ key: "orange", hue: 55 },
+	{ key: "orange", hue: 50 },
+	{ key: "green", hue: 130 },
+	{ key: "cyan", hue: 200 },
+	{ key: "blue", hue: 270 },
 ];
 
 // Nearest offered color — also maps a hue saved by the earlier free-form

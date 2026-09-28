@@ -244,7 +244,7 @@ const UI = {
   themeHueOrange: { bn: "কমলা", en: "Orange" },
   themeHueGreen: { bn: "সবুজ", en: "Green" },
   themeHueBlue: { bn: "নীল", en: "Blue" },
-  themeHuePurple: { bn: "বেগুনি", en: "Purple" },
+  themeHueCyan: { bn: "বেগুনি", en: "Cyan" },
   appTheme: { bn: "অ্যাপের থিম", en: "App theme" },
   appThemeSub: { bn: "সিস্টেম ডিফল্ট আপনার ডিভাইসের সেটিং অনুসরণ করে", en: "System default follows your device setting" },
   themeLight: { bn: "লাইট", en: "Light" },
