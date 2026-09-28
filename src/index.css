@@ -6,9 +6,11 @@
    (bg-shu/10 …). These are the default red palette; lib/themeColor.js
    overrides them on <html> when the learner picks another accent color. */
 :root {
-  --shu: 189 40 40;
+  /* --shu: 189 40 40; */
+  --shu: 200 30 30;
   --shu-soft: 251 238 238;
-  --shu-glow: 255 52 52;
+  /* --shu-glow: 255 52 52; */
+  --shu-glow: 255 30 30;
   --ai: 134 39 39;
   --ai-soft: 250 239 239;
   --ai-line: 235 224 224;

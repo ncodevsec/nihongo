@@ -137,7 +137,7 @@ export default function Sidebar({
 					})}
 				</div>
 
-				<div className="flex justify-stretch my-6 rounded-full border border-ai-line dark:border-night-line overflow-hidden bg-washi dark:bg-night">
+				<div className="my-6 flex flex-col gap-2 rounded-3xl">
 					{MODULE_ORDER.map((key) => {
 						const mod = MODULES[key];
 						const isActiveModule = moduleKey === key;
@@ -145,7 +145,7 @@ export default function Sidebar({
 							<button
 								key={key}
 								onClick={() => onModuleChange(key)}
-								className={`flex-1 px-3.5 py-3 text-xs text-center font-bengali font-semibold ${
+								className={`flex-1 px-2.5 py-2 rounded-full border border-ai-line dark:border-night-line text-md text-center font-bengali font-semibold ${
 									isActiveModule
 										? "bg-shu text-washi shadow-sm"
 										: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
@@ -160,7 +160,7 @@ export default function Sidebar({
 
 			{/* Main navigation */}
 			<nav
-				className="flex-1 px-3 space-y-1"
+				className="flex flex-col m-5 gap-2 p-2 rounded-3xl border border-ai-line dark:border-night-line bg-washi dark:bg-night"
 				role="tablist"
 				aria-label="Sections"
 			>
@@ -172,7 +172,7 @@ export default function Sidebar({
 							role="tab"
 							aria-selected={isSel}
 							onClick={() => onChange(tabItem.key)}
-							className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-bengali font-medium text-sm ${
+							className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-full font-bengali font-medium text-sm ${
 								isSel
 									? "bg-shu text-washi shadow-sm"
 									: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line hover:text-shu dark:hover:text-shu-glow"
