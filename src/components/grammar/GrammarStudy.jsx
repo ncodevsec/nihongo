@@ -14,10 +14,18 @@ import {
 	buildTransformationRows,
 } from "../../lib/grammarUtils.js";
 import VerbGroupFilter from "../transform/VerbGroupFilter.jsx";
-import { StarFilterButton, ShuffleButton, ToggleChip, SortControl } from "../FilterControls.jsx";
+import {
+	StarFilterButton,
+	ShuffleButton,
+	ToggleChip,
+	SortControl,
+} from "../FilterControls.jsx";
 import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
-import { grammarGroupCounts, transformSubGroupCounts } from "../../lib/categoryCounts.js";
+import {
+	grammarGroupCounts,
+	transformSubGroupCounts,
+} from "../../lib/categoryCounts.js";
 import LeveledKanji from "../LeveledKanji.jsx";
 
 // Renders a rule's Bengali explanation with light structure: sub-points
@@ -111,7 +119,12 @@ function ReadButton({ read, onClick, labelOn, labelOff }) {
 					: "border-ai-line dark:border-night-line text-ink-muted dark:text-night-ink-muted hover:border-take hover:text-take dark:hover:border-take-glow dark:hover:text-take-glow"
 			}`}
 		>
-			<svg viewBox="0 0 20 20" fill="none" className="w-5 h-5" aria-hidden="true">
+			<svg
+				viewBox="0 0 20 20"
+				fill="none"
+				className="w-5 h-5"
+				aria-hidden="true"
+			>
 				<path
 					d="M4 10.5l4 4 8-9"
 					stroke="currentColor"
@@ -221,32 +234,47 @@ export default function GrammarStudy({
 			if (transformOnly) {
 				const pool = transformRows.filter((r) =>
 					groupBy === "adjective"
-						? r.category.startsWith("i-adj-") || r.category.startsWith("na-adj-")
-						: r.category.startsWith("verb-") && verbGroupFilter.includes(r.verbGroup),
+						? r.category.startsWith("i-adj-") ||
+							r.category.startsWith("na-adj-")
+						: r.category.startsWith("verb-") &&
+							verbGroupFilter.includes(r.verbGroup),
 				);
 				list =
 					selectedFilters.length === 0
 						? pool
-						: pool.filter((r) => selectedFilters.includes(r.category));
+						: pool.filter((r) =>
+								selectedFilters.includes(r.category),
+							);
 			} else if (isTransform) {
 				list =
 					selectedFilters.length === 0
 						? transformRows
-						: transformRows.filter((r) => selectedFilters.includes(r.category));
+						: transformRows.filter((r) =>
+								selectedFilters.includes(r.category),
+							);
 			} else if (groupBy === "particle") {
 				list =
 					selectedFilters.length === 0
 						? allPoints
-						: allPoints.filter((p) => (p.particles || []).some((k) => selectedFilters.includes(k)));
+						: allPoints.filter((p) =>
+								(p.particles || []).some((k) =>
+									selectedFilters.includes(k),
+								),
+							);
 			} else {
 				list =
 					selectedFilters.length === 0
 						? allPoints
-						: allPoints.filter((p) => selectedFilters.includes(p.category));
+						: allPoints.filter((p) =>
+								selectedFilters.includes(p.category),
+							);
 			}
 			if (onlyUnread) list = list.filter((p) => !progress[p.id]?.learned);
 			if (onlyStarred) list = list.filter((p) => favorites[p.id]);
-			if (!useShuffled && !(effectiveSort === sortKeys[0] && sortDir === "asc")) {
+			if (
+				!useShuffled &&
+				!(effectiveSort === sortKeys[0] && sortDir === "asc")
+			) {
 				list = [...list].sort(
 					makeGrammarComparator({
 						sortBy: effectiveSort,
@@ -260,7 +288,23 @@ export default function GrammarStudy({
 			const ids = list.map((p) => p.id);
 			return useShuffled ? shuffle(ids) : ids;
 		},
-		[isTransform, transformOnly, groupBy, verbGroupFilter, selectedFilters, allPoints, transformRows, onlyUnread, onlyStarred, progress, favorites, effectiveSort, sortDir, lessonCategories, particleCategories],
+		[
+			isTransform,
+			transformOnly,
+			groupBy,
+			verbGroupFilter,
+			selectedFilters,
+			allPoints,
+			transformRows,
+			onlyUnread,
+			onlyStarred,
+			progress,
+			favorites,
+			effectiveSort,
+			sortDir,
+			lessonCategories,
+			particleCategories,
+		],
 	);
 
 	const [shuffled, setShuffled] = useState(true);
@@ -293,12 +337,7 @@ export default function GrammarStudy({
 	useEffect(() => {
 		setIndex(0);
 		setFlipped(false);
-	}, [
-		selectedFilters,
-		onlyUnread,
-		onlyStarred,
-		groupBy,
-	]);
+	}, [selectedFilters, onlyUnread, onlyStarred, groupBy]);
 
 	useEffect(() => {
 		if (index >= deck.length) setIndex(0);
@@ -336,7 +375,10 @@ export default function GrammarStudy({
 		useCallback(
 			(e) => {
 				if (!isActive) return;
-				if (e.target.tagName === "SELECT" || e.target.tagName === "INPUT")
+				if (
+					e.target.tagName === "SELECT" ||
+					e.target.tagName === "INPUT"
+				)
 					return;
 				if (e.key === " ") {
 					e.preventDefault();
@@ -358,19 +400,39 @@ export default function GrammarStudy({
 						transformOnly
 							? [
 									{
-									key: "verb",
-									label: T("groupByVerb"),
-									categories: VERB_TRANSFORM_CATEGORIES,
-									...transformGroupCounts.verb,
-									extra: (
-										<VerbGroupFilter value={verbGroupFilter} onChange={setVerbGroupFilter} lang={lang} />
-									),
-								},
-									{ key: "adjective", label: T("groupByAdjective"), categories: ADJECTIVE_TRANSFORM_CATEGORIES, ...transformGroupCounts.adjective },
+										key: "verb",
+										label: T("groupByVerb"),
+										categories: VERB_TRANSFORM_CATEGORIES,
+										...transformGroupCounts.verb,
+										extra: (
+											<VerbGroupFilter
+												value={verbGroupFilter}
+												onChange={setVerbGroupFilter}
+												lang={lang}
+											/>
+										),
+									},
+									{
+										key: "adjective",
+										label: T("groupByAdjective"),
+										categories:
+											ADJECTIVE_TRANSFORM_CATEGORIES,
+										...transformGroupCounts.adjective,
+									},
 								]
 							: [
-									{ key: "lesson", label: T("groupByLesson"), categories: lessonCategories, ...groupCounts.lesson },
-									{ key: "particle", label: T("groupByParticle"), categories: particleCategories, ...groupCounts.particle },
+									{
+										key: "lesson",
+										label: T("groupByLesson"),
+										categories: lessonCategories,
+										...groupCounts.lesson,
+									},
+									{
+										key: "particle",
+										label: T("groupByParticle"),
+										categories: particleCategories,
+										...groupCounts.particle,
+									},
 								]
 					}
 					active={groupBy}
@@ -429,7 +491,10 @@ export default function GrammarStudy({
 					<SortControl
 						label={T("sortBy")}
 						value={effectiveSort}
-						options={sortKeys.map((k) => ({ key: k, label: sortLabels[k] }))}
+						options={sortKeys.map((k) => ({
+							key: k,
+							label: sortLabels[k],
+						}))}
 						onChange={(v) => {
 							setSortBy(v);
 							setShuffled(false);
@@ -442,7 +507,12 @@ export default function GrammarStudy({
 						labelAsc={T("sortAsc")}
 						labelDesc={T("sortDesc")}
 					/>
-					<ShuffleButton shuffled={shuffled} onToggle={() => setShuffled((v) => !v)} label={T("shuffle")} serialLabel={T("serial")} />
+					<ShuffleButton
+						shuffled={shuffled}
+						onToggle={() => setShuffled((v) => !v)}
+						label={T("shuffle")}
+						serialLabel={T("serial")}
+					/>
 				</div>
 			</div>
 		</>
@@ -504,8 +574,12 @@ export default function GrammarStudy({
 				<div className="relative">
 					<button
 						onClick={() => toggleFavorite(point.id)}
-						aria-label={starred ? T("markAsUnstarred") : T("markAsStarred")}
-						title={starred ? T("markAsUnstarred") : T("markAsStarred")}
+						aria-label={
+							starred ? T("markAsUnstarred") : T("markAsStarred")
+						}
+						title={
+							starred ? T("markAsUnstarred") : T("markAsStarred")
+						}
 						className={`absolute top-2.5 right-2.5 z-10 w-11 h-11 flex items-center justify-center rounded-full ${
 							starred
 								? "text-shu dark:text-shu-glow bg-shu-soft dark:bg-shu/10"
@@ -536,7 +610,10 @@ export default function GrammarStudy({
 									{reverse ? (
 										<>
 											<div
-												style={fitStyle(point.transformedForm, 3)}
+												style={fitStyle(
+													point.transformedForm,
+													3,
+												)}
 												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
 											>
 												{point.transformedForm}
@@ -548,7 +625,10 @@ export default function GrammarStudy({
 									) : (
 										<>
 											<div
-												style={fitStyle(point.mainForm, 3)}
+												style={fitStyle(
+													point.mainForm,
+													3,
+												)}
 												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
 											>
 												{point.mainForm}
@@ -563,7 +643,10 @@ export default function GrammarStudy({
 								<>
 									{/* 1 — the word this card started from, small, with its meaning */}
 									<div className="flex flex-wrap items-baseline justify-center gap-x-2 text-center">
-										<span lang="ja" className="font-mincho text-base text-ink-muted dark:text-night-ink-muted">
+										<span
+											lang="ja"
+											className="font-mincho text-base text-ink-muted dark:text-night-ink-muted"
+										>
 											{point.mainForm}
 										</span>
 										{point.meaningBn && (
@@ -575,17 +658,30 @@ export default function GrammarStudy({
 									{/* 2 — the transformed word: the focus of the card, always one line */}
 									<div
 										lang="ja"
-										style={fitStyle(point.transformedForm, 2.5)}
+										style={fitStyle(
+											point.transformedForm,
+											2.5,
+										)}
 										className="font-mincho font-semibold text-ink dark:text-night-ink text-center whitespace-nowrap"
 									>
 										{point.transformedForm}
 									</div>
 									{/* 3 — other accepted forms, small (only when there are any) */}
 									{point.alternates?.length > 0 && (
-										<div lang="ja" className="flex flex-wrap items-baseline justify-center gap-x-3 font-mincho text-[13px] text-ink-muted dark:text-night-ink-muted text-center">
+										<div
+											lang="ja"
+											className="flex flex-wrap items-baseline justify-center gap-x-3 font-mincho text-[13px] text-ink-muted dark:text-night-ink-muted text-center"
+										>
 											{point.alternates.map((alt, i) => (
-												<span key={alt} className="whitespace-nowrap">
-													{i > 0 && <span className="mr-3 opacity-60">／</span>}
+												<span
+													key={alt}
+													className="whitespace-nowrap"
+												>
+													{i > 0 && (
+														<span className="mr-3 opacity-60">
+															／
+														</span>
+													)}
 													{alt}
 												</span>
 											))}
@@ -683,9 +779,9 @@ export default function GrammarStudy({
 
 			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg overflow-hidden shadow-card dark:shadow-none">
 				{/* Rule heading — always visible, on both sides of the card */}
-				<div className="flex items-start justify-between gap-2 px-4 sm:px-5 pt-4">
+				<div className="flex items-center justify-between gap-2 px-4 sm:px-5 py-4 border-b border-ai-line dark:border-night-line">
 					<div className="flex items-start gap-2.5 min-w-0">
-						<span className="shrink-0 mt-0.5 font-mono text-[11px] font-bold text-washi bg-shu rounded-full px-2.5 py-1">
+						<span className="shrink-0 font-mono text-[11px] font-bold text-washi bg-shu rounded-full px-2.5 py-1">
 							{formatGrammarPointId(point.pointId)}
 						</span>
 						<h3 className="font-bengali text-base font-bold text-ink dark:text-night-ink leading-snug">
@@ -708,28 +804,42 @@ export default function GrammarStudy({
 					</div>
 				</div>
 
+				{/* Structure */}
+				<div className="flex flex-col justify-between gap-2 px-4 py-4">
+					<h4 className="font-bengali text-xs font-bold text-ink dark:text-night-ink">
+						<span className="font-bengali font-bold uppercase tracking-wide text-shu dark:text-shu-glow">
+							{T("grammarStructure")}
+						</span>
+						{" : "}
+						{point.headingBn}
+					</h4>
+				</div>
+
 				<button
 					onClick={() => setFlipped((f) => !f)}
 					className="w-full text-left"
 				>
 					{!flipped ? (
-						<>
+						<div className="px-4 sm:px-5">
 							{/* Front: the rule itself — structure and explanation */}
-							<div className="px-4 sm:px-5 pt-3 pb-4 h-[260px] overflow-y-auto">
+							<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
+								{T("grammarDescription")}
+							</div>
+							<div className="min-h-[260px] max-h-[300px] overflow-y-auto">
 								<ExplanationBody text={point.explanationBn} />
 							</div>
-							<div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
+							{/* <div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
 								<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
 									{T("tapToRevealExamples")}
 								</span>
-							</div>
-						</>
+							</div> */}
+						</div>
 					) : (
 						/* Back: only the sentence examples */
-						<div className="px-4 sm:px-5 py-4 h-[260px] overflow-y-auto">
+						<div className="px-4 sm:px-5 min-h-[260px] max-h-[300px] overflow-y-auto">
 							{point.examples.length > 0 ? (
 								<>
-									<div className="font-bengali text-[10px] font-bold uppercase tracking-wide text-ink-muted dark:text-night-ink-muted mb-2.5">
+									<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
 										{T("grammarExamples")}
 									</div>
 									<div className="space-y-3">
@@ -748,7 +858,10 @@ export default function GrammarStudy({
 													</div>
 												)}
 												<div className="font-mincho text-lg text-ink dark:text-night-ink leading-snug">
-													<LeveledKanji text={ex.jp} level={level} />
+													<LeveledKanji
+														text={ex.jp}
+														level={level}
+													/>
 												</div>
 												{ex.meaningBn && (
 													<div className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted mt-1">

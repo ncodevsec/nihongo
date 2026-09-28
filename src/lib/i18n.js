@@ -47,6 +47,8 @@ const UI = {
   grammarSelectLesson: { bn: "একটি পাঠ বেছে নিন", en: "Select a lesson" },
   grammarSelectParticle: { bn: "একটি পার্টিকেল বেছে নিন", en: "Select a particle" },
   grammarSelectTransform: { bn: "একটি রূপান্তর ধরন বেছে নিন", en: "Select a transformation type" },
+  grammarStructure: { bn: "গঠন", en: "Structure" },
+  grammarDescription: { bn: "বিস্তারিত", en: "Description" },
   grammarExamples: { bn: "উদাহরণ", en: "Examples" },
   grammarQuizFillBlank: { bn: "ফাঁকা স্থান পূরণ করুন", en: "Fill in the blank" },
   grammarQuizTransformPrompt: { bn: "সঠিক রূপান্তরিত রূপ বেছে নিন", en: "Choose the correct transformed form" },
