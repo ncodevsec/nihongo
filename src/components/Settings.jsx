@@ -4,7 +4,7 @@ import SettingsAccordion from "./SettingsAccordion.jsx";
 import { HUE_PRESETS, primaryAt, snapToPreset } from "../lib/themeColor.js";
 import { PRESET_LABEL } from "./ThemeColorPicker.jsx";
 import { JP_FONTS } from "../lib/jpFonts.js";
-import { useRef, useState } from "react";
+import { useRef, useState, version } from "react";
 import { t } from "../lib/i18n.js";
 
 const DATA_KEYS = [
@@ -189,6 +189,7 @@ export default function Settings({
 							)}
 						</span>
 					}
+					
 					subtitle={
 						applying
 							? T("appUpdateApplying")
@@ -233,6 +234,26 @@ export default function Settings({
 						v{__APP_VERSION__}
 					</span>
 				</Row>
+				<Row title={T("siteLanguage")} subtitle={T("siteLanguageSub")}>
+					<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
+						{[
+							{ key: "bn", label: t("bn", "langBangla") },
+							{ key: "en", label: t("en", "langEnglish") },
+						].map((l) => (
+							<button
+								key={l.key}
+								onClick={() => updateSetting("uiLang", l.key)}
+								className={`px-3 py-1.5 text-[11px] font-medium ${
+									settings.uiLang === l.key
+										? activePillClass
+										: inactivePillClass
+								}`}
+							>
+								{l.label}
+							</button>
+						))}
+					</div>
+				</Row>
 			</div>
 
 			<SectionLabel>{T("sectionTheme")}</SectionLabel>
@@ -261,9 +282,21 @@ export default function Settings({
 						<span className="flex items-center gap-1.5 font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted">
 							<span
 								className="w-3.5 h-3.5 rounded-full ring-1 ring-ai-line dark:ring-night-line"
-								style={{ backgroundColor: primaryAt(snapToPreset(settings.themeHue)) }}
+								style={{
+									backgroundColor: primaryAt(
+										snapToPreset(settings.themeHue),
+									),
+								}}
 							/>
-							{T(PRESET_LABEL[HUE_PRESETS.find((p) => p.hue === snapToPreset(settings.themeHue))?.key || "red"])}
+							{T(
+								PRESET_LABEL[
+									HUE_PRESETS.find(
+										(p) =>
+											p.hue ===
+											snapToPreset(settings.themeHue),
+									)?.key || "red"
+								],
+							)}
 						</span>
 					}
 				>
@@ -273,58 +306,16 @@ export default function Settings({
 						lang={lang}
 					/>
 				</SettingsAccordion>
-				<SettingsAccordion
-					title={T("sectionJpFont")}
-					summary={
-						<span className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted">
-							{(JP_FONTS.find((f) => f.key === settings.jpFont) || JP_FONTS[0]).name}
-						</span>
-					}
-				>
-					<JpFontPicker
-						value={settings.jpFont}
-						onChange={(k) => updateSetting("jpFont", k)}
-						lang={lang}
-					/>
-				</SettingsAccordion>
-			</div>
-
-			<SectionLabel>{T("sectionLanguage")}</SectionLabel>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
-				<Row title={T("siteLanguage")} subtitle={T("siteLanguageSub")}>
-					<div className="flex rounded-md border border-ai-line dark:border-night-line overflow-hidden shrink-0">
-						{[
-							{ key: "bn", label: t("bn", "langBangla") },
-							{ key: "en", label: t("en", "langEnglish") },
-						].map((l) => (
-							<button
-								key={l.key}
-								onClick={() => updateSetting("uiLang", l.key)}
-								className={`px-3 py-1.5 text-[11px] font-medium ${
-									settings.uiLang === l.key
-										? activePillClass
-										: inactivePillClass
-								}`}
-							>
-								{l.label}
-							</button>
-						))}
-					</div>
-				</Row>
 			</div>
 
 			<SectionLabel>{T("sectionReading")}</SectionLabel>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden">
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line">
 				<Row title={T("showFurigana")} subtitle={T("showFuriganaSub")}>
 					<Toggle
 						checked={settings.showFurigana}
 						onChange={(v) => updateSetting("showFurigana", v)}
 					/>
 				</Row>
-			</div>
-
-			<SectionLabel>{T("sectionVocab")}</SectionLabel>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none overflow-hidden divide-y divide-ai-line dark:divide-night-line">
 				<Row
 					title={T("showVocabKanji")}
 					subtitle={T("showVocabKanjiSub")}
@@ -359,6 +350,27 @@ export default function Settings({
 						))}
 					</div>
 				</Row>
+				<SettingsAccordion
+					title={T("sectionJpFont")}
+					subtitle={T("sectionJpFontSub")}
+					summary={
+						<span className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted">
+							{
+								(
+									JP_FONTS.find(
+										(f) => f.key === settings.jpFont,
+									) || JP_FONTS[0]
+								).name
+							}
+						</span>
+					}
+				>
+					<JpFontPicker
+						value={settings.jpFont}
+						onChange={(k) => updateSetting("jpFont", k)}
+						lang={lang}
+					/>
+				</SettingsAccordion>
 			</div>
 
 			<SectionLabel>{T("sectionKanji")}</SectionLabel>

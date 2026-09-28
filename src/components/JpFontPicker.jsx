@@ -33,9 +33,6 @@ export default function JpFontPicker({ value, onChange, lang }) {
 
 	return (
 		<div className="px-4 pb-4">
-			<div className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted mb-3">
-				{T("jpFontSub")}
-			</div>
 			<div className="space-y-2" role="radiogroup" aria-label={T("sectionJpFont")}>
 				{JP_FONTS.map((f) => {
 					const active = value === f.key;
