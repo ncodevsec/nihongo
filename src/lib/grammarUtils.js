@@ -2,6 +2,7 @@ import { N5_VOCAB } from "../data/vocab/n5.js";
 import { N4_VOCAB } from "../data/vocab/n4.js";
 import { classifyPartOfSpeech } from "./vocabClassify.js";
 import { GRAMMAR_ELEMENT_CATEGORIES } from "../data/grammar-elements.js";
+import { getGrammarDescription } from "../data/grammar/descriptions.js";
 export { GRAMMAR_ELEMENT_CATEGORIES };
 import {
   conjugateVerb,
@@ -56,6 +57,7 @@ export function flattenGrammarPoints(lessons, level) {
         // overwrites the raw "8-5" id from the source data, so it's kept
         // here under its own key for display purposes.
         pointId: point.id,
+        explanationMd: point.explanationMd ?? getGrammarDescription(point.id),
         // Lessons in the combined "All" view carry their own level tag so
         // ids stay identical to the ones N5 / N4 use on their own.
         id: grammarItemId(lesson._level ?? level, point.id),
@@ -280,13 +282,15 @@ const KANA_RUN_RE = /[\u3040-\u30ff\u30fc]{2,}/g;
 // generic ending like です.
 function extractTarget(point) {
   if (!point.examples || point.examples.length === 0) return null;
-  const runs = Array.from(new Set((point.headingBn.match(KANA_RUN_RE) || [])));
-  runs.sort((a, b) => b.length - a.length);
-  for (const run of runs) {
-    for (const example of point.examples) {
-      const idx = example.jp.indexOf(run);
-      if (idx !== -1) {
-        return { phrase: run, example, idx };
+  for (const source of [point.structure, point.title]) {
+    const runs = Array.from(new Set((String(source || "").match(KANA_RUN_RE) || [])));
+    runs.sort((a, b) => b.length - a.length);
+    for (const run of runs) {
+      for (const example of point.examples) {
+        const idx = example.jp.indexOf(run);
+        if (idx !== -1) {
+          return { phrase: run, example, idx };
+        }
       }
     }
   }
@@ -325,7 +329,8 @@ export function buildGrammarQuestions(points) {
       id: point.id,
       lesson: point.lesson,
       pointId: point.pointId,
-      headingBn: point.headingBn,
+      title: point.title,
+      structure: point.structure,
       blanked,
       meaningBn: example.meaningBn,
       fullSentence: example.jp,

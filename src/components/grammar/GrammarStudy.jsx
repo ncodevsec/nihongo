@@ -27,54 +27,8 @@ import {
 	transformSubGroupCounts,
 } from "../../lib/categoryCounts.js";
 import LeveledKanji from "../LeveledKanji.jsx";
-
-// Renders a rule's Bengali explanation with light structure: sub-points
-// (১, ২, ৩...) get their own indented line, bracketed notes get an
-// italic aside style, everything else is a plain paragraph. No Japanese
-// example sentences live in this block anymore — those are rendered
-// separately as dedicated example cards.
-function ExplanationBody({ text }) {
-	const lines = text
-		.split("\n")
-		.map((l) => l.trim())
-		.filter(Boolean);
-	return (
-		<div className="space-y-1.5">
-			{lines.map((line, i) => {
-				const isSubPoint = /^[১২৩৪৫৬৭৮৯০]+\)\s/.test(line);
-				const isNote = /^[（(](নোট|Note)/i.test(line);
-				if (isSubPoint) {
-					return (
-						<p
-							key={i}
-							className="font-bengali text-sm text-ink dark:text-night-ink pl-3 border-l-2 border-sakura-line dark:border-night-line"
-						>
-							{line}
-						</p>
-					);
-				}
-				if (isNote) {
-					return (
-						<p
-							key={i}
-							className="font-bengali text-xs italic text-ink-muted dark:text-night-ink-muted"
-						>
-							{line}
-						</p>
-					);
-				}
-				return (
-					<p
-						key={i}
-						className="font-bengali text-sm text-ink dark:text-night-ink leading-relaxed"
-					>
-						{line}
-					</p>
-				);
-			})}
-		</div>
-	);
-}
+import Markdown from "../Markdown.jsx";
+import GrammarStructure from "./GrammarStructure.jsx";
 
 function StarButton({ starred, onClick, labelOn, labelOff }) {
 	return (
@@ -784,8 +738,8 @@ export default function GrammarStudy({
 						<span className="shrink-0 font-mono text-[11px] font-bold text-washi bg-shu rounded-full px-2.5 py-1">
 							{formatGrammarPointId(point.pointId)}
 						</span>
-						<h3 className="font-bengali text-base font-bold text-ink dark:text-night-ink leading-snug">
-							{point.headingBn}
+						<h3 className="font-bengali text-sm sm:text-[15px] font-bold text-ink dark:text-night-ink leading-snug pt-0.5">
+							{point.title}
 						</h3>
 					</div>
 					<div className="flex items-center gap-1.5 shrink-0">
@@ -804,15 +758,9 @@ export default function GrammarStudy({
 					</div>
 				</div>
 
-				{/* Structure */}
-				<div className="flex flex-col justify-between gap-2 px-4 py-4">
-					<h4 className="font-bengali text-xs font-bold text-ink dark:text-night-ink">
-						<span className="font-bengali font-bold uppercase tracking-wide text-shu dark:text-shu-glow">
-							{T("grammarStructure")}
-						</span>
-						{" : "}
-						{point.headingBn}
-					</h4>
+				{/* Structure — the sentence pattern the rule builds */}
+				<div className="px-4 sm:px-5 pt-4 pb-4">
+					<GrammarStructure structure={point.structure} lang={lang} />
 				</div>
 
 				<button
@@ -820,13 +768,13 @@ export default function GrammarStudy({
 					className="w-full text-left"
 				>
 					{!flipped ? (
-						<div className="px-4 sm:px-5">
+						<div className="px-4 sm:px-5 pb-4">
 							{/* Front: the rule itself — structure and explanation */}
 							<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
 								{T("grammarDescription")}
 							</div>
-							<div className="min-h-[250px] max-h-[300px] overflow-y-auto">
-								<ExplanationBody text={point.explanationBn} />
+							<div className="min-h-[200px] max-h-[26rem] overflow-y-auto pr-1">
+								<Markdown text={point.explanationMd} lang={lang} />
 							</div>
 							{/* <div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
 								<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">

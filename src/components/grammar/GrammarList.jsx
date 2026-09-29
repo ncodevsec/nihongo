@@ -14,6 +14,8 @@ import {
 import VerbGroupFilter from "../transform/VerbGroupFilter.jsx";
 import { StarFilterButton, SortControl } from "../FilterControls.jsx";
 import { makeGrammarComparator, grammarSortKeys } from "../../lib/sortItems.js";
+import Markdown from "../Markdown.jsx";
+import GrammarStructure from "./GrammarStructure.jsx";
 import GroupCategoryTabs from "../GroupCategoryTabs.jsx";
 import { grammarGroupCounts, transformSubGroupCounts } from "../../lib/categoryCounts.js";
 
@@ -174,9 +176,11 @@ export default function GrammarList({
 			if (onlyStarred && !favorites[p.id]) return false;
 			if (!q) return true;
 			const haystack =
-				p.headingBn.toLowerCase() +
+				p.title.toLowerCase() +
 				" " +
-				p.explanationBn.toLowerCase() +
+				(p.structure || "").toLowerCase() +
+				" " +
+				(p.explanationMd || "").toLowerCase() +
 				" " +
 				p.examples
 					.map((e) => e.jp + " " + (e.meaningBn || ""))
@@ -375,8 +379,16 @@ export default function GrammarList({
 										<span className="shrink-0 font-mono text-[10px] text-ai dark:text-ai-glow bg-ai-soft dark:bg-night-line rounded-full px-2 py-0.5">
 											{formatGrammarPointId(p.pointId)}
 										</span>
-										<span className="font-bengali text-sm text-ink dark:text-night-ink truncate">
-											{p.headingBn}
+										<span className="min-w-0">
+											<span className="block font-bengali text-sm font-semibold text-ink dark:text-night-ink truncate">
+												{p.title}
+											</span>
+											<span
+												lang="ja"
+												className="block font-mincho text-[11px] text-ink-muted dark:text-night-ink-muted truncate"
+											>
+												{(p.structure || "").split("\n")[0]}
+											</span>
 										</span>
 									</button>
 									<ReadButton
@@ -393,10 +405,9 @@ export default function GrammarList({
 									/>
 								</div>
 								{isOpen && (
-									<div className="px-4 pb-4 pt-1 bg-washi dark:bg-night border-t border-ai-line dark:border-night-line">
-										<p className="font-bengali text-sm text-ink dark:text-night-ink leading-relaxed whitespace-pre-line mb-3">
-											{p.explanationBn}
-										</p>
+									<div className="px-4 pb-4 pt-3 bg-washi dark:bg-night border-t border-ai-line dark:border-night-line space-y-3">
+										<GrammarStructure structure={p.structure} lang={lang} className="bg-paper dark:bg-night-paper" />
+										<Markdown text={p.explanationMd} lang={lang} />
 										{p.examples.length > 0 && (
 											<div className="bg-sakura-soft dark:bg-night-paper rounded-md p-3 space-y-2.5">
 												{p.examples.map((ex, ei) => (

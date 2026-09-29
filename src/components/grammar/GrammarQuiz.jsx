@@ -562,7 +562,7 @@ export default function GrammarQuiz({
 					<>
 						{!activeIsTransform && (
 							<p className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted text-center mt-4">
-								{q.headingBn}
+								{q.title}
 							</p>
 						)}
 						<div className="flex items-center justify-end mt-3">
