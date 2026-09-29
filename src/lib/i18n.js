@@ -9,7 +9,7 @@ export function pickLang(item, lang) {
 
 const UI = {
   // Header
-  appSubtitle: { bn: "জাপানি ভাষা ও JLPT / NAT পরীক্ষার প্রস্তুতি", en: "Japanese language & JLPT/NAT exam prep" },
+  appSubtitle: { bn: "জাপানি ভাষা ও JLPT / NAT পরীক্ষার প্রস্তুতি", en: "Japanese language & JLPT / NAT exam prep" },
   accuracy: { bn: "নির্ভুলতা", en: "Accuracy" },
   learnedCount: { bn: "শেখা হয়েছে", en: "Learned" },
   level: { bn: "Level", en: "Level" },
