@@ -825,7 +825,7 @@ export default function GrammarStudy({
 							<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
 								{T("grammarDescription")}
 							</div>
-							<div className="min-h-[260px] max-h-[300px] overflow-y-auto">
+							<div className="min-h-[250px] max-h-[300px] overflow-y-auto">
 								<ExplanationBody text={point.explanationBn} />
 							</div>
 							{/* <div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
@@ -836,13 +836,13 @@ export default function GrammarStudy({
 						</div>
 					) : (
 						/* Back: only the sentence examples */
-						<div className="px-4 sm:px-5 min-h-[260px] max-h-[300px] overflow-y-auto">
+						<div className="px-4 sm:px-5 min-h-[250px] max-h-[300px]">
 							{point.examples.length > 0 ? (
 								<>
 									<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
 										{T("grammarExamples")}
 									</div>
-									<div className="space-y-3">
+									<div className="space-y-3 overflow-y-auto">
 										{point.examples.map((ex, ei) => (
 											<div
 												key={ei}
@@ -857,7 +857,7 @@ export default function GrammarStudy({
 														({ex.note})
 													</div>
 												)}
-												<div className="font-mincho text-lg text-ink dark:text-night-ink leading-snug">
+												<div className="font-mincho text-sm text-ink dark:text-night-ink leading-snug">
 													<LeveledKanji
 														text={ex.jp}
 														level={level}
