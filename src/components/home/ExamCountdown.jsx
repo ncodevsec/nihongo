@@ -8,7 +8,10 @@ function daysLabel(days, T) {
 	if (days === 1) return `1 ${T("examDayLeft")}`;
 	return (
 		<span className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted shrink-0">
-			<span className="font-bold text-shu dark:text-shu-glow">{days}</span> {T("examDaysLeft")}
+			<span className="font-bold text-shu dark:text-shu-glow">
+				{days}
+			</span>{" "}
+			{T("examDaysLeft")}
 		</span>
 	);
 }
@@ -152,7 +155,7 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 				<div className="flex items-center gap-4 sm:gap-6">
 					{/* Big number first: the day-count is the point of the card. */}
 					<div className="shrink-0 flex items-baseline gap-1.5">
-						<span className="font-mono text-4xl sm:text-5xl font-bold leading-none text-shu dark:text-shu-glow">
+						<span className="font-mono text-5xl font-bold leading-none text-shu dark:text-shu-glow">
 							{main.days}
 						</span>
 						<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted whitespace-nowrap">
@@ -167,7 +170,7 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 					{/* The exam's name, clearly secondary to the number but still the
 					    first thing read after it. */}
 					<div className="min-w-0 flex-1">
-						<div className="font-bengali text-sm sm:text-base font-bold text-ink dark:text-night-ink truncate">
+						<div className="font-bengali text-3xl font-bold text-ink dark:text-night-ink truncate">
 							{main.name || T("examCountdownTitle")}
 						</div>
 						<div className="font-mono text-xs text-ink-muted dark:text-night-ink-muted mt-0.5">
