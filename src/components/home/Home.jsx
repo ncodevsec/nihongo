@@ -18,7 +18,7 @@ import Features from "./Features.jsx";
 import Faq from "./Faq.jsx";
 import CtaBand from "./CtaBand.jsx";
 import Banners from "./Banners.jsx";
-import ExamCountdown from "./ExamCountdown.jsx";
+import EventCountdown from "./EventCountdown.jsx";
 import SectionHeading from "./SectionHeading.jsx";
 import StreakWidget from "../StreakWidget.jsx";
 
@@ -113,9 +113,11 @@ export default function Home({
 	return (
 		<div className="space-y-8 sm:space-y-10 lg:space-y-14">
 			<Rise i={0}>
-				<ExamCountdown
-					exams={settings.exams}
-					onChange={(exams) => updateSetting("exams", exams)}
+				<EventCountdown
+					events={settings.events}
+					selectedEvents={settings.selectedEvents}
+					onChangeEvents={(v) => updateSetting("events", v)}
+					onChangeSelected={(v) => updateSetting("selectedEvents", v)}
 					lang={lang}
 				/>
 			</Rise>
