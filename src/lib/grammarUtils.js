@@ -16,9 +16,9 @@ import {
 // side of the Transform tab. Honorific verbs (くださいます, etc.) conjugate
 // irregularly but are still Godan-type, so they count as Group 1.
 export const VERB_GROUP_CATEGORIES = [
-  { key: "group1", bn: "গ্রুপ ১ (う-verb)", en: "Group 1 (u-verb)" },
-  { key: "group2", bn: "গ্রুপ ২ (る-verb)", en: "Group 2 (ru-verb)" },
-  { key: "group3", bn: "গ্রুপ ৩ (অনিয়মিত)", en: "Group 3 (irregular)" },
+  { key: "group1", bn: "গ্রুপ ১ (う-verb)", en: "Group 1 (う-verb)" },
+  { key: "group2", bn: "গ্রুপ ২ (る-verb)", en: "Group 2 (る-verb)" },
+  { key: "group3", bn: "গ্রুপ ৩ (অনিয়মিত)", en: "Group 3 (Irregular)" },
 ];
 
 

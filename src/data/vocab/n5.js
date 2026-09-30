@@ -767,6 +767,7 @@ const RAW = [
   ["浴びます［シャワーを～］", "あびます", "শাওয়ার নেওয়া", "Take a shower", "lesson16"],
   ["入れます", "いれます", "ঢোকানো, প্রবেশ করানো", "Put in, insert", "lesson16"],
   ["出します", "だします", "বের করা, উত্তোলন করা (টাকা)", "Take out, withdraw", "lesson16"],
+  ["降ろします","おろします","উত্তোলন করা / নামিয়ে দেওয়া / নামানো","withdraw / take out / Drop off","lesson24"],
   ["入ります［だいがくに～］", "はいります", "ভর্তি হওয়া", "Enter university", "lesson16"],
   ["出ます［だいがくを～］", "でます", "পাশ করা", "Graduate from university", "lesson16"],
   ["押します", "おします", "চাপ দেওয়া", "Press, push", "lesson16"],
