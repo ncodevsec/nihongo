@@ -15,7 +15,7 @@ export default function Footer({
 			<div className="max-w-6xl mx-auto px-3 sm:px-5 lg:px-10 py-8 flex flex-col items-center gap-4">
 				<div className="flex items-center gap-2.5">
 					<img
-						src="./icons/logo-mark-96.png"
+						src="./icons/icon-192.png"
 						alt="NihonGo"
 						className="brand-logo w-7 h-7"
 						width={28}

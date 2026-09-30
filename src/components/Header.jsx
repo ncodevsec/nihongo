@@ -76,7 +76,7 @@ export default function Header({
 						className="flex items-center gap-3 min-w-0 text-left"
 					>
 						<img
-							src="./icons/logo-mark-96.png"
+							src="./icons/icon-192.png"
 							alt="NihonGoSL"
 							className="brand-logo w-9 h-9 shrink-0"
 							width={36}

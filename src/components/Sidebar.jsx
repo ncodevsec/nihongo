@@ -82,7 +82,7 @@ export default function Sidebar({
 					}}
 				>
 					<img
-						src="./icons/logo-mark-128.png"
+						src="./icons/icon-192.png"
 						alt="NihonGo - Study Lab"
 						className="brand-logo w-9 h-9"
 						width={36}
@@ -114,7 +114,16 @@ export default function Sidebar({
 								: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
 						}`}
 					>
-						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5" aria-hidden="true">
+						<svg
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="1.8"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							className="w-5 h-5"
+							aria-hidden="true"
+						>
 							{ICONS.home}
 						</svg>
 					</button>

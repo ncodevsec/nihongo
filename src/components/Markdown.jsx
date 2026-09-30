@@ -27,7 +27,12 @@ const LIST_RE = /^(\s*)([-*+]|\d+[.)])\s+(.*)$/;
 const HR_RE = /^\s*(-{3,}|\*{3,})\s*$/;
 const SEP_RE = /^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/;
 const splitRow = (l) =>
-	l.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((s) => s.trim());
+	l
+		.trim()
+		.replace(/^\|/, "")
+		.replace(/\|$/, "")
+		.split("|")
+		.map((s) => s.trim());
 
 function startsBlock(line, next) {
 	return (
@@ -40,7 +45,9 @@ function startsBlock(line, next) {
 }
 
 export function parseMarkdown(src) {
-	const lines = String(src || "").replace(/\r\n?/g, "\n").split("\n");
+	const lines = String(src || "")
+		.replace(/\r\n?/g, "\n")
+		.split("\n");
 	const blocks = [];
 	let i = 0;
 	while (i < lines.length) {
@@ -60,19 +67,26 @@ export function parseMarkdown(src) {
 			i++;
 			continue;
 		}
-		if (line.trim().startsWith("|") && i + 1 < lines.length && SEP_RE.test(lines[i + 1])) {
+		if (
+			line.trim().startsWith("|") &&
+			i + 1 < lines.length &&
+			SEP_RE.test(lines[i + 1])
+		) {
 			const head = splitRow(line);
 			i += 2;
 			const rows = [];
-			while (i < lines.length && lines[i].trim().startsWith("|")) rows.push(splitRow(lines[i++]));
+			while (i < lines.length && lines[i].trim().startsWith("|"))
+				rows.push(splitRow(lines[i++]));
 			blocks.push({ type: "table", head, rows });
 			continue;
 		}
 		if (/^\s*>/.test(line)) {
 			const body = [];
-			while (i < lines.length && /^\s*>/.test(lines[i])) body.push(lines[i++].replace(/^\s*>\s?/, ""));
+			while (i < lines.length && /^\s*>/.test(lines[i]))
+				body.push(lines[i++].replace(/^\s*>\s?/, ""));
 			const k = body[0].match(/^\[!(\w+)\]\s*(.*)$/);
-			const kind = k && CALLOUTS[k[1].toUpperCase()] ? k[1].toUpperCase() : null;
+			const kind =
+				k && CALLOUTS[k[1].toUpperCase()] ? k[1].toUpperCase() : null;
 			if (kind) body[0] = k[2];
 			blocks.push({ type: "quote", kind, body: body.join("\n") });
 			continue;
@@ -83,7 +97,11 @@ export function parseMarkdown(src) {
 				const l = lines[i];
 				const lm = l.match(LIST_RE);
 				if (lm) {
-					items.push({ indent: lm[1].length, ordered: /\d/.test(lm[2]), text: lm[3] });
+					items.push({
+						indent: lm[1].length,
+						ordered: /\d/.test(lm[2]),
+						text: lm[3],
+					});
 					i++;
 				} else if (!l.trim()) {
 					const nxt = lines.slice(i + 1).find((x) => x.trim());
@@ -98,7 +116,11 @@ export function parseMarkdown(src) {
 			continue;
 		}
 		const para = [];
-		while (i < lines.length && lines[i].trim() && !(para.length && startsBlock(lines[i], lines[i + 1]))) {
+		while (
+			i < lines.length &&
+			lines[i].trim() &&
+			!(para.length && startsBlock(lines[i], lines[i + 1]))
+		) {
 			para.push(lines[i++].trim());
 		}
 		blocks.push({ type: "p", text: para.join(" ") });
@@ -115,12 +137,19 @@ function inline(text) {
 	while ((m = re.exec(text))) {
 		if (m.index > last) out.push(text.slice(last, m.index));
 		if (m[1] != null)
-			out.push(<strong key={k++} className="font-bold text-ink dark:text-night-ink">{m[1]}</strong>);
+			out.push(
+				<strong
+					key={k++}
+					className="font-bold text-ink dark:text-night-ink"
+				>
+					{m[1]}
+				</strong>,
+			);
 		else if (m[2] != null)
 			out.push(
 				<code
 					key={k++}
-					className="font-mincho text-[0.95em] px-1.5 py-0.5 rounded bg-shu-soft dark:bg-night text-shu dark:text-shu-glow"
+					className="font-mincho text-[0.95em] px-1.5 py-0.5 rounded bg-shu/20 dark:bg-shu-glow/20"
 				>
 					{m[2]}
 				</code>,
@@ -139,28 +168,45 @@ function Blocks({ blocks, lang }) {
 				if (b.type === "h") {
 					if (b.level >= 4)
 						return (
-							<h5 key={bi} className="pt-1 text-[11px] font-bold uppercase tracking-wide text-shu dark:text-shu-glow">
+							<h5
+								key={bi}
+								className="pt-1 text-[11px] font-bold uppercase tracking-wide text-shu dark:text-shu-glow"
+							>
 								{inline(b.text)}
 							</h5>
 						);
 					if (b.level === 3)
 						return (
-							<h4 key={bi} className="pt-1 flex items-center gap-2 text-sm font-bold text-ink dark:text-night-ink">
+							<h4
+								key={bi}
+								className="pt-1 flex items-center gap-2 text-sm font-bold text-ink dark:text-night-ink"
+							>
 								<span className="w-1 h-4 rounded-full bg-shu dark:bg-shu-glow shrink-0" />
 								{inline(b.text)}
 							</h4>
 						);
 					return (
-						<h3 key={bi} className="pt-1 pb-1 border-b border-ai-line dark:border-night-line text-base font-bold text-ink dark:text-night-ink">
+						<h3
+							key={bi}
+							className="pt-1 pb-1 border-b border-ai-line dark:border-night-line text-base font-bold text-ink dark:text-night-ink"
+						>
 							{inline(b.text)}
 						</h3>
 					);
 				}
 				if (b.type === "hr")
-					return <hr key={bi} className="border-ai-line dark:border-night-line" />;
+					return (
+						<hr
+							key={bi}
+							className="border-ai-line dark:border-night-line"
+						/>
+					);
 				if (b.type === "p")
 					return (
-						<p key={bi} className="text-sm leading-relaxed text-ink dark:text-night-ink">
+						<p
+							key={bi}
+							className="text-sm leading-relaxed text-ink dark:text-night-ink"
+						>
 							{inline(b.text)}
 						</p>
 					);
@@ -169,9 +215,14 @@ function Blocks({ blocks, lang }) {
 					return (
 						<ul key={bi} className="space-y-1.5" role="list">
 							{b.items.map((it, ii) => {
-								const level = Math.min(2, Math.floor(it.indent / 2));
+								const level = Math.min(
+									2,
+									Math.floor(it.indent / 2),
+								);
 								counters[level] = (counters[level] || 0) + 1;
-								Object.keys(counters).forEach((l) => l > level && delete counters[l]);
+								Object.keys(counters).forEach(
+									(l) => l > level && delete counters[l],
+								);
 								return (
 									<li
 										key={ii}
@@ -185,7 +236,9 @@ function Blocks({ blocks, lang }) {
 										) : (
 											<span className="shrink-0 mt-[0.6em] w-1.5 h-1.5 rounded-full bg-shu/70 dark:bg-shu-glow/70" />
 										)}
-										<span className="min-w-0">{inline(it.text)}</span>
+										<span className="min-w-0">
+											{inline(it.text)}
+										</span>
 									</li>
 								);
 							})}
@@ -194,12 +247,15 @@ function Blocks({ blocks, lang }) {
 				}
 				if (b.type === "table")
 					return (
-						<div key={bi} className="overflow-x-auto rounded-lg border border-ai-line dark:border-night-line">
-							<table className="min-w-full text-xs">
+						<div key={bi} className="overflow-x-auto">
+							<table className="text-xs rounded-lg border border-ai-line dark:border-night-line">
 								<thead className="bg-ai-soft dark:bg-night-line/60 text-ai dark:text-ai-glow">
 									<tr>
 										{b.head.map((h, hi) => (
-											<th key={hi} className="px-3 py-2 text-left font-semibold whitespace-nowrap">
+											<th
+												key={hi}
+												className="px-3 py-2 text-left font-semibold whitespace-nowrap"
+											>
 												{inline(h)}
 											</th>
 										))}
@@ -224,16 +280,26 @@ function Blocks({ blocks, lang }) {
 					);
 				if (b.type === "quote") {
 					const c = b.kind && CALLOUTS[b.kind];
-					const inner = <Blocks blocks={parseMarkdown(b.body)} lang={lang} />;
+					const inner = (
+						<Blocks blocks={parseMarkdown(b.body)} lang={lang} />
+					);
 					if (!c)
 						return (
-							<blockquote key={bi} className="border-l-2 border-sakura-line dark:border-night-line pl-3 text-ink-muted dark:text-night-ink-muted">
+							<blockquote
+								key={bi}
+								className="border-l-2 border-sakura-line dark:border-night-line pl-3 text-ink-muted dark:text-night-ink-muted"
+							>
 								{inner}
 							</blockquote>
 						);
 					return (
-						<aside key={bi} className={`rounded-lg border-l-4 px-3 py-2.5 ${c.cls}`}>
-							<div className={`mb-1 text-[10px] font-bold uppercase tracking-wide ${c.text}`}>
+						<aside
+							key={bi}
+							className={`rounded-lg border-l-4 px-3 py-2.5 ${c.cls}`}
+						>
+							<div
+								className={`mb-1 text-[10px] font-bold uppercase tracking-wide ${c.text}`}
+							>
 								{lang === "bn" ? c.label.bn : c.label.en}
 							</div>
 							{inner}
