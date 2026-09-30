@@ -223,7 +223,7 @@ export default function Settings({
 					)}
 				</Row>
 				{updateAvailable && (
-					<div className="px-4 pb-3">
+					<div className="p-4">
 						<p className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted">
 							{T("appUpdateNote")}
 						</p>
