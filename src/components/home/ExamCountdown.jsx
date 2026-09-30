@@ -154,7 +154,7 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 			) : (
 				<div className="flex items-center gap-4 sm:gap-6">
 					{/* Big number first: the day-count is the point of the card. */}
-					<div className="shrink-0 flex items-baseline gap-1.5">
+					<div className="shrink-0 flex flex-col items-center gap-1.5">
 						<span className="font-mono text-5xl font-bold leading-none text-shu dark:text-shu-glow">
 							{main.days}
 						</span>
@@ -170,10 +170,10 @@ export default function ExamCountdown({ exams, onChange, lang }) {
 					{/* The exam's name, clearly secondary to the number but still the
 					    first thing read after it. */}
 					<div className="min-w-0 flex-1">
-						<div className="font-bengali text-3xl font-bold text-ink dark:text-night-ink truncate">
+						<div className="font-bengali text-4xl font-bold text-ink dark:text-night-ink truncate">
 							{main.name || T("examCountdownTitle")}
 						</div>
-						<div className="font-mono text-xs text-ink-muted dark:text-night-ink-muted mt-0.5">
+						<div className="font-mono text-sm text-ink-muted dark:text-night-ink-muted mt-0.5">
 							{main.date}
 						</div>
 					</div>
