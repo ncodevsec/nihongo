@@ -532,9 +532,9 @@ export const GRAMMAR_N5 = [
     "title": "Lesson 6",
     "points": [
       {
-        "id": "6-1",
-        "title": "を — Object Marker",
-        "structure": "Noun + を + Verb (Transitive)",
+        "id": "6-1.1",
+        "title": "Transitive Verb",
+        "structure": "Object + を + Verb (Transitive)",
         "particles": [
           "wo"
         ],
@@ -550,6 +550,70 @@ export const GRAMMAR_N5 = [
           {
             "jp": "しゅくだいを します。",
             "meaningBn": "বাড়ির কাজ করবো।"
+          }
+        ]
+      },
+      {
+        "id": "6-1.2",
+        "title": "Intransitive Verb",
+        "structure": "Noun + に + Verb (Intransitive)",
+        "particles": [
+          "wo"
+        ],
+        "examples": [
+          {
+            "jp": "つくえの うえに あります。",
+            "meaningBn": "টেবিলের উপরে আছে।"
+          },
+          {
+            "jp": "バスに のります。",
+            "meaningBn": "বাসে উঠি।"
+          },
+          {
+            "jp": "いすに すわります。",
+            "meaningBn": "চেয়ারে বসি।"
+          },
+          {
+            "jp": "きょうとに すみます。",
+            "meaningBn": "কিয়োটোতে থাকি।"
+          },
+          {
+            "jp": "へやに はいります。",
+            "meaningBn": "ঘরে প্রবেশ করি।"
+          }
+        ]
+      },
+      {
+        "id": "6-1.3",
+        "title": "Intransitive Verb",
+        "structure": "Noun + が + Verb (Intransitive)",
+        "particles": [
+          "wo"
+        ],
+        "examples": [
+          {
+            "jp": "にほんごが わかります。",
+            "meaningBn": "জাপানি বুঝি।"
+          },
+          {
+            "jp": "しごとが はじまります。",
+            "meaningBn": "কাজ শুরু হয়।"
+          },
+          {
+            "jp": "ゆきが ふります。",
+            "meaningBn": "তুষারপাত হয়।"
+          },
+          {
+            "jp": "にほんごが できます。",
+            "meaningBn": "জাপানি পারি।"
+          },
+          {
+            "jp": "おかねが いります。",
+            "meaningBn": "টাকা প্রয়োজন।"
+          },
+          {
+            "jp": "かぜが ふきます。",
+            "meaningBn": "বাতাস প্রবাহিত হয়।"
           }
         ]
       },
