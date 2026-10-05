@@ -6,7 +6,7 @@ import { MODULES, LEVEL_OPTIONS } from "../data/modules.js";
 // key — never part of progress/settings, so resets and backups don't
 // touch it.
 const STORAGE_KEY = "nihongo-last-v1";
-const VALID_TABS = ["study", "quiz", "reference", "progress"];
+const VALID_TABS = ["study", "quiz", "reference", "progress", "mock"];
 
 function isValid(s) {
 	return (

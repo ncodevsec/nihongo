@@ -18,6 +18,7 @@ import Features from "./Features.jsx";
 import Faq from "./Faq.jsx";
 import CtaBand from "./CtaBand.jsx";
 import Banners from "./Banners.jsx";
+import MockPromo from "./MockPromo.jsx";
 import EventCountdown from "./EventCountdown.jsx";
 import SectionHeading from "./SectionHeading.jsx";
 import StreakWidget from "../StreakWidget.jsx";
@@ -27,6 +28,7 @@ const TAB_LABEL_KEYS = {
 	quiz: "tabQuiz",
 	reference: "tabReference",
 	progress: "tabProgress",
+	mock: "tabMock",
 };
 
 // Staggered fade-up on entry (re-plays each time Home becomes visible; the
@@ -207,6 +209,7 @@ export default function Home({
 						stats={stats}
 						onLaunch={onLaunch}
 					/>
+					<MockPromo lang={lang} isActive={isActive} onLaunch={onLaunch} />
 				</div>
 			</Rise>
 

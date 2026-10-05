@@ -17,6 +17,7 @@ const UI = {
   tabQuiz: { bn: "পরীক্ষা", en: "Quiz" },
   tabReference: { bn: "তালিকা", en: "List" },
   tabProgress: { bn: "অগ্রগতি", en: "Progress" },
+  tabMock: { bn: "মক টেস্ট", en: "Mock Test" },
   tabSettings: { bn: "সেটিংস", en: "Settings" },
   backButton: { bn: "ফিরে যান", en: "Back" },
   tabGrammarContent: { bn: "ফ্ল্যাশকার্ডস", en: "Flashcards" },

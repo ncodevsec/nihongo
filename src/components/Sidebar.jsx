@@ -16,6 +16,12 @@ const ICONS = {
 	),
 	reference: <path d="M4 6h16M4 12h16M4 18h10" />,
 	progress: <path d="M4 20V10M10 20V4M16 20v-7M4 20h16" />,
+	mock: (
+		<>
+			<rect x="6" y="4" width="12" height="17" rx="2" />
+			<path d="M9 4V3h6v1M9 13l2 2 4-4" />
+		</>
+	),
 	settings: (
 		<>
 			<circle cx="12" cy="12" r="3" />
@@ -67,6 +73,7 @@ export default function Sidebar({
 		{ key: "quiz", label: T("tabQuiz"), icon: "quiz" },
 		{ key: "reference", label: T("tabReference"), icon: "reference" },
 		{ key: "progress", label: T("tabProgress"), icon: "progress" },
+		{ key: "mock", label: T("tabMock"), icon: "mock" },
 	];
 
 	return (

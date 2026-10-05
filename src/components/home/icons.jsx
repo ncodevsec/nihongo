@@ -36,6 +36,12 @@ const PATHS = {
 	quiz: <path d="M9 11l2 2 4-4M12 3l8 4-8 4-8-4 8-4zM4 12l8 4 8-4M4 16l8 4 8-4" />,
 	reference: <path d="M4 6h16M4 12h16M4 18h10" />,
 	progress: <path d="M4 20V10M10 20V4M16 20v-7M4 20h16" />,
+	mock: (
+		<>
+			<rect x="6" y="4" width="12" height="17" rx="2" />
+			<path d="M9 4V3h6v1M9 13l2 2 4-4" />
+		</>
+	),
 	arrowRight: <path d="M5 12h14M13 6l6 6-6 6" />,
 	chevronDown: <polyline points="6 9 12 15 18 9" />,
 	check: <path d="M5 12.5l4.5 4.5L19 7.5" />,

@@ -22,6 +22,7 @@ import GrammarQuiz from "./components/grammar/GrammarQuiz.jsx";
 import GrammarList from "./components/grammar/GrammarList.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./components/home/Home.jsx";
+import MockTest from "./components/mock/MockTest.jsx";
 
 // Stable reference for the Transform tab's unused "lessons" prop — a
 // fresh [] literal every render would look like a changed prop to
@@ -58,7 +59,7 @@ export default function App() {
 
 	// Remember the last study context so Home can offer "Continue learning".
 	useEffect(() => {
-		if (["study", "quiz", "reference", "progress"].includes(tab)) {
+		if (["study", "quiz", "reference", "progress", "mock"].includes(tab)) {
 			saveSession({ moduleKey, level, tab });
 		}
 	}, [tab, moduleKey, level, saveSession]);
@@ -206,6 +207,14 @@ export default function App() {
 							onLaunch={launch}
 							onOpenSettings={() => setTab("settings")}
 							isActive={tab === "home"}
+						/>
+					</div>
+					<div className={tab === "mock" ? "" : "hidden"}>
+						<MockTest
+							settings={settings}
+							level={level}
+							onLaunch={launch}
+							isActive={tab === "mock"}
 						/>
 					</div>
 					{isGrammar ? (
