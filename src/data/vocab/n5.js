@@ -196,10 +196,6 @@ const RAW = [
   ["北京", "ぺきん", "বেইজিং", "Beijing", "lesson4"],
   ["ロサンゼルス", "ロサンゼルス", "লস অ্যাঞ্জেলেস", "Los Angeles", "lesson4"],
   ["ロンドン", "ロンドン", "লন্ডন", "London", "lesson4"],
-  ["えーと", "えーと", "ইয়ে...", "Well, let me see", "lesson4"], // Extra
-  ["うけつけい", "うけつけい", "তথ্যকেন্দ্র", "Information, directory assistance", "lesson4"], // Extra
-  ["お願いします。", "おねがいします", "অনুগ্রহ করে", "Please.", "lesson4"], // Extra
-  ["ありがとうございました。", "ありがとうございました", "অনেক ধন্যবাদ", "Thank you very much.", "lesson4"], // Extra
 
   // Lesson 5
   ["行きます", "いきます", "যাওয়া", "Go", "lesson5"],
@@ -257,7 +253,7 @@ const RAW = [
   ["次の", "つぎの", "পরবর্তী", "Next", "lesson5"],
   ["どういたしまして。", "どういたしまして", "স্বাগতম / কোনো ব্যাপার না", "You're welcome.", "lesson5"],
   ["～番線", "ばんせん", "~ নম্বর প্ল্যাটফর্ম", "Platform ~", "lesson5"],
-  ["甲子園", "こうしえん", "কোশিয়েন", "Koshien", "lesson5"],
+  ["甲子園", "こうしえん", "কোশিয়েন (জাপানের একটি বিখ্যাত বেসবল স্টেডিয়াম)", "Koshien (A famous baseball stadium)", "lesson5"],
   ["大阪城", "おおさかじょう", "ওসাকা দুর্গ", "Osaka Castle", "lesson5"],
 
   // Lesson 6
@@ -302,7 +298,7 @@ const RAW = [
   ["宿題", "しゅくだい", "বাড়ির কাজ", "Homework", "lesson6"],
   ["テニス", "テニス", "টেনিস", "Tennis", "lesson6"],
   ["サッカー", "サッカー", "ফুটবল", "Soccer, football", "lesson6"],
-  ["［お］花見", "おはなみ", "চেরি ফুল দেখা", "Cherry-blossom viewing", "lesson6"],
+  ["［お］花見", "おはなみ", "চেরি ফুল দেখার উৎসব", "Cherry Blossom viewing festival", "lesson6"],
   ["何", "なに", "কী", "What", "lesson6"],
   ["いっしょに", "いっしょに", "একসাথে", "Together", "lesson6"],
   ["ちょっと", "ちょっと", "একটু", "A little while, a little bit", "lesson6"],
@@ -356,12 +352,10 @@ const RAW = [
   ["いらっしゃい", "いらっしゃい", "স্বাগতম", "Welcome", "lesson7"],
   ["どうぞ おあがりください", "どうぞ おあがりください", "অনুগ্রহ করে ভিতরে আসুন", "Please come in", "lesson7"],
   ["失礼します", "しつれいします", "ঢোকা বা বিদায় নেওয়ার সময় বলা হয় (মাফ করবেন / আসি)", "Excuse me (said when entering or leaving a place)", "lesson7", "vocab-n5-x1"],
-  ["～は いかがですか", "～は いかがですか", "～ কেমন হবে?", "How about ~?", "lesson7"],
+  ["～は いかがですか", "コーヒー は いかがですか", "কফি কেমন হবে?", "How about Coffee?", "lesson7"],
   ["いただきます", "いただきます", "খাওয়া শুরু করার আগে বলা হয়", "Said before eating", "lesson7"],
   ["ごちそうさまでした", "ごちそうさまでした", "খাবারের জন্য ধন্যবাদ", "Thank you for the meal", "lesson7"],
   ["スペイン", "スペイン", "স্পেন", "Spain", "lesson7"],
-  ["ファクス", "ファクス", "ফ্যাক্স", "Fax", "lesson7"], // Extra
-  ["ワープロ", "ワープロ", "ওয়ার্ড প্রসেসর", "Word processor", "lesson7"], // Extra
 
   // Lesson 8
   ["ハンサム［な］", "ハンサム", "সুদর্শন", "Handsome", "lesson8"],
@@ -380,7 +374,8 @@ const RAW = [
   ["古い", "ふるい", "পুরনো", "Old (not of age)", "lesson8"],
   ["いい（よい）", "いい（よい）", "ভালো", "Good", "lesson8"],
   ["悪い", "わるい", "খারাপ", "Bad", "lesson8"],
-  ["暑い、熱い", "あつい", "গরম", "Hot", "lesson8"],
+  ["暑い", "あつい", "গরম (আবহাওয়া)", "Hot (Weather)", "lesson8"],
+  ["熱い", "あつい", "গরম / উত্তপ্ত (চা বা পানি)", "Hot (Tea)", "lesson8"],
   ["寒い", "さむい", "ঠান্ডা (আবহাওয়া)", "Cold (temperature)", "lesson8"],
   ["冷たい", "つめたい", "ঠান্ডা (স্পর্শে)", "Cold (to the touch)", "lesson8"],
   ["難しい", "むずかしい", "কঠিন", "Difficult", "lesson8"],
@@ -415,13 +410,13 @@ const RAW = [
   ["～が、～", "が", "কিন্তু", "~, but ~", "lesson8"],
   ["おげんきですか", "おげんきですか", "আপনি কেমন আছেন?", "How are you?", "lesson8"],
   ["そうですね", "そうですね", "তাই না? / হ্যাঁ, ঠিক বলেছেন", "That's right / I agree", "lesson8"],
-  ["もう いっぱい いかがですか", "もう いっぱい いかがですか", "আরেক কাপ নেবেন?", "Would you like another cup?", "lesson8"],
+  ["もう いっぱい いかがですか", "もう いっぱい いかがですか", "আরেক কাপ নেবেন কি?", "Would you like another cup?", "lesson8"],
   ["いいえ、けっこうです", "いいえ、けっこうです", "না, ধন্যবাদ", "No, thank you", "lesson8"],
   ["もう～ですね", "もう～ですね", "ইতিমধ্যে ~, তাই না?", "Already ~, isn't it?", "lesson8"],
   ["そろそろ しつれいします", "そろそろ しつれいします", "এখন বিদায় নেওয়ার সময় হয়েছে", "It's about time for me to leave", "lesson8"],
   ["また いらっしゃってください", "また いらっしゃってください", "আবার আসবেন", "Please come again", "lesson8"],
   ["シャンハイ", "シャンハイ", "সাংহাই", "Shanghai", "lesson8"],
-  ["きんかくじ", "きんかくじ", "কিংকাকুজি", "Kinkakuji", "lesson8"],
+  ["きんかくじ", "きんかくじ", "কিংকাকুজি মন্দির", "Kinkakuji Temple", "lesson8"],
   ["ならこうえん", "ならこうえん", "নারা পার্ক", "Nara Park", "lesson8"],
   ["ふじさん", "ふじさん", "মাউন্ট ফুজি", "Mount Fuji", "lesson8"],
   ["しちにんのさむらい", "しちにんのさむらい", "সেভেন সামুরাই", "Seven Samurai", "lesson8"],
@@ -458,16 +453,19 @@ const RAW = [
   ["約束", "やくそく", "প্রতিশ্রুতি", "Appointment, promise", "lesson9"],
   ["アルバイト", "アルバイト", "পার্ট-টাইম কাজ", "Side job", "lesson9"],
   ["ご主人", "ごしゅじん", "স্বামী (অন্যের)", "(someone else's) husband", "lesson9"],
-  ["夫／主人", "おっと", "স্বামী (নিজের)", "(my) husband", "lesson9"],
+  ["夫", "おっと", "স্বামী (নিজের)", "(my) husband", "lesson9"],
+  ["主人", "しゅじん", "স্বামী (নিজের)", "(my) husband", "lesson9"],
   ["奥さん", "おくさん", "স্ত্রী (অন্যের)", "(someone else's) wife", "lesson9"],
-  ["妻／家内", "つま", "স্ত্রী (নিজের)", "(my) wife", "lesson9"],
+  ["妻", "つま", "স্ত্রী (নিজের)", "(my) wife", "lesson9"],
+  ["家内", "かない", "স্ত্রী (নিজের)", "(my) wife", "lesson9"],
   ["子ども", "こども", "বাচ্চা", "Child", "lesson9"],
   ["よく", "よく", "ভালোভাবে/প্রায়ই", "Well, much", "lesson9"],
   ["だいたい", "だいたい", "অধিকংশ ক্ষেত্রে", "Mostly, roughly", "lesson9"],
   ["たくさん", "たくさん", "অনেক (গননা যৌগ্য)", "Many, much (Countable)", "lesson9"],
   ["少し", "すこし", "একটু", "A little, a few", "lesson9"],
   ["全然", "ぜんぜん", "একদমই না", "Not at all", "lesson9"],
-  ["早く、速く", "はやく", "তাড়াতাড়ি", "Early, quickly, fast", "lesson9"],
+  ["速く", "はやく", "দ্রুত / জোরে গতিতে (কাজ বা চলার গতি)", "Quickly, fast", "lesson9"],
+  ["早く", "はやく", "তাড়াতাড়ি / আগে (সময়ের দিক থেকে আগে)", "Early, soon", "lesson9"],
   ["～から", "から", "কারণ", "Because ~", "lesson9"],
   ["どうして", "どうして", "কেন", "Why", "lesson9"],
   ["ざんねんですが", "ざんねんですが", "দুঃখিত, কিন্তু… / দুর্ভাগ্যবশত, কিন্তু…", "Unfortunately, but… / I'm sorry, but…", "lesson9"],
@@ -526,9 +524,6 @@ const RAW = [
   ["コーナー", "コーナー", "কোণা / সেকশন", "Corner / Section", "lesson10"],
   ["いちばんした", "いちばんした", "সবচেয়ে নিচে", "The very bottom", "lesson10"],
   ["とうきょうディズニーランド", "とうきょうディズニーランド", "টোকিও ডিজনিল্যান্ড", "Tokyo Disneyland", "lesson10"],
-  ["スパイスコーナー", "スパイスコーナー", "মসলার কর্নার", "Spice corner", "lesson10"], // Extra
-  ["～段目", "だんめ", "~ নম্বর তাক", "The ~th shelf", "lesson10"], // Extra
-  ["チリソース", "チリソース", "চিলি সস", "Chilli sauce", "lesson10"], // Extra
 
   // Lesson 11
   ["います［こどもが～］", "います", "আছে, থাকা (জীবিত প্রাণী)", "There is/are, have (living things)", "lesson11"],
@@ -586,13 +581,10 @@ const RAW = [
   ["いい［お］天気ですね。", "いいてんきですね", "ভালো আবহাওয়া, তাই না", "Nice weather, isn't it?", "lesson11"],
   ["お出かけですか。", "おでかけですか", "বাইরে যাচ্ছেন?", "Are you going out?", "lesson11"],
   ["ちょっと～まで。", "ちょっと～まで", "একটু ~ পর্যন্ত", "I'm just going to ~.", "lesson11"],
-  ["行っていらっしゃい。", "いっていらっしゃい", "যাও, ফিরে এসো", "So long.", "lesson11"],
-  ["行ってまいります。", "いってまいります", "যাচ্ছি, ফিরে আসবো", "So long. (I'm going and coming back)", "lesson11"],
+  ["行っていらっしゃい。", "いってらっしゃい", "যাও, ফিরে এসো", "So long.", "lesson11"],
+  ["行ってまいります。", "いってきます", "যাচ্ছি, ফিরে আসবো", "So long. (I'm going and coming back)", "lesson11"],
   ["おねがいします", "おねがいします", "অনুগ্রহ করে / দয়া করে", "Please", "lesson11"],
   ["オーストラリア", "オーストラリア", "অস্ট্রেলিয়া", "Australia", "lesson11"],
-  ["いらっしゃいませ。", "いらっしゃいませ", "স্বাগতম", "Welcome.", "lesson11"], // Extra
-  ["書留", "かきとめ", "রেজিস্টার্ড মেইল", "Registered mail", "lesson11"], // Extra
-  ["速達", "そくたつ", "স্পেশাল ডেলিভারি", "Special delivery", "lesson11"], // Extra
 
   // Lesson 12
   ["簡単［な］", "かんたん", "সহজ", "Easy, simple", "lesson12"],
@@ -640,9 +632,6 @@ const RAW = [
   ["ぎおんまつり", "ぎおんまつり", "গিওন উৎসব", "Gion Festival", "lesson12"],
   ["ホンコン", "ホンコン", "হংকং", "Hong Kong", "lesson12"],
   ["シンガポール", "シンガポール", "সিঙ্গাপুর", "Singapore", "lesson12"],
-  ["すごいですね。", "すごいですね", "দারুণ তো", "That's amazing.", "lesson12"], // Extra
-  ["でも", "でも", "কিন্তু", "But", "lesson12"], // Extra
-  ["試験", "しけん", "পরীক্ষা", "Examination", "lesson12"], // Extra
 
   // Lesson 13
   ["遊びます", "あそびます", "খেলা/আনন্দ করা", "Enjoy oneself, play", "lesson13"],
@@ -677,10 +666,6 @@ const RAW = [
   ["［少々］お待ちください。", "おまちください", "একটু অপেক্ষা করুন", "Please wait a moment.", "lesson13"],
   ["別々に", "べつべつに", "আলাদাভাবে", "Separately", "lesson13"],
   ["～でございます。", "でございます", "です এর Polite", "(polite です)", "lesson13"],
-  ["そうですね。", "そうですね", "তাই তো", "I agree with you.", "lesson13"], // Extra
-  ["登録", "とうろく", "নিবন্ধন", "Registration", "lesson13"], // Extra
-  ["会議", "かいぎ", "মিটিং", "Meeting, conference", "lesson13"], // Extra
-  ["出します［てがみを～］", "だします", "(চিঠি) পাঠানো", "Send a letter", "lesson13"], // Extra
 
   // Lesson 14
   ["つけます", "つけます", "চালু করা (বৈদ্যুতিক জিনিস)", "Turn on (electric items)", "lesson14"],
@@ -754,11 +739,6 @@ const RAW = [
   ["思い出します", "おもいだします", "মনে পড়া", "Remember, recollect", "lesson15"],
   ["いらっしゃいます", "いらっしゃいます", "থাকা (সম্মানসূচক) / います এর Polite form", "Be (Polite form of います)", "lesson15"],
   ["高校", "こうこう", "উচ্চ বিদ্যালয়", "Senior high school", "lesson15"],
-  ["知っています", "しっています", "জানা (আছে)", "Know", "lesson15"], // Extra
-  ["しりません", "しりません", "জানি না", "Don't know", "lesson15"], // Extra
-  ["プレイガイド", "プレイガイド", "টিকিট এজেন্সি", "Theatre ticket agency", "lesson15"], // Extra
-  ["専門", "せんもん", "বিশেষত্ব", "Speciality, field of study", "lesson15"], // Extra
-  ["ご家族", "ごかぞく", "আপনার পরিবার", "Your family", "lesson15"], // Extra
 
   // Lesson 16
   ["乗ります［でんしゃに～］", "のります", "চড়া, উঠা (যানবাহনে)", "Ride, get on (a transport)", "lesson16"],
@@ -767,7 +747,7 @@ const RAW = [
   ["浴びます［シャワーを～］", "あびます", "শাওয়ার নেওয়া", "Take a shower", "lesson16"],
   ["入れます", "いれます", "ঢোকানো, প্রবেশ করানো", "Put in, insert", "lesson16"],
   ["出します", "だします", "বের করা, উত্তোলন করা (টাকা)", "Take out, withdraw", "lesson16"],
-  ["降ろします","おろします","উত্তোলন করা / নামিয়ে দেওয়া / নামানো","withdraw / take out / Drop off","lesson24"],
+  ["降ろします", "おろします", "উত্তোলন করা / নামিয়ে দেওয়া / নামানো", "withdraw / take out / Drop off", "lesson24"],
   ["入ります［だいがくに～］", "はいります", "ভর্তি হওয়া", "Enter university", "lesson16"],
   ["出ます［だいがくを～］", "でます", "পাশ করা", "Graduate from university", "lesson16"],
   ["押します", "おします", "চাপ দেওয়া", "Press, push", "lesson16"],
@@ -814,9 +794,6 @@ const RAW = [
   ["フランケン", "フランケン", "ফ্রাঙ্কেন", "Franken", "lesson16"],
   ["ベラクルス", "ベラクルス", "ভেরাক্রুজ", "Veracruz", "lesson16"],
   ["梅田", "うめだ", "উমেদা (ওসাকার একটি শহর)", "Umeda (A district in Osaka)", "lesson16"],
-  ["留学生", "りゅうがくせい", "বিদেশি শিক্ষার্থী", "Foreign student", "lesson16"], // Extra
-  ["頭がいい", "あたまがいい", "বুদ্ধিমান", "Clever, smart", "lesson16"], // Extra
-  ["やめます［かいしゃを～］", "やめます", "ছেড়ে দেওয়া (কোম্পানি)", "Quit or retire from a company", "lesson21"], // Extra
 
   // Lesson 17
   ["覚えます", "おぼえます", "মনে রাখা", "Memorise", "lesson17"],
@@ -853,7 +830,6 @@ const RAW = [
   ["かぜ", "かぜ", "সর্দি", "Cold", "lesson17"],
   ["それから", "それから", "তারপর", "After that, and then", "lesson17"],
   ["お大事に。", "おだいじに", "নিজের যত্ন নিও", "Take care of yourself.", "lesson17"],
-  ["出します［レポートを～］", "だします", "জমা দেওয়া", "Hand in a report", "lesson17"], // Extra
 
   // Lesson 18
   ["できます", "できます", "পারা/সক্ষম হওয়া", "Be able to, can", "lesson18"],
@@ -886,8 +862,6 @@ const RAW = [
   ["ふるさと", "ふるさと", "এটি একটি আঞ্চলিক গান। অর্থ ঃ \"মাতৃভূমি\"", "A song. Meaning \"Hometown / Homeland\"", "lesson18"],
   ["ビートルズ", "ビートルズ", "দ্য বিটলস (বিখ্যাত ব্রিটিশ সংগীত দল)", "The Beatles (famous british pop group)", "lesson18"],
   ["秋葉原", "あきはばら", "আকিহাবারা (টকিওর একটি শহর)", "Akihabara (A district in Tokyo)", "lesson18"],
-  ["牧場", "ぼくじょう", "খামার", "Ranch, stock farm", "lesson18"], // Extra
-  ["国際～", "こくさい", "আন্তর্জাতিক ~", "International ~", "lesson18"], // Extra
 
   // Lesson 19
   ["登ります［やまに～］", "のぼります", "(পাহাড়ে, গাছে) চড়া, আরোহন করা", "Climb a mountain", "lesson19"],
@@ -917,11 +891,6 @@ const RAW = [
   ["体にいい", "からだにいい", "স্বাস্থ্যের জন্য ভালো", "Good for one's health", "lesson19"],
   ["東京スカイツリー", "とうきょうスカイツリー", "টোকিও স্কাই ট্রি", "Tokyo Skytree", "lesson19"],
   ["葛飾北斎", "かつしか ほくさい", "জাপানের বিখ্যাত চিত্রশিল্পী ও উকিও-এ শিল্পী", "Famous Japanese painter and ukiyo-e artist", "lesson19"],
-  ["何回も", "なんかいも", "বহুবার", "Many times", "lesson19"], // Extra
-  ["実は", "じつは", "আসলে", "Actually, to tell the truth", "lesson19"], // Extra
-  ["パチンコ", "パチンコ", "পাচিনকো খেলা", "Pinball game", "lesson19"], // Extra
-  ["調子がいい", "ちょうしがいい", "শরীর ভালো লাগছে", "Be in good condition", "lesson19"], // Extra
-  ["調子が悪い", "ちょうしがわるい", "শরীর খারাপ লাগছে", "Be in bad condition", "lesson19"], // Extra
 
   // Lesson 20
   ["要る［ビザが～］", "いります", "প্রয়োজন হওয়া", "Need, require a visa", "lesson20"],
@@ -948,11 +917,6 @@ const RAW = [
   ["どうするの？", "どうするの", "কী করবে?", "What will you do?", "lesson20"],
   ["よかったら", "よかったら", "যদি ভালো লাগে", "If you like", "lesson20"],
   ["色々", "いろいろ", "বিভিন্ন রকম", "Various", "lesson20"],
-  ["サラリーマン", "サラリーマン", "বেতনভুক্ত কর্মী", "Salaried worker", "lesson20"], // Extra
-  ["物価", "ぶっか", "দ্রব্যমূল্য", "Commodity prices", "lesson20"], // Extra
-  ["この間", "このあいだ", "সেদিন / কিছুদিন আগে / সম্প্রতি", "The other day", "lesson20"], // Extra
-  ["国へ帰るの？", "くにへかえるの", "দেশে ফিরে যাচ্ছ?", "Are you going back to your country?", "lesson20"], // Extra
-  ["どうしようかな。", "どうしようかな", "কী করা যায় ভাবছি", "What shall I do?", "lesson20"], // Extra
 
   // Lesson 21
   ["思う", "おもいます", "মনে করা", "Think", "lesson21"],
@@ -989,7 +953,7 @@ const RAW = [
   ["きっと", "きっと", "নিশ্চই, নিশ্চিতভাবে", "Surely", "lesson21"],
   ["本当に", "ほんとうに", "সত্যিই", "Really", "lesson21"],
   ["そんなに", "そんなに", "তেমন একটা না", "Not so much", "lesson21"],
-  ["～について", "について", "~ সম্পর্কে", "About ~, concerning ~", "lesson21"],
+  ["~ に ついて", "~ に ついて", "~ সম্পর্কে", "About ~, concerning ~", "lesson21"],
   ["暫くですね。", "しばらくですね", "অনেকদিন পর দেখা", "Long time no see.", "lesson21"],
   ["コーヒーでも飲みませんか。", "コーヒーでものみませんか", "কফি-টফি কিছু পান করবেন কি?", "How about drinking ~ or something?", "lesson21"],
   ["勿論", "もちろん", "অবশ্যই", "Of course", "lesson21"],
@@ -997,13 +961,6 @@ const RAW = [
   ["てんじんまつり", "てんじんまつり", "তেনজিন উৎসব", "Tenjin Festival", "lesson21"],
   ["カンガルー", "カンガルー", "ক্যাঙ্গারু", "Kangaroo", "lesson21"],
   ["かぐやひめ", "かぐやひめ", "জাপানি লোককাহিনির চাঁদের রাজকন্যা", "Princess Kaguya, a character from a Japanese folktale", "lesson21"],
-  ["見ないと。", "みないと", "দেখতেই হবে", "I've got to watch it.", "lesson21"], // Extra
-  ["しかたがありません。", "しかたがありません", "কিছু করার নেই / উপায় নেই / নিরুপায়", "It can't be helped.", "lesson21"], // Extra
-  ["ラッシュアワー", "ラッシュアワー", "ভিড়ের সময়", "Rush hour", "lesson21"], // Extra
-  ["同じ", "おなじ", "একই", "The same", "lesson21"], // Extra
-  ["首相", "しゅしょう", "প্রধানমন্ত্রী", "Prime minister", "lesson21"], // Extra
-  ["大統領", "だいとうりょう", "রাষ্ট্রপতি", "President", "lesson21"], // Extra
-  ["政治", "せいじ", "রাজনীতি", "Politics", "lesson21"], // Extra
 
   // Lesson 22
   ["着ます［シャツを～］", "きます", "(শার্ট) পরা", "Put on a shirt", "lesson22"],
@@ -1035,8 +992,6 @@ const RAW = [
   ["都合", "つごう", "সুবিধা / সময়-সুবিধা", "Convenience / Availability", "lesson22"],
   ["パリ", "パリ", "প্যারিস", "Paris", "lesson22"],
   ["万里の長城", "ばんりのちょうじょう", "চীনের মহাপ্রাচীর", "The Great Wall of China", "lesson22"],
-  ["アパート", "アパート", "অ্যাপার্টমেন্ট", "Apartment", "lesson22"], // Extra
-  ["うーん", "うーん", "হুম...", "Let me see.", "lesson22"], // Extra
 
   // Lesson 23
   ["聞きます［せんせいに～］", "ききます", "(শিক্ষককে) জিজ্ঞাসা করা", "Ask the teacher", "lesson23"],
@@ -1063,14 +1018,6 @@ const RAW = [
   ["ー目", "~め", "~ নম্বর (ক্রম)", "The -th (order)", "lesson23"],
   ["聖徳太子", "しょうとくたいし", "শোতোকু তাইশি (জাপানের ঐতিহাসিক রাজপুত্র)", "Prince Shotoku, a historical Japanese prince", "lesson23"],
   ["法隆寺", "ほうりゅうじ", "হোরিউজি মন্দির", "Horyuji Temple", "lesson23"],
-  ["外国人登録証", "がいこくじんとうろくしょう", "বিদেশি নিবন্ধন কার্ড", "Alien registration card", "lesson23"], // Extra
-  ["ごちそうさま［でした］。", "ごちそうさま", "খাওয়া সুস্বাদু ছিল", "That was delicious.", "lesson23"], // Extra
-  ["つまみ", "つまみ", "নব (মেশিনের)", "Knob", "lesson23"], // Extra
-  ["機械", "きかい", "যন্ত্র", "Machine", "lesson23"], // Extra
-  ["～屋", "や", "~ দোকানের মালিক", "Person of ~ shop", "lesson23"], // Extra
-  ["電気屋", "でんきや", "ইলেকট্রনিক্স দোকান", "Electrician", "lesson23"], // Extra
-  ["引っ越しします", "ひっこしします", "বাসা পরিবর্তন করা", "Move house", "lesson23"], // Extra
-  ["気をつけます［くるまに～］", "きをつけます", "সতর্ক থাকা", "Pay attention to cars", "lesson23"], // Extra
 
   // Lesson 24
   ["くれます", "くれます", "(আমাকে) দেওয়া", "Give (me)", "lesson24"],
@@ -1092,8 +1039,6 @@ const RAW = [
   ["［お］弁当", "おべんとう", "টিফিন বাক্স", "Box lunch", "lesson24"],
   ["渡します", "わたします", "হাতে তুলে দেওয়া / প্রদান করা", "Hand over / Give", "lesson24"],
   ["母の日", "ははのひ", "মা দিবস", "Mother's Day", "lesson24"],
-  ["ワゴン車", "ワゴンしゃ", "ওয়াগন গাড়ি", "Station wagon", "lesson24"], // Extra
-  ["いれます［コーヒーを～］", "いれます", "কফি বানানো", "Make coffee", "lesson24"], // Extra
 
   // Lesson 25
   ["考えます", "かんがえます", "চিন্তা করা, বিবেচনা করা", "Think, consider", "lesson25"],
@@ -1111,10 +1056,6 @@ const RAW = [
   ["頑張ります", "がんばります", "সর্বোচ্চ চেষ্টা করা", "Do one's best", "lesson25"],
   ["どうぞお元気で。", "どうぞおげんきで", "ভালো থাকবেন", "Best of luck.", "lesson25"],
   ["ベトナム", "ベトナム", "ভিয়েতনাম", "Vietnam", "lesson25"],
-  ["一杯飲みましょう。", "いっぱいのみましょう", "একসাথে একটু পান করি", "Let's have a drink together.", "lesson25"], // Extra
-  ["いくら［～でも］", "いくら", "যতই ~ হোক না কেন", "However ~, even if ~", "lesson25"], // Extra
-  ["グループ", "グループ", "দল", "Group", "lesson25"], // Extra
-  ["大使館", "たいしかん", "দূতাবাস", "Embassy", "lesson25"], // Extra
 
 
   // --- Counting supplement: numerals, months, weeks, hours, minutes,
