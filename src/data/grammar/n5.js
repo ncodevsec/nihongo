@@ -1283,8 +1283,26 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "11-2",
+        "title": "ぐらい — \"Around\"",
+        "structure": "Quantifier (Times) + ぐらい",
+        "particles": [
+          "donokurai"
+        ],
+        "examples": [
+          {
+            "jp": "うちから がっこうまで どのくらい かかりますか。……いちじかんぐらいです。",
+            "meaningBn": "বাসা থেকে স্কুল পর্যন্ত কত সময় প্রয়োজন? ……১ ঘণ্টা প্রায়।"
+          },
+          {
+            "jp": "1じかん ぐらい です。",
+            "meaningBn": "১ ঘন্টা প্রায়।"
+          }
+        ]
+      },
+      {
+        "id": "11-3",
         "title": "に — Frequency in a Period",
-        "structure": "Quantifier(Time Period) + に + Verb",
+        "structure": "Quantifier (Time Period) + に + Quantifier (Times) + Verb",
         "particles": [
           "ni"
         ],
@@ -1304,7 +1322,7 @@ export const GRAMMAR_N5 = [
         ]
       },
       {
-        "id": "11-3",
+        "id": "11-4",
         "title": "だけ — \"Only\"",
         "structure": "Quantifier/Noun + だけ (Only)",
         "particles": [
