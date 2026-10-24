@@ -18,7 +18,7 @@ import Features from "./Features.jsx";
 import Faq from "./Faq.jsx";
 import CtaBand from "./CtaBand.jsx";
 import Banners from "./Banners.jsx";
-import MockPromo from "./MockPromo.jsx";
+import LatestFeature from "./LatestFeature.jsx";
 import EventCountdown from "./EventCountdown.jsx";
 import SectionHeading from "./SectionHeading.jsx";
 import StreakWidget from "../StreakWidget.jsx";
@@ -162,6 +162,13 @@ export default function Home({
 			</Rise>
 
 			<Rise i={2}>
+				<LatestFeature
+					lang={lang}
+					onOpen={(f) => onLaunch(resumeModule, f.level ?? (level === "n4" ? "n4" : "n5"), f.tab)}
+				/>
+			</Rise>
+
+			<Rise i={2}>
 				<StatsStrip
 					T={T}
 					personal={stats.hasProgress}
@@ -209,7 +216,6 @@ export default function Home({
 						stats={stats}
 						onLaunch={onLaunch}
 					/>
-					<MockPromo lang={lang} isActive={isActive} onLaunch={onLaunch} />
 				</div>
 			</Rise>
 

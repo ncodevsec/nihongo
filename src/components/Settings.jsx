@@ -13,6 +13,7 @@ const DATA_KEYS = [
 	"nihongo-activity-v1",
 	"nihongo-favorites-v1",
 	"nihongo-mock-v1",
+	"nihongo-mock-papers-v1",
 ];
 
 function Toggle({ checked, onChange }) {

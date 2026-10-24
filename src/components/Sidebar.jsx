@@ -73,7 +73,6 @@ export default function Sidebar({
 		{ key: "quiz", label: T("tabQuiz"), icon: "quiz" },
 		{ key: "reference", label: T("tabReference"), icon: "reference" },
 		{ key: "progress", label: T("tabProgress"), icon: "progress" },
-		{ key: "mock", label: T("tabMock"), icon: "mock" },
 	];
 
 	return (
@@ -156,7 +155,7 @@ export default function Sidebar({
 				<div className="my-6 flex flex-col gap-2 rounded-3xl">
 					{MODULE_ORDER.map((key) => {
 						const mod = MODULES[key];
-						const isActiveModule = moduleKey === key;
+						const isActiveModule = active !== "mock" && moduleKey === key;
 						return (
 							<button
 								key={key}
@@ -171,11 +170,23 @@ export default function Sidebar({
 							</button>
 						);
 					})}
+					<button
+						onClick={() => onChange("mock")}
+						aria-current={active === "mock" ? "page" : undefined}
+						className={`flex-1 px-2.5 py-2 rounded-full border border-ai-line dark:border-night-line text-md text-center font-bengali font-semibold ${
+							active === "mock"
+								? "bg-shu text-washi shadow-sm"
+								: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+						}`}
+					>
+						{T("tabMock")}
+					</button>
 				</div>
 			</div>
 
 			{/* Main navigation */}
 			<nav
+				hidden={active === "mock"}
 				className="flex flex-col m-5 gap-2 p-2 rounded-3xl border border-ai-line dark:border-night-line bg-washi dark:bg-night"
 				role="tablist"
 				aria-label="Sections"
@@ -202,7 +213,7 @@ export default function Sidebar({
 			</nav>
 
 			{/* Accuracy / mastered snapshot */}
-			{!isGrammar && (
+			{!isGrammar && active !== "mock" && (
 				<div className="m-5 grid grid-cols-2 gap-2">
 					<div className="rounded-lg border border-ai-line dark:border-night-line bg-washi dark:bg-night px-3 py-2 text-center">
 						<div className="text-shu dark:text-shu-glow font-mono text-base font-semibold">

@@ -177,13 +177,17 @@ export default function App() {
 								onLevelChange={handleLevelChange}
 								onHome={() => setTab("home")}
 								settings={settings}
+								mockActive={tab === "mock"}
+								onMock={() => setTab("mock")}
 							/>
-							<TabBar
-								active={tab}
-								onChange={setTab}
-								moduleKey={moduleKey}
-								settings={settings}
-							/>
+							{tab !== "mock" && (
+								<TabBar
+									active={tab}
+									onChange={setTab}
+									moduleKey={moduleKey}
+									settings={settings}
+								/>
+							)}
 						</div>
 					)}
 				</div>

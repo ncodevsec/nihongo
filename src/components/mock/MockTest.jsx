@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMockStore } from "../../hooks/useMockStore.js";
+import { usePaperLibrary } from "../../hooks/usePaperLibrary.js";
 import { buildTest } from "../../lib/mockTest/build.js";
+import { paperToTest } from "../../lib/mockTest/paper.js";
 import { scoreTest } from "../../lib/mockTest/score.js";
 import { stopSpeech } from "../../lib/mockTest/speech.js";
 import MockSetup from "./MockSetup.jsx";
@@ -13,6 +15,7 @@ import MockResults from "./MockResults.jsx";
 export default function MockTest({ settings, level: appLevel, onLaunch, isActive = true }) {
 	const lang = settings.uiLang;
 	const store = useMockStore();
+	const library = usePaperLibrary();
 	const [level, setLevel] = useState(appLevel === "n4" ? "n4" : "n5");
 	const [session, setSessionState] = useState(store.loadSession);
 	const [result, setResult] = useState(null);
@@ -34,14 +37,21 @@ export default function MockTest({ settings, level: appLevel, onLaunch, isActive
 		[saveSession],
 	);
 
+	// opts: { level, format, mode, sectionKey, timed, listening, lisMode, neg, source, paperId }
 	const start = (opts) => {
-		const test = buildTest(opts);
+		let test = null;
+		if (opts.source === "paper") {
+			const entry = library.papers.find((p) => p.id === opts.paperId);
+			test = entry ? paperToTest(entry.paper, opts) : null;
+		}
+		if (!test) test = buildTest({ ...opts, source: "builtin" });
 		setResult(null);
 		setSession({
 			test,
 			answers: {},
 			flags: {},
 			plays: {},
+			lisPos: 0,
 			sIdx: 0,
 			qIdx: 0,
 			stage: "intro",
@@ -64,6 +74,8 @@ export default function MockTest({ settings, level: appLevel, onLaunch, isActive
 				format: s.test.format,
 				mode: s.test.mode,
 				section: s.test.mode === "section" ? s.test.sections[0].key : null,
+				title: s.test.title,
+				neg: s.test.neg || 0,
 				lk: score.lk,
 				lis: score.lis,
 				total: score.total,
@@ -86,16 +98,7 @@ export default function MockTest({ settings, level: appLevel, onLaunch, isActive
 	};
 
 	if (session) {
-		return (
-			<MockExam
-				session={session}
-				setSession={setSession}
-				lang={lang}
-				isActive={isActive}
-				onFinish={finish}
-				onAbandon={abandon}
-			/>
-		);
+		return <MockExam session={session} setSession={setSession} lang={lang} isActive={isActive} onFinish={finish} onAbandon={abandon} />;
 	}
 	if (result) {
 		return (
@@ -103,16 +106,11 @@ export default function MockTest({ settings, level: appLevel, onLaunch, isActive
 				result={result}
 				lang={lang}
 				onClose={() => setResult(null)}
-				onRetake={() =>
-					start({
-						level: result.test.level,
-						format: result.test.format,
-						mode: result.test.mode,
-						sectionKey: result.test.mode === "section" ? result.test.sections[0].key : null,
-						timed: result.test.timed,
-						listening: result.test.sections.some((s) => s.key === "listening"),
-					})
-				}
+				onRetake={() => {
+					const t = result.test;
+					// `opts` is missing on papers started before v1.26 — rebuild it from the test.
+					start(t.opts || { level: t.level, format: t.format, mode: t.mode, sectionKey: t.mode === "section" ? t.sections[0].key : null, timed: t.timed, listening: t.sections.some((x) => x.key === "listening") });
+				}}
 				onLaunch={onLaunch}
 			/>
 		);
@@ -124,6 +122,7 @@ export default function MockTest({ settings, level: appLevel, onLaunch, isActive
 			setLevel={setLevel}
 			history={store.history}
 			onClearHistory={store.clearHistory}
+			library={library}
 			onStart={start}
 		/>
 	);

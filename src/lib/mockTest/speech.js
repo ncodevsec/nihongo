@@ -37,8 +37,10 @@ export function parseScript(script) {
 		});
 }
 
-// Speaks the lines one after another; returns a cancel function.
-export function speakLines(lines, { rate = 0.85, onEnd } = {}) {
+// Speaks the lines one after another; returns a cancel function. A line may
+// carry its own pause afterwards (`after`, ms); otherwise `gapMs` is used.
+// A guard timer covers browsers whose speech engine never reports the end.
+export function speakLines(lines, { rate = 0.85, gapMs = 350, onEnd } = {}) {
 	if (!speechAvailable()) {
 		onEnd?.();
 		return () => {};
@@ -47,26 +49,34 @@ export function speakLines(lines, { rate = 0.85, onEnd } = {}) {
 	synth.cancel();
 	const voice = jaVoices()[0];
 	let cancelled = false;
+	let finished = false;
+	let guard = null;
+	const done = () => {
+		if (finished || cancelled) return;
+		finished = true;
+		clearTimeout(guard);
+		onEnd?.();
+	};
 	let i = 0;
 	const next = () => {
-		if (cancelled) return;
-		if (i >= lines.length) {
-			onEnd?.();
-			return;
-		}
-		const { who, text } = lines[i++];
+		if (cancelled || finished) return;
+		if (i >= lines.length) return done();
+		const { who, text, after } = lines[i++];
 		const u = new window.SpeechSynthesisUtterance(text);
 		u.lang = "ja-JP";
 		if (voice) u.voice = voice;
 		u.rate = rate;
 		u.pitch = who === "F" ? 1.25 : who === "M" ? 0.8 : 1;
-		u.onend = () => setTimeout(next, 350);
-		u.onerror = () => onEnd?.();
+		u.onend = () => setTimeout(next, after ?? gapMs);
+		u.onerror = () => done();
 		synth.speak(u);
 	};
+	const chars = lines.reduce((n, l) => n + l.text.length, 0);
+	guard = setTimeout(done, Math.max(4000, chars * 450 + lines.length * 2500));
 	next();
 	return () => {
 		cancelled = true;
+		clearTimeout(guard);
 		synth.cancel();
 	};
 }

@@ -34,7 +34,6 @@ export default function TabBar({ active, onChange, moduleKey, settings }) {
     { key: "quiz", label: T("tabQuiz"), icon: "quiz" },
     { key: "reference", label: T("tabReference"), icon: "reference" },
     { key: "progress", label: T("tabProgress"), icon: "progress" },
-    { key: "mock", label: T("tabMock"), icon: "mock" },
   ];
 
   return (

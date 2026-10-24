@@ -8,6 +8,8 @@ export default function LevelModuleBar({
 	onLevelChange,
 	onHome,
 	settings,
+	mockActive = false,
+	onMock = () => {},
 }) {
 	const lang = settings.uiLang;
 
@@ -52,10 +54,10 @@ export default function LevelModuleBar({
 					aria-hidden="true"
 				/>
 
-				<div className="flex rounded-full border border-ai-line dark:border-night-line overflow-hidden bg-washi dark:bg-night">
+				<div className="flex max-w-full overflow-x-auto rounded-full border border-ai-line dark:border-night-line bg-washi dark:bg-night">
 					{MODULE_ORDER.map((key) => {
 						const mod = MODULES[key];
-						const isActiveModule = moduleKey === key;
+						const isActiveModule = !mockActive && moduleKey === key;
 						return (
 							<button
 								key={key}
@@ -70,6 +72,16 @@ export default function LevelModuleBar({
 							</button>
 						);
 					})}
+					<button
+						onClick={onMock}
+						className={`px-2.5 min-[400px]:px-3 py-1.5 text-xs font-bengali font-semibold whitespace-nowrap ${
+							mockActive
+								? "bg-shu text-washi shadow-sm"
+								: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+						}`}
+					>
+						{t(lang, "tabMock")}
+					</button>
 				</div>
 			</div>
 		</div>

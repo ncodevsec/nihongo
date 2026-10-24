@@ -29,13 +29,13 @@ function ScoreBar({ label, value, max, mark, markLabel, tone = "shu" }) {
 	);
 }
 
-function AccBar({ label, c, t }) {
-	const pct = t ? Math.round((c / t) * 100) : 0;
+function AccBar({ label, c, t, w = 0, neg = 0 }) {
+	const pct = t ? Math.round((Math.max(0, c - neg * w) / t) * 100) : 0;
 	return (
 		<div>
 			<div className="flex items-baseline justify-between mb-1">
 				<span className="font-bengali text-xs text-ink dark:text-night-ink">{label}</span>
-				<span className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted">{c}/{t} · {pct}%</span>
+				<span className="font-mono text-[11px] text-ink-muted dark:text-night-ink-muted">{c}/{t}{neg > 0 && w > 0 ? ` −${Math.round(neg * w * 100) / 100}` : ""} · {pct}%</span>
 			</div>
 			<div className="h-2 rounded-full bg-ai-soft dark:bg-night-line overflow-hidden">
 				<div className={`h-full rounded-full ${pct >= 75 ? "bg-take dark:bg-take-glow" : pct >= 50 ? "bg-sakura" : "bg-danger dark:bg-danger-glow"}`} style={{ width: `${pct}%` }} />
@@ -86,7 +86,7 @@ export default function MockResults({ result, lang, onClose, onRetake, onLaunch 
 				<div className="flex items-center gap-4 sm:gap-6">
 					<Hanko label={score.complete ? (score.pass ? "合格" : "もう少し") : `${Math.round((score.correct / score.totalQuestions) * 100)}%`} sub={score.complete ? undefined : undefined} tone={score.complete ? (score.pass ? "take" : "shu") : "ai"} size="lg" />
 					<div className="min-w-0">
-						<div className="font-mono text-[11px] font-semibold text-shu dark:text-shu-glow">{test.level.toUpperCase()} · {test.format === "jlpt" ? "JLPT" : "NAT-TEST"} · {M("estimated")}</div>
+						<div className="font-mono text-[11px] font-semibold text-shu dark:text-shu-glow">{test.title ? `${test.title} · ` : ""}{test.level.toUpperCase()} · {test.format === "jlpt" ? "JLPT" : "NAT-TEST"} · {M("estimated")}</div>
 						<h2 className="font-bengali text-xl sm:text-2xl font-bold text-ink dark:text-night-ink leading-snug">{M(heroKey)}</h2>
 						{score.complete ? (
 							<div className="font-mono text-3xl sm:text-4xl font-bold text-ink dark:text-night-ink mt-1">{score.total}<span className="text-base font-normal text-ink-muted dark:text-night-ink-muted"> / 180</span></div>
@@ -95,6 +95,7 @@ export default function MockResults({ result, lang, onClose, onRetake, onLaunch 
 						)}
 					</div>
 				</div>
+				{score.neg > 0 && <p className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-3 leading-relaxed rounded-lg border border-ai-line dark:border-night-line px-4 py-2.5">{M("negResult", { rate: score.neg === 0.25 ? "¼" : score.neg === 0.5 ? "½" : "⅓", wrong: score.wrong, penalty: score.penalty })}</p>}
 				{score.band && <p className="font-bengali text-sm text-ink dark:text-night-ink mt-4 leading-relaxed rounded-lg bg-washi dark:bg-night border border-ai-line dark:border-night-line px-4 py-3">{M(`band_${score.band}`, { pass: test.passMark })}</p>}
 			</Card>
 
@@ -109,11 +110,11 @@ export default function MockResults({ result, lang, onClose, onRetake, onLaunch 
 			<div className="grid gap-5 sm:grid-cols-2">
 				<Card className="p-4 sm:p-5 space-y-3">
 					<h3 className="font-bengali text-sm font-bold text-ink dark:text-night-ink">{M("bySkill")}</h3>
-					{["vocab", "grammar", "reading", "listening"].filter((k) => score.skills[k]).map((k) => <AccBar key={k} label={M(`skill_${k}`)} {...score.skills[k]} />)}
+					{["vocab", "grammar", "reading", "listening"].filter((k) => score.skills[k]).map((k) => <AccBar key={k} label={M(`skill_${k}`)} {...score.skills[k]} neg={score.neg} />)}
 				</Card>
 				<Card className="p-4 sm:p-5 space-y-3">
 					<h3 className="font-bengali text-sm font-bold text-ink dark:text-night-ink">{M("byPart")}</h3>
-					{Object.keys(PART_META).filter((p) => score.parts[p]).map((p) => <AccBar key={p} label={M(`part_${p}`)} {...score.parts[p]} />)}
+					{Object.keys(PART_META).filter((p) => score.parts[p]).map((p) => <AccBar key={p} label={M(`part_${p}`)} {...score.parts[p]} neg={score.neg} />)}
 				</Card>
 			</div>
 
