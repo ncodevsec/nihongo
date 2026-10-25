@@ -622,7 +622,8 @@ export const GRAMMAR_N5 = [
         "title": "なに・なん — \"What\"",
         "structure": "なに + が / も / を\nなん + Other Particles",
         "particles": [
-          "nani"
+          "nani",
+          "nan"
         ],
         "examples": [
           {
@@ -857,7 +858,7 @@ export const GRAMMAR_N5 = [
     "points": [
       {
         "id": "8-1",
-        "title": "い-Adj & な-Adj — Adjective Types",
+        "title": "Adjective Types - [い-Adj & な-Adj]",
         "structure": "な-Adj: Base + な + Noun\nい-Adj: Base(〜い) + Noun",
         "particles": [
           "i-adjective",
@@ -866,22 +867,34 @@ export const GRAMMAR_N5 = [
         "examples": [
           {
             "jp": "しんせつ［な］",
-            "meaningBn": "দয়ালু (な-adjective)"
+            "meaningBn": "দয়ালু (な-Adjective)"
+          },
+          {
+            "jp": "しんせつじゃありません",
+            "meaningBn": "দয়ালু নয় (な-Adjective-এর negative form)"
           },
           {
             "jp": "たかい",
-            "meaningBn": "উঁচু/দামী (い-adjective)"
+            "meaningBn": "উঁচু/দামি (い-Adjective)"
+          },
+          {
+            "jp": "たかくない",
+            "meaningBn": "উঁচু/দামি নয় (い-Adjective-এর negative form)"
           },
           {
             "jp": "きれい［な］",
-            "meaningBn": "সুন্দর (な-adjective, ব্যতিক্রম শব্দ)"
+            "meaningBn": "সুন্দর/পরিষ্কার (な-Adjective, ব্যতিক্রম শব্দ)"
+          },
+          {
+            "jp": "きれいじゃありません",
+            "meaningBn": "সুন্দর/পরিষ্কার নয় (な-Adjective-এর negative form)"
           }
         ]
       },
       {
         "id": "8-2",
-        "title": "な-Adjective Sentence",
-        "structure": "Noun/Subject + は + な-Adjective［な］+ です",
+        "title": "な-Adjective - Negative Sentence",
+        "structure": "Noun/Subject + は + な-Adjective[な] + です",
         "particles": [
           "wa",
           "na-adjective"
@@ -893,17 +906,21 @@ export const GRAMMAR_N5 = [
           },
           {
             "jp": "きむらさんは しんせつじゃありません。",
-            "meaningBn": "মিস্টার কিমুরা দয়ালু না।"
+            "meaningBn": "মিস্টার কিমুরা দয়ালু নন।"
           },
           {
             "jp": "この まちは にぎやかです。",
-            "meaningBn": "এই শহর প্রাণবন্ত।"
+            "meaningBn": "এই শহরটি প্রাণবন্ত।"
+          },
+          {
+            "jp": "この まちは にぎやかじゃありません。",
+            "meaningBn": "এই শহরটি প্রাণবন্ত নয়।"
           }
         ]
       },
       {
         "id": "8-3",
-        "title": "い-Adjective Sentence",
+        "title": "い-Adjective - Negative Sentence",
         "structure": "Noun/Subject + は + い-Adjective［い］+ です",
         "particles": [
           "wa",
@@ -916,18 +933,22 @@ export const GRAMMAR_N5 = [
           },
           {
             "jp": "ふじさんは たかくないです。",
-            "meaningBn": "মাউন্ট ফুজি উঁচু না।"
+            "meaningBn": "মাউন্ট ফুজি উঁচু নয়।"
           },
           {
             "jp": "この りょうりは おいしいです。",
             "meaningBn": "এই খাবারটি সুস্বাদু।"
+          },
+          {
+            "jp": "この りょうりは おいしくないです。",
+            "meaningBn": "এই খাবারটি সুস্বাদু নয়।"
           }
         ]
       },
       {
         "id": "8-4",
         "title": "な-Adjective + Noun",
-        "structure": "Noun/Subject + は + な-Adjective［な］+ Noun です",
+        "structure": "Noun/Subject + は + な-Adjective + な + Noun です",
         "particles": [
           "wa",
           "na-adjective"
@@ -950,22 +971,26 @@ export const GRAMMAR_N5 = [
       {
         "id": "8-5",
         "title": "とても・あまり — Degree Adverbs",
-        "structure": "とても + Adj (＋)\nあまり + Adj (−)",
+        "structure": "とても + Adj (+)\nあまり + Adj (-)",
         "particles": [
           "adverb-degree"
         ],
         "examples": [
           {
-            "jp": "バングラデシュは とても さむいです。",
-            "meaningBn": "বাংলাদেশে অনেক ঠান্ডা।"
+            "jp": "バングラデシュは とても あついです。",
+            "meaningBn": "বাংলাদেশে অনেক গরম।"
           },
           {
-            "jp": "バングラデシュは あまり さむくないです。",
-            "meaningBn": "বাংলাদেশে তেমন ঠান্ডা না।"
+            "jp": "バングラデシュは あまり あつくないです。",
+            "meaningBn": "বাংলাদেশে তেমন গরম নয়।"
           },
           {
             "jp": "この えいがは とても おもしろいです。",
             "meaningBn": "এই সিনেমাটি অনেক মজার।"
+          },
+          {
+            "jp": "この えいがは あまり おもしろくないです。",
+            "meaningBn": "এই সিনেমাটি তেমন মজার নয়।"
           }
         ]
       },
@@ -982,12 +1007,24 @@ export const GRAMMAR_N5 = [
             "meaningBn": "ঢাকা কেমন? ……একটি প্রাণবন্ত শহর।"
           },
           {
-            "jp": "にほんの たべものは どうですか。",
-            "meaningBn": "জাপানের খাবার কেমন?"
+            "jp": "にほんの たべものは どうですか。……おいしいです。",
+            "meaningBn": "জাপানের খাবার কেমন? ……সুস্বাদু।"
           },
           {
-            "jp": "しごとは どうですか。",
-            "meaningBn": "কাজ কেমন চলছে?"
+            "jp": "にほんの たべものは あまり おいしくないです。",
+            "meaningBn": "জাপানের খাবার তেমন সুস্বাদু নয়।"
+          },
+          {
+            "jp": "しごとは どうですか。……おもしろいです。",
+            "meaningBn": "কাজ কেমন চলছে? ……মজার।"
+          },
+          {
+            "jp": "しごとは あまり おもしろくないです。",
+            "meaningBn": "কাজ তেমন মজার নয়।"
+          },
+          {
+            "jp": "この まちは どうですか。……しずかな まちです。",
+            "meaningBn": "এই শহরটি কেমন? ……একটি শান্ত শহর।"
           }
         ]
       },
@@ -1283,8 +1320,26 @@ export const GRAMMAR_N5 = [
       },
       {
         "id": "11-2",
+        "title": "ぐらい — \"Around\"",
+        "structure": "Quantifier (Times) + ぐらい",
+        "particles": [
+          "donokurai"
+        ],
+        "examples": [
+          {
+            "jp": "うちから がっこうまで どのくらい かかりますか。……いちじかんぐらいです。",
+            "meaningBn": "বাসা থেকে স্কুল পর্যন্ত কত সময় প্রয়োজন? ……১ ঘণ্টা প্রায়।"
+          },
+          {
+            "jp": "1じかん ぐらい です。",
+            "meaningBn": "১ ঘন্টা প্রায়।"
+          }
+        ]
+      },
+      {
+        "id": "11-3",
         "title": "に — Frequency in a Period",
-        "structure": "Quantifier(Time Period) + に + Verb",
+        "structure": "Quantifier (Time Period) + に + Quantifier (Times) + Verb",
         "particles": [
           "ni"
         ],
@@ -1304,7 +1359,7 @@ export const GRAMMAR_N5 = [
         ]
       },
       {
-        "id": "11-3",
+        "id": "11-4",
         "title": "だけ — \"Only\"",
         "structure": "Quantifier/Noun + だけ (Only)",
         "particles": [
@@ -1403,23 +1458,38 @@ export const GRAMMAR_N5 = [
       {
         "id": "12-4",
         "title": "どちら・いちばん — Comparison & Superlative",
-        "structure": "Noun1 と Noun2 と どちらが Adjective ですか / いちばん",
+        "structure": "Noun1 + と + Noun2 + と + どちらが + Adjective + ですか\nNoun + の + なかで + [なに / どこ / だれ / いつ] + が + いちばん + Adjective + ですか",
         "particles": [
           "to",
-          "dochira"
+          "dochira",
+          "ga",
+          "nan",
+          "de",
         ],
         "examples": [
           {
-            "jp": "サッカーと やきゅうと どちらが すきですか。……サッカーのほうが すきです。",
-            "meaningBn": "ফুটবল এবং বেসবলের মধ্যে কোনটি পছন্দ? ……ফুটবল পছন্দ।"
+            "jp": "コーヒーと おちゃと どちらが すきですか。……コーヒーのほうが すきです。",
+            "meaningBn": "কফি এবং চায়ের মধ্যে কোনটি পছন্দ? ……কফি বেশি পছন্দ।"
           },
           {
-            "jp": "にほんりょうりの なかで なにが いちばん すきですか。……らめんが いちばん すきです。",
-            "meaningBn": "জাপানের খাবারের মধ্যে কী সবচেয়ে বেশি পছন্দ? ……রামেন সবচেয়ে বেশি পছন্দ।"
+            "jp": "でんしゃと バスと どちらが はやいですか。……でんしゃのほうが はやいです。",
+            "meaningBn": "ট্রেন এবং বাসের মধ্যে কোনটি দ্রুত? ……ট্রেন বেশি দ্রুত।"
           },
           {
-            "jp": "どちらも すきです。",
-            "meaningBn": "দুটোই পছন্দ।"
+            "jp": "なつと ふゆと どちらが すきですか。……ふゆのほうが すきです。",
+            "meaningBn": "গ্রীষ্ম ও শীতের মধ্যে কোন ঋতু পছন্দ? ……শীত বেশি পছন্দ।"
+          },
+          {
+            "jp": "スポーツの なかで なにが いちばん すきですか。……サッカーが いちばん すきです。",
+            "meaningBn": "খেলাধুলার মধ্যে কোনটি সবচেয়ে বেশি পছন্দ? ……ফুটবল সবচেয়ে বেশি পছন্দ।"
+          },
+          {
+            "jp": "かぞくの なかで だれが いちばん はやく おきますか。……ははが いちばん はやく おきます。",
+            "meaningBn": "পরিবারের মধ্যে কে সবচেয়ে আগে ঘুম থেকে ওঠেন? ……মা সবচেয়ে আগে ঘুম থেকে ওঠেন।"
+          },
+          {
+            "jp": "にほんの まちの なかで どこが いちばん にぎやかですか。……とうきょうが いちばん にぎやかです。",
+            "meaningBn": "জাপানের শহরগুলোর মধ্যে কোন শহরটি সবচেয়ে জমজমাট? ……টোকিও সবচেয়ে জমজমাট।"
           }
         ]
       }
@@ -1477,7 +1547,7 @@ export const GRAMMAR_N5 = [
       {
         "id": "13-3",
         "title": "〜に いきます — Go To Do",
-        "structure": "Noun(Place) + へ + Noun(V-Stem) に + いきます/きます/かえります",
+        "structure": "Place + へ + Verb Stem + に + いきます / きます / かえります",
         "particles": [
           "ni",
           "e"
