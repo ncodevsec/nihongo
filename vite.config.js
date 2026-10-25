@@ -23,7 +23,7 @@ function writeVersionFile() {
     name: "write-version-file",
     apply: "build",
     writeBundle(options) {
-      const outDir = options.dir || resolve(process.cwd(), "docs");
+      const outDir = options.dir || resolve(process.cwd(), "dist");
       writeFileSync(
         resolve(outDir, "version.json"),
         JSON.stringify({ version: pkg.version, buildTime: BUILD_TIME })
