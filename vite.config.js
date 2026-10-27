@@ -49,14 +49,14 @@ function writeVersionFile() {
 // files are copied straight through by Vite with zero processing, this
 // approach is both simpler and cannot slow down or hang the build.
 export default defineConfig({
-  base: "./",
+  base: "/",
   plugins: [react(), writeVersionFile()],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
     __APP_BUILD_TIME__: JSON.stringify(String(BUILD_TIME)),
   },
   build: {
-    outDir: 'docs',
+    outDir: 'dist',
     rollupOptions: {
       output: {
         // Forces the entry file name to be index.js

@@ -81,14 +81,14 @@ export default function Sidebar({
 			<div className="flex items-center gap-3 px-5 pt-6 pb-5 border-b border-ai-line dark:border-night-line mb-4">
 				<a
 					className="shrink-0"
-					href="./"
+					href="/"
 					onClick={(e) => {
 						e.preventDefault();
 						onChange("home");
 					}}
 				>
 					<img
-						src="./icons/icon-192.png"
+						src="/icons/icon-192.png"
 						alt="NihonGo - Study Lab"
 						className="brand-logo w-9 h-9"
 						width={36}

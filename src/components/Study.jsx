@@ -20,6 +20,7 @@ import GroupCategoryTabs from "./GroupCategoryTabs.jsx";
 import { vocabKanjiGroupCounts } from "../lib/categoryCounts.js";
 import { RADICAL_CATEGORIES, radicalKeyOf } from "../data/kanji-radicals.js";
 import Furigana from "./Furigana.jsx";
+import FlipCard from "./FlipCard.jsx";
 import LeveledKanji from "./LeveledKanji.jsx";
 
 // Largest size (up to maxRem) at which `text` still fits the flashcard on
@@ -353,72 +354,9 @@ export default function Study({
 		);
 	}
 
-	return (
-		<div className="max-w-lg mx-auto">
-			{filterRow}
-
-			<div className="flex items-center justify-between text-[11px] font-mono text-ink-muted dark:text-night-ink-muted mb-1.5">
-				<span>
-					{index + 1} / {deck.length}
-				</span>
-				<span
-					className={
-						isLearned
-							? "text-take dark:text-take-glow font-semibold font-bengali"
-							: "font-bengali"
-					}
-				>
-					{isLearned
-						? `✓ ${T("alreadyLearned")}`
-						: pickLang(cat, lang)}
-				</span>
-			</div>
-			<div className="w-full h-1 bg-ai-soft dark:bg-night-line rounded-full mb-4 overflow-hidden">
-				<div
-					className="h-full bg-shu transition-all"
-					style={{ width: `${((index + 1) / deck.length) * 100}%` }}
-				/>
-			</div>
-
-			<div className="relative">
-				<button
-					onClick={() => toggleFavorite(card.id)}
-					aria-label={
-						favorites[card.id]
-							? T("markAsUnstarred")
-							: T("markAsStarred")
-					}
-					title={
-						favorites[card.id]
-							? T("markAsUnstarred")
-							: T("markAsStarred")
-					}
-					className={`absolute top-2.5 right-2.5 z-10 w-11 h-11 flex items-center justify-center rounded-full ${
-						favorites[card.id]
-							? "text-shu dark:text-shu-glow bg-shu-soft dark:bg-shu/10"
-							: "text-ink-muted/50 dark:text-night-ink-muted/50 hover:text-shu dark:hover:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10"
-					}`}
-				>
-					<svg
-						viewBox="0 0 24 24"
-						className="w-5 h-5"
-						fill={favorites[card.id] ? "currentColor" : "none"}
-						stroke="currentColor"
-						strokeWidth="1.6"
-					>
-						<path
-							d="M12 3.5l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3.5z"
-							strokeLinejoin="round"
-						/>
-					</svg>
-				</button>
-				<button
-					onClick={() => setFlipped((f) => !f)}
-					className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
-				>
-					{!flipped !== reverse ? (
-						// Word side: shows the Japanese word (kanji/reading).
-						// Normal mode shows this first; reverse mode shows it after flip.
+	// Card faces: word side (Japanese) and meaning side. Normal mode shows the word
+	// first; reverse recall shows the meaning first. FlipCard animates between them.
+	const wordSide = (
 						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 py-8">
 							<div
 								className={`font-mincho text-ink dark:text-night-ink text-center px-4 ${
@@ -458,9 +396,8 @@ export default function Study({
 								</span>
 							)}
 						</div>
-					) : (
-						// Meaning side: shows the Bengali/English meaning.
-						// Reverse mode shows this first; normal mode shows it after flip.
+	);
+	const meaningSide = (
 						<div className="min-h-[260px] flex flex-col items-center justify-center gap-3 px-3 py-5">
 							{!isVocab && !reverse && (
 								<div className="font-mincho text-3xl sm:text-4xl text-ai dark:text-ai-glow text-center">
@@ -580,8 +517,74 @@ export default function Study({
 								</span>
 							)}
 						</div>
-					)}
+	);
+
+	return (
+		<div className="max-w-lg mx-auto">
+			{filterRow}
+
+			<div className="flex items-center justify-between text-[11px] font-mono text-ink-muted dark:text-night-ink-muted mb-1.5">
+				<span>
+					{index + 1} / {deck.length}
+				</span>
+				<span
+					className={
+						isLearned
+							? "text-take dark:text-take-glow font-semibold font-bengali"
+							: "font-bengali"
+					}
+				>
+					{isLearned
+						? `✓ ${T("alreadyLearned")}`
+						: pickLang(cat, lang)}
+				</span>
+			</div>
+			<div className="w-full h-1 bg-ai-soft dark:bg-night-line rounded-full mb-4 overflow-hidden">
+				<div
+					className="h-full bg-shu transition-all"
+					style={{ width: `${((index + 1) / deck.length) * 100}%` }}
+				/>
+			</div>
+
+			<div className="relative">
+				<button
+					onClick={() => toggleFavorite(card.id)}
+					aria-label={
+						favorites[card.id]
+							? T("markAsUnstarred")
+							: T("markAsStarred")
+					}
+					title={
+						favorites[card.id]
+							? T("markAsUnstarred")
+							: T("markAsStarred")
+					}
+					className={`absolute top-2.5 right-2.5 z-10 w-11 h-11 flex items-center justify-center rounded-full ${
+						favorites[card.id]
+							? "text-shu dark:text-shu-glow bg-shu-soft dark:bg-shu/10"
+							: "text-ink-muted/50 dark:text-night-ink-muted/50 hover:text-shu dark:hover:text-shu-glow hover:bg-shu-soft dark:hover:bg-shu/10"
+					}`}
+				>
+					<svg
+						viewBox="0 0 24 24"
+						className="w-5 h-5"
+						fill={favorites[card.id] ? "currentColor" : "none"}
+						stroke="currentColor"
+						strokeWidth="1.6"
+					>
+						<path
+							d="M12 3.5l2.6 5.6 6.1.6-4.6 4.1 1.3 6-5.4-3.1-5.4 3.1 1.3-6-4.6-4.1 6.1-.6L12 3.5z"
+							strokeLinejoin="round"
+						/>
+					</svg>
 				</button>
+				<FlipCard
+					flipped={flipped}
+					onToggle={() => setFlipped((f) => !f)}
+					cardKey={card.id}
+					front={reverse ? meaningSide : wordSide}
+					back={reverse ? wordSide : meaningSide}
+				/>
 			</div>
 
 			<div className="grid grid-cols-2 gap-5 mt-4">

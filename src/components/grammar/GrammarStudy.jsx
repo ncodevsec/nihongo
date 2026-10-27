@@ -29,6 +29,7 @@ import {
 import LeveledKanji from "../LeveledKanji.jsx";
 import Markdown from "../Markdown.jsx";
 import GrammarStructure from "./GrammarStructure.jsx";
+import FlipCard from "../FlipCard.jsx";
 
 function StarButton({ starred, onClick, labelOn, labelOff }) {
 	return (
@@ -501,6 +502,103 @@ export default function GrammarStudy({
 		</span>
 	) : null;
 
+	const faceInner = "h-[260px] overflow-y-auto flex flex-col items-center justify-center gap-2.5 py-8 px-4";
+	const transformFront = (
+		<div className={faceInner}>
+			<>
+								<>
+									{formTag}
+									{reverse ? (
+										<>
+											<div
+												style={fitStyle(
+													point.transformedForm,
+													3,
+												)}
+												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
+											>
+												{point.transformedForm}
+											</div>
+											<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
+												{T("tapToRevealForm")}
+											</span>
+										</>
+									) : (
+										<>
+											<div
+												style={fitStyle(
+													point.mainForm,
+													3,
+												)}
+												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
+											>
+												{point.mainForm}
+											</div>
+											<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
+												{T("tapToRevealForm")}
+											</span>
+										</>
+									)}
+								</>
+			</>
+		</div>
+	);
+	const transformBack = (
+		<div className={faceInner}>
+			<>								<>
+									{/* 1 — the word this card started from, small, with its meaning */}
+									<div className="flex flex-wrap items-baseline justify-center gap-x-2 text-center">
+										<span
+											lang="ja"
+											className="font-mincho text-base text-ink-muted dark:text-night-ink-muted"
+										>
+											{point.mainForm}
+										</span>
+										{point.meaningBn && (
+											<span className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
+												— {point.meaningBn}
+											</span>
+										)}
+									</div>
+									{/* 2 — the transformed word: the focus of the card, always one line */}
+									<div
+										lang="ja"
+										style={fitStyle(
+											point.transformedForm,
+											2.5,
+										)}
+										className="font-mincho font-semibold text-ink dark:text-night-ink text-center whitespace-nowrap"
+									>
+										{point.transformedForm}
+									</div>
+									{/* 3 — other accepted forms, small (only when there are any) */}
+									{point.alternates?.length > 0 && (
+										<div
+											lang="ja"
+											className="flex flex-wrap items-baseline justify-center gap-x-3 font-mincho text-[13px] text-ink-muted dark:text-night-ink-muted text-center"
+										>
+											{point.alternates.map((alt, i) => (
+												<span
+													key={alt}
+													className="whitespace-nowrap"
+												>
+													{i > 0 && (
+														<span className="mr-3 opacity-60">
+															／
+														</span>
+													)}
+													{alt}
+												</span>
+											))}
+										</div>
+									)}
+									{/* 4 — the form tag */}
+									<div className="mt-1">{formTag}</div>
+								</>
+			</>
+		</div>
+	);
+
 	if (isTransform) {
 		return (
 			<div className="max-w-2xl lg:max-w-3xl mx-auto">
@@ -553,100 +651,13 @@ export default function GrammarStudy({
 							/>
 						</svg>
 					</button>
-					<button
-						onClick={() => setFlipped((f) => !f)}
-						className="w-full bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none active:shadow-md active:border-ai/30 dark:active:border-ai-glow/40 sm:hover:shadow-md sm:hover:border-ai/30 dark:sm:hover:border-ai-glow/40 text-left"
-					>
-						<div className="h-[260px] overflow-y-auto flex flex-col items-center justify-center gap-2.5 py-8 px-4">
-							{!flipped ? (
-								<>
-									{formTag}
-									{reverse ? (
-										<>
-											<div
-												style={fitStyle(
-													point.transformedForm,
-													3,
-												)}
-												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
-											>
-												{point.transformedForm}
-											</div>
-											<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
-												{T("tapToRevealForm")}
-											</span>
-										</>
-									) : (
-										<>
-											<div
-												style={fitStyle(
-													point.mainForm,
-													3,
-												)}
-												className="font-mincho text-ink dark:text-night-ink text-center whitespace-nowrap"
-											>
-												{point.mainForm}
-											</div>
-											<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted mt-2">
-												{T("tapToRevealForm")}
-											</span>
-										</>
-									)}
-								</>
-							) : (
-								<>
-									{/* 1 — the word this card started from, small, with its meaning */}
-									<div className="flex flex-wrap items-baseline justify-center gap-x-2 text-center">
-										<span
-											lang="ja"
-											className="font-mincho text-base text-ink-muted dark:text-night-ink-muted"
-										>
-											{point.mainForm}
-										</span>
-										{point.meaningBn && (
-											<span className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted">
-												— {point.meaningBn}
-											</span>
-										)}
-									</div>
-									{/* 2 — the transformed word: the focus of the card, always one line */}
-									<div
-										lang="ja"
-										style={fitStyle(
-											point.transformedForm,
-											2.5,
-										)}
-										className="font-mincho font-semibold text-ink dark:text-night-ink text-center whitespace-nowrap"
-									>
-										{point.transformedForm}
-									</div>
-									{/* 3 — other accepted forms, small (only when there are any) */}
-									{point.alternates?.length > 0 && (
-										<div
-											lang="ja"
-											className="flex flex-wrap items-baseline justify-center gap-x-3 font-mincho text-[13px] text-ink-muted dark:text-night-ink-muted text-center"
-										>
-											{point.alternates.map((alt, i) => (
-												<span
-													key={alt}
-													className="whitespace-nowrap"
-												>
-													{i > 0 && (
-														<span className="mr-3 opacity-60">
-															／
-														</span>
-													)}
-													{alt}
-												</span>
-											))}
-										</div>
-									)}
-									{/* 4 — the form tag */}
-									<div className="mt-1">{formTag}</div>
-								</>
-							)}
-						</div>
-					</button>
+					<FlipCard
+						flipped={flipped}
+						onToggle={() => setFlipped((f) => !f)}
+						cardKey={point.id}
+						front={transformFront}
+						back={transformBack}
+					/>
 				</div>
 
 				<div className="grid grid-cols-2 gap-2.5 mt-4">
@@ -708,6 +719,70 @@ export default function GrammarStudy({
 		);
 	}
 
+	const ruleFront = (
+						<div className="px-4 sm:px-5 pb-4">
+							{/* Front: the rule itself — structure and explanation */}
+							<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
+								{T("grammarDescription")}
+							</div>
+							<div className="min-h-[200px] max-h-[26rem] overflow-y-auto pr-1">
+								<Markdown text={point.explanationMd} lang={lang} />
+							</div>
+							{/* <div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
+								<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+									{T("tapToRevealExamples")}
+								</span>
+							</div> */}
+						</div>
+	);
+	const ruleBack = (
+						
+						<div className="px-4 sm:px-5 min-h-[250px] max-h-[300px]">
+							{point.examples.length > 0 ? (
+								<>
+									<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
+										{T("grammarExamples")}
+									</div>
+									<div className="space-y-3 overflow-y-auto">
+										{point.examples.map((ex, ei) => (
+											<div
+												key={ei}
+												className={
+													ei > 0
+														? "pt-3 border-t border-ai-line dark:border-night-line"
+														: ""
+												}
+											>
+												{ex.note && (
+													<div className="font-bengali text-[11px] italic text-ink-muted dark:text-night-ink-muted mb-1">
+														({ex.note})
+													</div>
+												)}
+												<div className="font-mincho text-sm text-ink dark:text-night-ink leading-snug">
+													<LeveledKanji
+														text={ex.jp}
+														level={level}
+													/>
+												</div>
+												{ex.meaningBn && (
+													<div className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted mt-1">
+														{ex.meaningBn}
+													</div>
+												)}
+											</div>
+										))}
+									</div>
+								</>
+							) : (
+								<div className="text-center py-6">
+									<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
+										{T("noResults")}
+									</span>
+								</div>
+							)}
+						</div>
+	);
+
 	return (
 		<div className="max-w-2xl lg:max-w-3xl mx-auto">
 			{filterRow}
@@ -763,73 +838,14 @@ export default function GrammarStudy({
 					<GrammarStructure structure={point.structure} lang={lang} />
 				</div>
 
-				<button
-					onClick={() => setFlipped((f) => !f)}
-					className="w-full text-left"
-				>
-					{!flipped ? (
-						<div className="px-4 sm:px-5 pb-4">
-							{/* Front: the rule itself — structure and explanation */}
-							<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
-								{T("grammarDescription")}
-							</div>
-							<div className="min-h-[200px] max-h-[26rem] overflow-y-auto pr-1">
-								<Markdown text={point.explanationMd} lang={lang} />
-							</div>
-							{/* <div className="border-t border-ai-line dark:border-night-line px-4 sm:px-5 py-3 text-center">
-								<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
-									{T("tapToRevealExamples")}
-								</span>
-							</div> */}
-						</div>
-					) : (
-						/* Back: only the sentence examples */
-						<div className="px-4 sm:px-5 min-h-[250px] max-h-[300px]">
-							{point.examples.length > 0 ? (
-								<>
-									<div className="font-bengali text-xs font-bold uppercase tracking-wide text-shu dark:text-shu-glow mb-2">
-										{T("grammarExamples")}
-									</div>
-									<div className="space-y-3 overflow-y-auto">
-										{point.examples.map((ex, ei) => (
-											<div
-												key={ei}
-												className={
-													ei > 0
-														? "pt-3 border-t border-ai-line dark:border-night-line"
-														: ""
-												}
-											>
-												{ex.note && (
-													<div className="font-bengali text-[11px] italic text-ink-muted dark:text-night-ink-muted mb-1">
-														({ex.note})
-													</div>
-												)}
-												<div className="font-mincho text-sm text-ink dark:text-night-ink leading-snug">
-													<LeveledKanji
-														text={ex.jp}
-														level={level}
-													/>
-												</div>
-												{ex.meaningBn && (
-													<div className="font-bengali text-sm text-ink-muted dark:text-night-ink-muted mt-1">
-														{ex.meaningBn}
-													</div>
-												)}
-											</div>
-										))}
-									</div>
-								</>
-							) : (
-								<div className="text-center py-6">
-									<span className="font-bengali text-xs text-ink-muted dark:text-night-ink-muted">
-										{T("noResults")}
-									</span>
-								</div>
-							)}
-						</div>
-					)}
-				</button>
+				<FlipCard
+					flipped={flipped}
+					onToggle={() => setFlipped((f) => !f)}
+					cardKey={point.id}
+					faceClass="bg-paper dark:bg-night-paper text-left"
+					front={ruleFront}
+					back={ruleBack}
+				/>
 			</div>
 
 			<div className="flex gap-6 items-center justify-center mt-6">

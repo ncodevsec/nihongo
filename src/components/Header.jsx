@@ -39,7 +39,6 @@ function BackIcon({ className = "w-4 h-4" }) {
 export default function Header({
 	active,
 	onChange,
-	onBack,
 	moduleKey,
 	accuracy,
 	masteredCount,
@@ -76,7 +75,7 @@ export default function Header({
 						className="flex items-center gap-3 min-w-0 text-left"
 					>
 						<img
-							src="./icons/icon-192.png"
+							src="/icons/icon-192.png"
 							alt="NihonGoSL"
 							className="brand-logo w-9 h-9 shrink-0"
 							width={36}
@@ -114,34 +113,7 @@ export default function Header({
 							</div>
 						)}
 
-						{/* This single button doubles as the Settings entry point and,
-                while on the Settings page, a Back button — same position,
-                swapped icon/action, so it's always reachable in one tap. */}
-						<button
-							onClick={() =>
-								isSettings ? onBack() : onChange("settings")
-							}
-							aria-label={
-								isSettings ? T("backButton") : T("tabSettings")
-							}
-							title={
-								isSettings ? T("backButton") : T("tabSettings")
-							}
-							aria-pressed={isSettings}
-							className={`relative w-9 h-9 flex items-center justify-center rounded-full border ${
-								isSettings
-									? "bg-shu border-shu text-washi"
-									: "border-ai-line dark:border-night-line text-ink-muted dark:text-night-ink-muted hover:text-shu hover:border-shu/50 hover:bg-shu-soft dark:hover:bg-night-line"
-							}`}
-						>
-							{isSettings ? <BackIcon /> : <SettingsIcon />}
-							{updateAvailable && !isSettings && (
-								<span
-									className="absolute top-0.5 right-0.5 w-2 h-2 rounded-full bg-shu dark:bg-shu-glow ring-2 ring-paper dark:ring-night-paper"
-									aria-hidden="true"
-								/>
-							)}
-						</button>
+						
 					</div>
 				</div>
 			</div>

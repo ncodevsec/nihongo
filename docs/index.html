@@ -1,95 +1,43 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NihonGo - Study Lab</title>
-    <meta name="description" content="কাঞ্জি, শব্দভাণ্ডার ও গ্রামার শেখা, পরীক্ষা দেওয়া এবং রেফারেন্স দেখুন এক অ্যাপে | JLPT ও NAT পরীক্ষার প্রস্তুতি | Features: Flashcard, MOC Test, Progress View, Reverse-Recall Method, etc" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#bd2828" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="NihonGo" />
-    <link rel="icon" href="./icons/icon-192.png" type="image/png" />
-    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
-    <script>
-      // Apply theme before paint to avoid a light-mode flash on load.
-      (function () {
-        try {
-          var raw = localStorage.getItem("nihongo-settings-v1");
-          var saved = raw ? (JSON.parse(raw).theme || "system") : "system";
-          var isDark =
-            saved === "dark" ||
-            (saved === "system" &&
-              window.matchMedia &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches);
-          if (isDark) document.documentElement.classList.add("dark");
-        } catch (e) {}
-      })();
-    </script>
-    <script>
-      // Re-apply the chosen accent color before first paint (the cached
-      // CSS variables are written by lib/themeColor.js) so a non-default
-      // theme doesn't flash red on load.
-      (function () {
-        try {
-          var raw = localStorage.getItem("nihongo-theme-v1");
-          if (raw) {
-            var cache = JSON.parse(raw);
-            var root = document.documentElement;
-            for (var k in cache.vars) root.style.setProperty(k, cache.vars[k]);
-            var meta = document.querySelector('meta[name="theme-color"]');
-            if (meta && cache.meta) meta.setAttribute("content", cache.meta);
-          }
-        } catch (e) {}
-        // Same for the chosen Japanese font (lib/jpFonts.js).
-        try {
-          var jp = JSON.parse(localStorage.getItem("nihongo-jpfont-v1") || "null");
-          if (jp && jp.href && jp.family) {
-            document.documentElement.style.setProperty("--font-jp-display", jp.family);
-            document.documentElement.style.setProperty("--font-jp-body", jp.family);
-            var l = document.createElement("link");
-            l.id = "jpfont-" + jp.key;
-            l.rel = "stylesheet";
-            l.href = jp.href;
-            document.head.appendChild(l);
-          }
-        } catch (e) {}
-      })();
-    </script>
-    <script>
-      // Register the service worker for offline support + installability.
-      // Registered relative to this document so it works correctly both
-      // at the domain root and under a GitHub Pages repo subpath.
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          // updateViaCache: "none" tells the browser to never serve sw.js
-          // itself from its own HTTP cache — it's always re-fetched over
-          // the network on every registration.update() check, so a new
-          // service worker (and therefore a new deploy) is never missed
-          // because of ordinary browser caching of the script file.
-          navigator.serviceWorker
-            .register("./sw.js", { scope: "./", updateViaCache: "none" })
-            .catch(() => {
-              // Offline PWA features are a progressive enhancement — if
-              // registration fails (e.g. unsupported context) the app
-              // still works normally online.
-            });
-        });
-      }
-    </script>
-    <script type="module" crossorigin src="./assets/index.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NihonGo - Study Lab has moved</title>
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#bd2828" />
+<link rel="icon" href="icons/icon-192.png" />
+<link rel="manifest" href="manifest.webmanifest" />
+<script src="redirect.js"></script>
+<script>
+  // Redirect immediately, keeping any query/hash. Unconfigured target => show notice instead.
+  (function () {
+    var ok = typeof TARGET === "string" && TARGET.indexOf("REPLACE") === -1;
+    window.__nihongoTarget = ok ? TARGET + "/" + location.search + location.hash : null;
+    if (ok) location.replace(window.__nihongoTarget);
+  })();
+</script>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#faf7f2;color:#2e2b27;font-family:system-ui,sans-serif;text-align:center;padding:24px}
+  @media(prefers-color-scheme:dark){body{background:#000;color:#e9e9e9}}
+  img{width:72px;height:72px}
+  a.btn{display:inline-block;margin-top:16px;background:#dc1414;color:#fff;text-decoration:none;padding:12px 22px;border-radius:10px;font-weight:600}
+  p{max-width:340px;margin:12px auto 0;line-height:1.5;opacity:.85}
+</style>
+</head>
+<body>
+<main>
+  <img src="icons/icon-192.png" alt="NihonGo" />
+  <h1>NihonGo - Study Lab has moved</h1>
+  <p>Redirecting you to the new site…</p>
+  <p id="msg"></p>
+  <a id="go" class="btn" href="#">Open the new site</a>
+</main>
+<script>
+  var go = document.getElementById("go");
+  if (window.__nihongoTarget) { go.href = window.__nihongoTarget; }
+  else { go.style.display = "none"; document.getElementById("msg").textContent = "Redirect target is not configured yet (docs/redirect.js)."; }
+</script>
+<noscript><meta http-equiv="refresh" content="0" /></noscript>
+</body>
 </html>

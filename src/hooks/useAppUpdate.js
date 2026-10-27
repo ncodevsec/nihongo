@@ -88,7 +88,7 @@ export function useAppUpdate() {
       // principle be compared against a stale cached copy of itself).
       let foundNewer = false;
       try {
-        const res = await fetch(`./version.json?t=${Date.now()}`, {
+        const res = await fetch(`/version.json?t=${Date.now()}`, {
           cache: "no-store",
         });
         if (res.ok) {
@@ -159,7 +159,7 @@ export function useAppUpdate() {
     // GitHub Pages serves max-age=600, so a plain reload could otherwise
     // re-serve the old bundle and look like nothing updated.
     await Promise.all(
-      ["./", "./assets/index.js", "./assets/index.css", "./version.json"].map((u) =>
+      ["/", "/assets/index.js", "/assets/index.css", "/version.json"].map((u) =>
         fetch(u, { cache: "reload" }).catch(() => {})
       )
     );

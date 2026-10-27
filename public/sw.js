@@ -11,8 +11,9 @@
 // old build) — this forces every existing installed copy to drop
 // whatever it has cached, once, the next time its service worker
 // activates, as a one-time unstick independent of whatever caused it.
-const CACHE_NAME = "nihongo-cache-v3";
-const CORE_ASSETS = ["./", "./index.html"];
+// v4: moved to Vercel + client-side routing (absolute paths, SPA navigation fallback).
+const CACHE_NAME = "nihongo-cache-v4";
+const CORE_ASSETS = ["/", "/index.html"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -84,7 +85,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           return response;
         })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match("./index.html")))
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("/index.html")))
     );
     return;
   }

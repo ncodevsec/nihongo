@@ -1,61 +1,55 @@
-import { useEffect, useMemo, useState } from "react";
-import { MODULES } from "./data/modules.js";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { AppContext } from "./context/AppContext.jsx";
 import { useProgress } from "./hooks/useProgress.js";
 import { useSettings } from "./hooks/useSettings.js";
 import { useFavorites } from "./hooks/useFavorites.js";
 import { useAppUpdate } from "./hooks/useAppUpdate.js";
 import { useTimeTracking } from "./hooks/useTimeTracking.js";
 import { useLastSession } from "./hooks/useLastSession.js";
-import { t, pickLang } from "./lib/i18n.js";
-import { flattenGrammarPoints, grammarCategories } from "./lib/grammarUtils.js";
+import { useModuleData } from "./hooks/useModuleData.js";
+import { DEFAULT_SELECTION, isLevel, isModule, pathFor, studyPath, tabFromPath } from "./lib/routes.js";
 import Header from "./components/Header.jsx";
 import Sidebar from "./components/Sidebar.jsx";
-import LevelModuleBar from "./components/LevelModuleBar.jsx";
-import TabBar from "./components/TabBar.jsx";
-import Study from "./components/Study.jsx";
-import Quiz from "./components/Quiz.jsx";
-import Reference from "./components/Reference.jsx";
-import Progress from "./components/Progress.jsx";
-import Settings from "./components/Settings.jsx";
-import GrammarStudy from "./components/grammar/GrammarStudy.jsx";
-import GrammarQuiz from "./components/grammar/GrammarQuiz.jsx";
-import GrammarList from "./components/grammar/GrammarList.jsx";
+import BottomNav from "./components/BottomNav.jsx";
 import Footer from "./components/Footer.jsx";
-import Home from "./components/home/Home.jsx";
-import MockTest from "./components/mock/MockTest.jsx";
+import HomePage from "./pages/HomePage.jsx";
+import StudyPage from "./pages/StudyPage.jsx";
+import ProgressPage from "./pages/ProgressPage.jsx";
+import MockPage from "./pages/MockPage.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 
-// Stable reference for the Transform tab's unused "lessons" prop — a
-// fresh [] literal every render would look like a changed prop to
-// GrammarStudy/Quiz/List's effects and reset their state on every tick
-// (e.g. the once-a-second time-tracking re-render).
-const EMPTY_LESSONS = [];
+// Module + level currently "selected" — taken from the URL on study/progress
+// pages, remembered everywhere else (so Mock Test, the dock and Home follow it).
+function useSelection(lastSession) {
+	const { pathname } = useLocation();
+	const [selection, setSelection] = useState(() =>
+		lastSession && isModule(lastSession.moduleKey) && isLevel(lastSession.level)
+			? { moduleKey: lastSession.moduleKey, level: lastSession.level }
+			: DEFAULT_SELECTION,
+	);
+	useEffect(() => {
+		const m = pathname.match(/^\/(?:study|progress)\/([^/]+)\/([^/]+)/);
+		if (m && isModule(m[1]) && isLevel(m[2])) {
+			setSelection((s) => (s.moduleKey === m[1] && s.level === m[2] ? s : { moduleKey: m[1], level: m[2] }));
+		}
+	}, [pathname]);
+	return selection;
+}
 
 export default function App() {
-	// Home is the landing page on every launch; everything else is one
-	// tap away from it.
-	const [tab, setTabRaw] = useState("home");
-	const [lastTab, setLastTab] = useState("home");
-	const setTab = (next) => {
-		if (next !== "settings") setLastTab(next);
-		setTabRaw(next);
-	};
-	const goBack = () => setTabRaw(lastTab);
-	const [moduleKey, setModuleKey] = useState("vocabulary");
-	const [level, setLevel] = useState("n5");
-	const {
-		progress,
-		recordQuizResult,
-		setLearned,
-		resetProgress,
-		resetProgressForIds,
-		activity,
-	} = useProgress();
+	const navigate = useNavigate();
+	const { pathname } = useLocation();
+	const tab = tabFromPath(pathname);
+
+	const progressApi = useProgress();
 	const { settings, updateSetting, resetSettings } = useSettings();
 	const { favorites, toggleFavorite } = useFavorites();
-	const { updateAvailable, checking, lastCheckedAt, checkForUpdate, applyUpdate } =
-		useAppUpdate();
-	const { todaySeconds, weekSeconds, totalSeconds } = useTimeTracking();
+	const update = useAppUpdate();
+	const time = useTimeTracking();
 	const { lastSession, saveSession } = useLastSession();
+	const selection = useSelection(lastSession);
+	const { moduleKey, level } = selection;
 
 	// Remember the last study context so Home can offer "Continue learning".
 	useEffect(() => {
@@ -64,407 +58,90 @@ export default function App() {
 		}
 	}, [tab, moduleKey, level, saveSession]);
 
-	const mod = MODULES[moduleKey];
-	const isGrammar = mod.kind === "grammar";
-	const isTransformKind = mod.kind === "transform";
-	const levelData = mod.levels[level];
-	const rawKanjiData = isGrammar ? [] : levelData.data;
-	const kanjiData = useMemo(() => {
-		if (isGrammar) return rawKanjiData;
-		if (moduleKey === "kanji" && !settings.showJukugo) {
-			return rawKanjiData.filter((k) => !k.isJukugo);
-		}
-		return rawKanjiData;
-	}, [isGrammar, rawKanjiData, moduleKey, settings.showJukugo]);
-	const categories = isGrammar ? [] : levelData.categories;
-	const lang = settings.uiLang;
-
-	const grammarLessons = isGrammar ? levelData.lessons : [];
-	const grammarPoints = useMemo(
-		() => (isGrammar ? flattenGrammarPoints(grammarLessons, level) : []),
-		[isGrammar, grammarLessons, level],
+	// go(tab, module?, level?) — navigate by tab name (Sidebar, bars, Home, dock).
+	const go = useCallback(
+		(nextTab, nextModule = moduleKey, nextLevel = level) => {
+			navigate(pathFor(nextModule, nextLevel, nextTab));
+			window.scrollTo({ top: 0 });
+		},
+		[navigate, moduleKey, level],
 	);
-	const grammarCats = useMemo(
-		() => (isGrammar ? grammarCategories(grammarLessons) : []),
-		[isGrammar, grammarLessons],
+	const launch = useCallback((m, l, t) => go(t, m, l), [go]);
+
+	const d = useModuleData(moduleKey, level, settings, progressApi.progress);
+	const sidebarTab = tab === "settings" ? "settings" : tab;
+	const barTab = ["study", "quiz", "reference", "progress"].includes(tab) ? tab : "study";
+
+	const ctx = useMemo(
+		() => ({
+			settings, updateSetting, resetSettings, favorites, toggleFavorite,
+			...progressApi, ...update,
+			todaySeconds: time.todaySeconds, weekSeconds: time.weekSeconds, totalSeconds: time.totalSeconds,
+			lastSession, selection, go, launch,
+		}),
+		[settings, updateSetting, resetSettings, favorites, toggleFavorite, progressApi, update, time.todaySeconds, time.weekSeconds, time.totalSeconds, lastSession, selection, go, launch],
 	);
-
-	// Data ids use a shorter module prefix ("vocab-n4-…", "kanji-n4-…",
-	// "grammar-n4-…") than the moduleKey itself ("vocabulary"), so resets
-	// and favorites need this mapping to actually match real ids.
-	const idPrefixMap = {
-		vocabulary: "vocab",
-		kanji: "kanji",
-		grammar: "grammar",
-		transform: "transform",
-	};
-	// "All" resets/filters across both levels: "vocab-" matches n5 and n4 ids.
-	const idPrefix = `${idPrefixMap[moduleKey]}-${level === "all" ? "" : `${level}-`}`;
-
-	const { accuracy, masteredCount } = useMemo(() => {
-		if (isGrammar) return { accuracy: 0, masteredCount: 0 };
-		const relevantIds = new Set(kanjiData.map((k) => k.id));
-		const entries = Object.entries(progress)
-			.filter(([id]) => relevantIds.has(id))
-			.map(([, v]) => v);
-		const seen = entries.reduce((s, e) => s + e.seen, 0);
-		const correct = entries.reduce((s, e) => s + e.correct, 0);
-		const mastered = entries.filter((e) => e.learned).length;
-		return {
-			accuracy: seen ? Math.round((correct / seen) * 100) : 0,
-			masteredCount: mastered,
-		};
-	}, [progress, kanjiData, isGrammar]);
-
-	const handleModuleChange = (nextModule) => {
-		setModuleKey(nextModule);
-		setTab("study");
-	};
-
-	const handleLevelChange = (nextLevel) => {
-		setLevel(nextLevel);
-		setTab("study");
-	};
-
-	// Jump straight into a module + level + tab (used by the Home page).
-	const launch = (nextModule, nextLevel, nextTab) => {
-		setModuleKey(nextModule);
-		setLevel(nextLevel);
-		setTab(nextTab);
-		window.scrollTo({ top: 0 });
-	};
 
 	return (
-		<div className="min-h-screen bg-washi dark:bg-[#0d0d0d] text-ink dark:text-night-ink lg:flex">
-			<Sidebar
-				active={tab}
-				onChange={setTab}
-				moduleKey={moduleKey}
-				onModuleChange={handleModuleChange}
-				level={level}
-				onLevelChange={handleLevelChange}
-				accuracy={accuracy}
-				masteredCount={masteredCount}
-				total={kanjiData.length}
-				settings={settings}
-				updateAvailable={updateAvailable}
-			/>
-
-			<div className="flex-1 min-w-0 flex flex-col">
-				{/* Mobile/tablet header + level/module/tab bars — the desktop
-            Sidebar covers this same navigation from lg (1024px) up, so
-            this whole stacked-header pattern is hidden there instead of
-            being awkwardly stretched across a wide viewport. */}
-				<div className="lg:hidden">
-					<Header
-						active={tab}
-						onChange={setTab}
-						onBack={goBack}
-						moduleKey={moduleKey}
-						accuracy={accuracy}
-						masteredCount={masteredCount}
-						total={kanjiData.length}
-						settings={settings}
-						updateAvailable={updateAvailable}
-					/>
-
-					{tab !== "settings" && tab !== "home" && (
-						<div className="pt-3 space-y-2.5">
-							<LevelModuleBar
-								moduleKey={moduleKey}
-								onModuleChange={handleModuleChange}
-								level={level}
-								onLevelChange={handleLevelChange}
-								onHome={() => setTab("home")}
-								settings={settings}
-								mockActive={tab === "mock"}
-								onMock={() => setTab("mock")}
-							/>
-							{tab !== "mock" && (
-								<TabBar
-									active={tab}
-									onChange={setTab}
-									moduleKey={moduleKey}
-									settings={settings}
-								/>
-							)}
-						</div>
-					)}
-				</div>
-
-				{/* Every applicable tab panel stays mounted at all times; only
-            visibility toggles via the "hidden" class. This is what keeps
-            each panel's own state (selected lesson/category, flashcard
-            position, in-progress quiz, scroll position, etc.) alive when
-            switching between tabs — previously each panel was conditionally
-            rendered, which unmounted and threw away its state every time. */}
-				<main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-10 pt-4 sm:pt-5 lg:pt-10 pb-6 lg:pb-12">
-					<div className={tab === "home" ? "" : "hidden"}>
-						<Home
-							settings={settings}
-							updateSetting={updateSetting}
-							progress={progress}
-							activity={activity}
-							timeToday={todaySeconds}
-							lastSession={lastSession}
-							updateAvailable={updateAvailable}
-							onLaunch={launch}
-							onOpenSettings={() => setTab("settings")}
-							isActive={tab === "home"}
-						/>
-					</div>
-					<div className={tab === "mock" ? "" : "hidden"}>
-						<MockTest
-							settings={settings}
-							level={level}
-							onLaunch={launch}
-							isActive={tab === "mock"}
-						/>
-					</div>
-					{isGrammar ? (
-						<>
-							<div className={tab === "study" ? "" : "hidden"}>
-								<GrammarStudy
-									key="grammar-study"
-									lessons={grammarLessons}
-									level={level}
-									settings={settings}
-									progress={progress}
-									setLearned={setLearned}
-									favorites={favorites}
-									toggleFavorite={toggleFavorite}
-									isActive={tab === "study"}
-								/>
-							</div>
-							<div className={tab === "quiz" ? "" : "hidden"}>
-								<GrammarQuiz
-									key="grammar-quiz"
-									lessons={grammarLessons}
-									level={level}
-									settings={settings}
-									updateSetting={updateSetting}
-									recordQuizResult={recordQuizResult}
-								/>
-							</div>
-							<div
-								className={tab === "reference" ? "" : "hidden"}
-							>
-								<GrammarList
-									key="grammar-list"
-									lessons={grammarLessons}
-									level={level}
-									settings={settings}
-									progress={progress}
-									setLearned={setLearned}
-									favorites={favorites}
-									toggleFavorite={toggleFavorite}
-								/>
-							</div>
-							<div className={tab === "progress" ? "" : "hidden"}>
-								<Progress
-									key={moduleKey}
-									kanjiData={grammarPoints}
-									categories={grammarCats}
-									progress={progress}
-									resetProgress={() =>
-										resetProgress(idPrefix)
-									}
-									onResetCategory={(ids) =>
-										resetProgressForIds(ids)
-									}
-									settings={settings}
-									activity={activity}
-									favorites={favorites}
-									moduleKey={moduleKey}
-									level={level}
-									timeToday={todaySeconds}
-									timeWeek={weekSeconds}
-									timeTotal={totalSeconds}
-								/>
-							</div>
-							<div className={tab === "settings" ? "" : "hidden"}>
-								<Settings
-									settings={settings}
-									updateSetting={updateSetting}
-									resetSettings={resetSettings}
-									resetAllProgress={() => resetProgress()}
-									updateAvailable={updateAvailable}
-									checkingForUpdate={checking}
-									lastCheckedAt={lastCheckedAt}
-									onCheckForUpdate={checkForUpdate}
-									onApplyUpdate={applyUpdate}
-								/>
-							</div>
-						</>
-					) : isTransformKind ? (
-						<>
-							<div className={tab === "study" ? "" : "hidden"}>
-								<GrammarStudy
-									key="transform-study"
-									transformOnly
-									lessons={EMPTY_LESSONS}
-									level={level}
-									settings={settings}
-									progress={progress}
-									setLearned={setLearned}
-									favorites={favorites}
-									toggleFavorite={toggleFavorite}
-									isActive={tab === "study"}
-								/>
-							</div>
-							<div className={tab === "quiz" ? "" : "hidden"}>
-								<GrammarQuiz
-									key="transform-quiz"
-									transformOnly
-									lessons={EMPTY_LESSONS}
-									level={level}
-									settings={settings}
-									updateSetting={updateSetting}
-									recordQuizResult={recordQuizResult}
-								/>
-							</div>
-							<div className={tab === "reference" ? "" : "hidden"}>
-								<GrammarList
-									key="transform-list"
-									transformOnly
-									lessons={EMPTY_LESSONS}
-									level={level}
-									settings={settings}
-									progress={progress}
-									setLearned={setLearned}
-									favorites={favorites}
-									toggleFavorite={toggleFavorite}
-								/>
-							</div>
-							<div className={tab === "progress" ? "" : "hidden"}>
-								<Progress
-									key={moduleKey}
-									kanjiData={kanjiData}
-									categories={categories}
-									progress={progress}
-									resetProgress={() =>
-										resetProgress(idPrefix)
-									}
-									onResetCategory={(ids) =>
-										resetProgressForIds(ids)
-									}
-									settings={settings}
-									activity={activity}
-									favorites={favorites}
-									moduleKey={moduleKey}
-									level={level}
-									timeToday={todaySeconds}
-									timeWeek={weekSeconds}
-									timeTotal={totalSeconds}
-								/>
-							</div>
-							<div className={tab === "settings" ? "" : "hidden"}>
-								<Settings
-									settings={settings}
-									updateSetting={updateSetting}
-									resetSettings={resetSettings}
-									resetAllProgress={() => resetProgress()}
-									updateAvailable={updateAvailable}
-									checkingForUpdate={checking}
-									lastCheckedAt={lastCheckedAt}
-									onCheckForUpdate={checkForUpdate}
-									onApplyUpdate={applyUpdate}
-								/>
-							</div>
-						</>
-					) : (
-						<>
-							<div className={tab === "study" ? "" : "hidden"}>
-								<Study
-									key={moduleKey}
-									moduleKey={moduleKey}
-									kanjiData={kanjiData}
-									categories={categories}
-									progress={progress}
-									setLearned={setLearned}
-									settings={settings}
-									isActive={tab === "study"}
-									favorites={favorites}
-									toggleFavorite={toggleFavorite}
-									level={level}
-								/>
-							</div>
-							<div className={tab === "quiz" ? "" : "hidden"}>
-								<Quiz
-									key={moduleKey}
-									moduleKey={moduleKey}
-									kanjiData={kanjiData}
-									categories={categories}
-									progress={progress}
-									recordQuizResult={recordQuizResult}
-									settings={settings}
-									updateSetting={updateSetting}
-									isActive={tab === "quiz"}
-									level={level}
-								/>
-							</div>
-							<div
-								className={tab === "reference" ? "" : "hidden"}
-							>
-								<Reference
-									key={moduleKey}
-									moduleKey={moduleKey}
-									kanjiData={kanjiData}
-									categories={categories}
-									progress={progress}
-									setLearned={setLearned}
-									settings={settings}
-									favorites={favorites}
-									toggleFavorite={toggleFavorite}
-									level={level}
-								/>
-							</div>
-							<div className={tab === "progress" ? "" : "hidden"}>
-								<Progress
-									key={moduleKey}
-									kanjiData={kanjiData}
-									categories={categories}
-									progress={progress}
-									resetProgress={() =>
-										resetProgress(idPrefix)
-									}
-									onResetCategory={(ids) =>
-										resetProgressForIds(ids)
-									}
-									settings={settings}
-									activity={activity}
-									favorites={favorites}
-									moduleKey={moduleKey}
-									level={level}
-									timeToday={todaySeconds}
-									timeWeek={weekSeconds}
-									timeTotal={totalSeconds}
-								/>
-							</div>
-							<div className={tab === "settings" ? "" : "hidden"}>
-								<Settings
-									settings={settings}
-									updateSetting={updateSetting}
-									resetSettings={resetSettings}
-									resetAllProgress={() => resetProgress()}
-									updateAvailable={updateAvailable}
-									checkingForUpdate={checking}
-									lastCheckedAt={lastCheckedAt}
-									onCheckForUpdate={checkForUpdate}
-									onApplyUpdate={applyUpdate}
-								/>
-							</div>
-						</>
-					)}
-				</main>
-
-				{/* Footer Section */}
-				<Footer
-					settings={settings}
+		<AppContext.Provider value={ctx}>
+			<div className="min-h-screen bg-washi dark:bg-[#0d0d0d] text-ink dark:text-night-ink lg:flex">
+				<Sidebar
+					active={sidebarTab}
+					onChange={(t) => go(t)}
 					moduleKey={moduleKey}
+					onModuleChange={(m) => go(barTab, m, level)}
 					level={level}
+					onLevelChange={(l) => go(barTab, moduleKey, l)}
+					accuracy={d.accuracy}
+					masteredCount={d.masteredCount}
+					total={d.kanjiData.length}
+					settings={settings}
+					updateAvailable={update.updateAvailable}
 				/>
+
+				<div className="flex-1 min-w-0 flex flex-col">
+					<div className="lg:hidden">
+						<Header
+							active={tab}
+							onChange={(t) => go(t)}
+							moduleKey={moduleKey}
+							accuracy={d.accuracy}
+							masteredCount={d.masteredCount}
+							total={d.kanjiData.length}
+							settings={settings}
+							updateAvailable={update.updateAvailable}
+						/>
+					</div>
+
+					<main className="flex-1 w-full max-w-6xl mx-auto px-3 sm:px-5 lg:px-10 pt-4 sm:pt-5 lg:pt-10 pb-28 lg:pb-12">
+						<Routes>
+							<Route path="/" element={<HomePage />} />
+							<Route path="/study" element={<Navigate to={studyPath(moduleKey, level)} replace />} />
+							<Route path="/study/:module/:level/:mode" element={<StudyPage />} />
+							<Route path="/study/:module/:level" element={<RedirectStudy />} />
+							<Route path="/progress" element={<Navigate to={pathFor(moduleKey, level, "progress")} replace />} />
+							<Route path="/progress/:module/:level" element={<ProgressPage />} />
+							<Route path="/mock-test" element={<MockPage />} />
+							<Route path="/profile" element={<ProfilePage />} />
+							<Route path="/settings" element={<Navigate to="/profile" replace />} />
+							<Route path="*" element={<Navigate to="/" replace />} />
+						</Routes>
+					</main>
+
+					<div className="hidden lg:block">
+						<Footer settings={settings} moduleKey={moduleKey} level={level} />
+					</div>
+					<div className="lg:hidden pb-20">
+						<Footer settings={settings} moduleKey={moduleKey} level={level} />
+					</div>
+				</div>
+				<BottomNav />
 			</div>
-		</div>
+		</AppContext.Provider>
 	);
+}
+
+function RedirectStudy() {
+	const { pathname } = useLocation();
+	return <Navigate to={`${pathname.replace(/\/$/, "")}/flashcards`} replace />;
 }

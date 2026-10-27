@@ -320,6 +320,8 @@ const UI = {
   backupReminderSub: { bn: "ব্রাউজার ডেটা মুছে গেলে অগ্রগতি হারাতে পারেন — এখনই এক্সপোর্ট করুন।", en: "Clearing browser data would lose your progress — export it now." },
   backupReminderBtn: { bn: "সেটিংসে যান", en: "Go to Settings" },
   // Home page
+  navStudy: { bn: "পড়াশোনা", en: "Study" },
+  navProfile: { bn: "প্রোফাইল", en: "Profile" },
   tabHome: { bn: "হোম", en: "Home" },
   homeEyebrow: { bn: "JLPT N5 · N4 · NAT প্রস্তুতি", en: "JLPT N5 · N4 · NAT prep" },
   homeGreetingNew: { bn: "স্বাগতম", en: "Welcome" },

@@ -108,3 +108,12 @@ to `localStorage` in this source project — appropriate for a real
 deployed site, but if you ever adapt this into a sandboxed preview/canvas
 environment that disallows `localStorage`, swap those two hooks for
 in-memory-only versions (state only, no `localStorage` calls).
+
+## Hosting (v2.0.0+): Vercel
+
+- Client-side-routed SPA (`react-router-dom`): `/`, `/study/:module/:level/(flashcards|quiz|list)`,
+  `/progress/:module/:level`, `/mock-test`, `/profile`.
+- `npm run build` outputs to `dist/` (git-ignored). `vercel.json` sets the output dir, the SPA rewrite and
+  no-cache headers for `sw.js` / `version.json`.
+- `docs/` is no longer build output: it is a hand-written redirect for the old GitHub Pages site
+  (`index.html`, `404.html`, kill-switch `sw.js`, `version.json`). Set the Vercel URL in `docs/redirect.js`.

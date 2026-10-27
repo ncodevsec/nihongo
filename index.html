@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>NihonGo - Study Lab</title>
     <meta name="description" content="কাঞ্জি, শব্দভাণ্ডার ও গ্রামার শেখা, পরীক্ষা দেওয়া এবং রেফারেন্স দেখুন এক অ্যাপে | JLPT ও NAT পরীক্ষার প্রস্তুতি | Features: Flashcard, MOC Test, Progress View, Reverse-Recall Method, etc" />
     <meta name="color-scheme" content="light dark" />
@@ -11,9 +11,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="NihonGo" />
-    <link rel="icon" href="./icons/icon-192.png" type="image/png" />
-    <link rel="apple-touch-icon" href="./icons/icon-192.png" />
-    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" href="/icons/icon-192.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -77,7 +77,7 @@
           // service worker (and therefore a new deploy) is never missed
           // because of ordinary browser caching of the script file.
           navigator.serviceWorker
-            .register("./sw.js", { scope: "./", updateViaCache: "none" })
+            .register("/sw.js", { scope: "/", updateViaCache: "none" })
             .catch(() => {
               // Offline PWA features are a progressive enhancement — if
               // registration fails (e.g. unsupported context) the app
