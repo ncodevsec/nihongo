@@ -2,28 +2,23 @@ import { useApp } from "../context/AppContext.jsx";
 import LevelModuleBar from "./LevelModuleBar.jsx";
 import TabBar from "./TabBar.jsx";
 
-// Level / module / tab selectors shown at the top of Study and Progress pages
-// on mobile + tablet (the desktop Sidebar carries the same controls).
+// Module / level selectors (+ Flashcards · Quiz · List tabs on study pages) at the top of
+// the Study and Progress pages, on every screen size.
 export default function StudyBars({ moduleKey, level, tab }) {
 	const { settings, go } = useApp();
+	const isProgress = tab === "progress";
 	return (
-		<div className="lg:hidden pb-3 space-y-2.5 -mt-1">
+		<div className="pb-3 space-y-2.5 -mt-1">
 			<LevelModuleBar
 				moduleKey={moduleKey}
-				onModuleChange={(m) => go(tab === "progress" ? "progress" : "study", m, level)}
+				onModuleChange={(m) => go(isProgress ? "progress" : "study", m, level)}
 				level={level}
-				onLevelChange={(l) => go(tab === "progress" ? "progress" : "study", moduleKey, l)}
-				onHome={() => go("home")}
-				settings={settings}
-				mockActive={false}
-				onMock={() => go("mock")}
-			/>
-			<TabBar
-				active={tab}
-				onChange={(next) => go(next, moduleKey, level)}
-				moduleKey={moduleKey}
+				onLevelChange={(l) => go(isProgress ? "progress" : "study", moduleKey, l)}
 				settings={settings}
 			/>
+			{!isProgress && (
+				<TabBar active={tab} onChange={(next) => go(next, moduleKey, level)} moduleKey={moduleKey} settings={settings} />
+			)}
 		</div>
 	);
 }

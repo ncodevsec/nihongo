@@ -33,7 +33,6 @@ export default function TabBar({ active, onChange, moduleKey, settings }) {
     { key: "study", label: isGrammar ? T("tabGrammarContent") : T("tabStudy"), icon: "study" },
     { key: "quiz", label: T("tabQuiz"), icon: "quiz" },
     { key: "reference", label: T("tabReference"), icon: "reference" },
-    { key: "progress", label: T("tabProgress"), icon: "progress" },
   ];
 
   return (

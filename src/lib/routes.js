@@ -21,8 +21,10 @@ export function pathFor(moduleKey, level, tab) {
 			return "/";
 		case "mock":
 			return "/mock-test";
-		case "settings":
+		case "profile":
 			return "/profile";
+		case "settings":
+			return "/settings";
 		case "progress":
 			return progressPath(moduleKey, level);
 		default:
@@ -35,7 +37,8 @@ export function tabFromPath(pathname) {
 	if (pathname === "/" || pathname === "") return "home";
 	if (pathname.startsWith("/mock-test")) return "mock";
 	if (pathname.startsWith("/progress")) return "progress";
-	if (pathname.startsWith("/profile") || pathname.startsWith("/settings")) return "settings";
+	if (pathname.startsWith("/settings")) return "settings";
+	if (pathname.startsWith("/profile")) return "profile";
 	const m = pathname.match(/^\/study\/[^/]+\/[^/]+\/([^/]+)/);
 	if (m) return SLUG_MODE[m[1]] || "study";
 	return "study";

@@ -6,6 +6,7 @@ import { useSettings } from "./hooks/useSettings.js";
 import { useFavorites } from "./hooks/useFavorites.js";
 import { useAppUpdate } from "./hooks/useAppUpdate.js";
 import { useTimeTracking } from "./hooks/useTimeTracking.js";
+import { useProfile } from "./hooks/useProfile.js";
 import { useLastSession } from "./hooks/useLastSession.js";
 import { useModuleData } from "./hooks/useModuleData.js";
 import { DEFAULT_SELECTION, isLevel, isModule, pathFor, studyPath, tabFromPath } from "./lib/routes.js";
@@ -18,6 +19,7 @@ import StudyPage from "./pages/StudyPage.jsx";
 import ProgressPage from "./pages/ProgressPage.jsx";
 import MockPage from "./pages/MockPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
 
 // Module + level currently "selected" — taken from the URL on study/progress
 // pages, remembered everywhere else (so Mock Test, the dock and Home follow it).
@@ -48,6 +50,7 @@ export default function App() {
 	const update = useAppUpdate();
 	const time = useTimeTracking();
 	const { lastSession, saveSession } = useLastSession();
+	const profileApi = useProfile();
 	const selection = useSelection(lastSession);
 	const { moduleKey, level } = selection;
 
@@ -69,35 +72,21 @@ export default function App() {
 	const launch = useCallback((m, l, t) => go(t, m, l), [go]);
 
 	const d = useModuleData(moduleKey, level, settings, progressApi.progress);
-	const sidebarTab = tab === "settings" ? "settings" : tab;
-	const barTab = ["study", "quiz", "reference", "progress"].includes(tab) ? tab : "study";
 
 	const ctx = useMemo(
 		() => ({
 			settings, updateSetting, resetSettings, favorites, toggleFavorite,
-			...progressApi, ...update,
+			...progressApi, ...update, ...profileApi,
 			todaySeconds: time.todaySeconds, weekSeconds: time.weekSeconds, totalSeconds: time.totalSeconds,
 			lastSession, selection, go, launch,
 		}),
-		[settings, updateSetting, resetSettings, favorites, toggleFavorite, progressApi, update, time.todaySeconds, time.weekSeconds, time.totalSeconds, lastSession, selection, go, launch],
+		[settings, updateSetting, resetSettings, favorites, toggleFavorite, progressApi, update, profileApi, time.todaySeconds, time.weekSeconds, time.totalSeconds, lastSession, selection, go, launch],
 	);
 
 	return (
 		<AppContext.Provider value={ctx}>
 			<div className="min-h-screen bg-washi dark:bg-[#0d0d0d] text-ink dark:text-night-ink lg:flex">
-				<Sidebar
-					active={sidebarTab}
-					onChange={(t) => go(t)}
-					moduleKey={moduleKey}
-					onModuleChange={(m) => go(barTab, m, level)}
-					level={level}
-					onLevelChange={(l) => go(barTab, moduleKey, l)}
-					accuracy={d.accuracy}
-					masteredCount={d.masteredCount}
-					total={d.kanjiData.length}
-					settings={settings}
-					updateAvailable={update.updateAvailable}
-				/>
+				<Sidebar />
 
 				<div className="flex-1 min-w-0 flex flex-col">
 					<div className="lg:hidden">
@@ -123,15 +112,12 @@ export default function App() {
 							<Route path="/progress/:module/:level" element={<ProgressPage />} />
 							<Route path="/mock-test" element={<MockPage />} />
 							<Route path="/profile" element={<ProfilePage />} />
-							<Route path="/settings" element={<Navigate to="/profile" replace />} />
+							<Route path="/settings" element={<SettingsPage />} />
 							<Route path="*" element={<Navigate to="/" replace />} />
 						</Routes>
 					</main>
 
-					<div className="hidden lg:block">
-						<Footer settings={settings} moduleKey={moduleKey} level={level} />
-					</div>
-					<div className="lg:hidden pb-20">
+					<div className="pb-20 lg:pb-0">
 						<Footer settings={settings} moduleKey={moduleKey} level={level} />
 					</div>
 				</div>

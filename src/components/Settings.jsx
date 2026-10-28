@@ -12,6 +12,7 @@ const DATA_KEYS = [
 	"nihongo-progress-v2",
 	"nihongo-activity-v1",
 	"nihongo-favorites-v1",
+	"nihongo-profile-v1",
 	"nihongo-mock-v1",
 	"nihongo-mock-papers-v1",
 ];

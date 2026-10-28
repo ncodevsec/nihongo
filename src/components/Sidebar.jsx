@@ -1,263 +1,43 @@
-import { MODULES, MODULE_ORDER, LEVEL_OPTIONS } from "../data/modules.js";
-import { t, pickLang } from "../lib/i18n.js";
+import { NavLink } from "react-router-dom";
+import { useApp } from "../context/AppContext.jsx";
+import { t } from "../lib/i18n.js";
+import { NAV_ICONS, useNavItems } from "./navItems.jsx";
 
-const ICONS = {
-	home: (
-		<>
-			<path d="M3 10.5L12 3l9 7.5" />
-			<path d="M5 9.5V20a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V9.5" />
-		</>
-	),
-	study: (
-		<path d="M4 5.5a2 2 0 012-2h4.5v13H6a2 2 0 00-2 2v-13zM20 5.5a2 2 0 00-2-2h-4.5v13H18a2 2 0 012 2v-13z" />
-	),
-	quiz: (
-		<path d="M9 11l2 2 4-4M12 3l8 4-8 4-8-4 8-4zM4 12l8 4 8-4M4 16l8 4 8-4" />
-	),
-	reference: <path d="M4 6h16M4 12h16M4 18h10" />,
-	progress: <path d="M4 20V10M10 20V4M16 20v-7M4 20h16" />,
-	mock: (
-		<>
-			<rect x="6" y="4" width="12" height="17" rx="2" />
-			<path d="M9 4V3h6v1M9 13l2 2 4-4" />
-		</>
-	),
-	settings: (
-		<>
-			<circle cx="12" cy="12" r="3" />
-			<path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
-		</>
-	),
-};
-
-function NavIcon({ name }) {
+// Desktop sidebar (lg+): the same five destinations as the mobile bottom dock.
+export default function Sidebar() {
+	const { settings, updateAvailable } = useApp();
+	const items = useNavItems();
 	return (
-		<svg
-			viewBox="0 0 24 24"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="1.8"
-			strokeLinecap="round"
-			strokeLinejoin="round"
-			className="w-4 h-4 shrink-0"
-			aria-hidden="true"
-		>
-			{ICONS[name]}
-		</svg>
-	);
-}
-
-export default function Sidebar({
-	active,
-	onChange,
-	moduleKey,
-	onModuleChange,
-	level,
-	onLevelChange,
-	accuracy,
-	masteredCount,
-	total,
-	settings,
-	updateAvailable = false,
-}) {
-	const lang = settings.uiLang;
-	const T = (k) => t(lang, k);
-	const isGrammar = MODULES[moduleKey].kind === "grammar";
-
-	const TABS = [
-		{
-			key: "study",
-			label: isGrammar ? T("tabGrammarContent") : T("tabStudy"),
-			icon: "study",
-		},
-		{ key: "quiz", label: T("tabQuiz"), icon: "quiz" },
-		{ key: "reference", label: T("tabReference"), icon: "reference" },
-		{ key: "progress", label: T("tabProgress"), icon: "progress" },
-	];
-
-	return (
-		<aside className="hidden lg:flex lg:flex-col lg:w-72 lg:shrink-0 lg:h-screen lg:sticky lg:top-0 lg:overflow-y-auto border-r border-ai-line dark:border-night-line bg-paper dark:bg-night-paper shadow-card dark:shadow-none">
-			{/* Brand */}
-			<div className="flex items-center gap-3 px-5 pt-6 pb-5 border-b border-ai-line dark:border-night-line mb-4">
-				<a
-					className="shrink-0"
-					href="/"
-					onClick={(e) => {
-						e.preventDefault();
-						onChange("home");
-					}}
-				>
-					<img
-						src="/icons/icon-192.png"
-						alt="NihonGo - Study Lab"
-						className="brand-logo w-9 h-9"
-						width={36}
-						height={36}
-					/>
-				</a>
+		<aside className="hidden lg:flex lg:flex-col lg:w-64 lg:shrink-0 lg:h-screen lg:sticky lg:top-0 lg:overflow-y-auto border-r border-ai-line dark:border-night-line bg-paper dark:bg-night-paper shadow-card dark:shadow-none">
+			<NavLink to="/" className="flex items-center gap-3 px-5 pt-6 pb-5 border-b border-ai-line dark:border-night-line mb-4">
+				<img src="/icons/icon-192.png" alt="NihonGo - Study Lab" className="brand-logo w-9 h-9 shrink-0" width={36} height={36} />
 				<div className="min-w-0">
-					<h1 className="font-mincho text-md font-bold text-ink dark:text-night-ink truncate">
-						NihonGo - Study Lab
-					</h1>
-					<p className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted truncate">
-						{T("appSubtitle")}
-					</p>
+					<h1 className="font-mincho text-md font-bold text-ink dark:text-night-ink truncate">NihonGo - Study Lab</h1>
+					<p className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted truncate">{t(settings.uiLang, "appSubtitle")}</p>
 				</div>
-			</div>
-
-			{/* Level + Module selectors, stacked vertically */}
-			<div className="px-5 pb-5 space-y-2">
-				<div className="flex gap-2.5 justify-center items-center w-full my-6">
-					<button
-						type="button"
-						onClick={() => onChange("home")}
-						aria-label={T("tabHome")}
-						title={T("tabHome")}
-						aria-current={active === "home" ? "page" : undefined}
-						className={`rounded-full w-12 h-12 shrink-0 border border-ai-line dark:border-night-line hover:outline outline-slate-200 dark:outline-gray-700 flex items-center justify-center ${
-							active === "home"
+			</NavLink>
+			<nav aria-label="Primary" className="flex flex-col gap-1.5 px-3">
+				{items.map((it) => (
+					<NavLink
+						key={it.key}
+						to={it.to}
+						aria-current={it.active ? "page" : undefined}
+						className={`relative flex items-center gap-3 rounded-full px-4 py-2.5 font-bengali text-sm font-semibold transition-colors ${
+							it.active
 								? "bg-shu text-washi shadow-sm"
-								: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
+								: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line hover:text-shu dark:hover:text-shu-glow"
 						}`}
 					>
-						<svg
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="1.8"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							className="w-5 h-5"
-							aria-hidden="true"
-						>
-							{ICONS.home}
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0" aria-hidden="true">
+							{NAV_ICONS[it.key]}
 						</svg>
-					</button>
-					{LEVEL_OPTIONS.map((key) => {
-						const lvl = MODULES[moduleKey].levels[key];
-						const isActiveLevel = level === key;
-						return (
-							<button
-								key={key}
-								onClick={() => onLevelChange(key)}
-								className={`rounded-full w-12 h-12 shrink-0 flex items-center justify-center border border-ai-line dark:border-night-line hover:outline outline-slate-200 dark:outline-gray-700 text-lg font-semibold ${
-									isActiveLevel
-										? "bg-shu text-washi shadow-sm"
-										: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-								}`}
-							>
-								{key === "all" ? T("levelAll") : lvl.label}
-							</button>
-						);
-					})}
-				</div>
-
-				<div className="my-6 flex flex-col gap-2 rounded-3xl">
-					{MODULE_ORDER.map((key) => {
-						const mod = MODULES[key];
-						const isActiveModule = active !== "mock" && moduleKey === key;
-						return (
-							<button
-								key={key}
-								onClick={() => onModuleChange(key)}
-								className={`flex-1 px-2.5 py-2 rounded-full border border-ai-line dark:border-night-line text-md text-center font-bengali font-semibold ${
-									isActiveModule
-										? "bg-shu text-washi shadow-sm"
-										: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-								}`}
-							>
-								{pickLang(mod, lang)}
-							</button>
-						);
-					})}
-					<button
-						onClick={() => onChange("mock")}
-						aria-current={active === "mock" ? "page" : undefined}
-						className={`flex-1 px-2.5 py-2 rounded-full border border-ai-line dark:border-night-line text-md text-center font-bengali font-semibold ${
-							active === "mock"
-								? "bg-shu text-washi shadow-sm"
-								: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line"
-						}`}
-					>
-						{T("tabMock")}
-					</button>
-				</div>
-			</div>
-
-			{/* Main navigation */}
-			<nav
-				hidden={active === "mock"}
-				className="flex flex-col m-5 gap-2 p-2 rounded-3xl border border-ai-line dark:border-night-line bg-washi dark:bg-night"
-				role="tablist"
-				aria-label="Sections"
-			>
-				{TABS.map((tabItem) => {
-					const isSel = active === tabItem.key;
-					return (
-						<button
-							key={tabItem.key}
-							role="tab"
-							aria-selected={isSel}
-							onClick={() => onChange(tabItem.key)}
-							className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-full font-bengali font-medium text-sm ${
-								isSel
-									? "bg-shu text-washi shadow-sm"
-									: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line hover:text-shu dark:hover:text-shu-glow"
-							}`}
-						>
-							<NavIcon name={tabItem.icon} />
-							{tabItem.label}
-						</button>
-					);
-				})}
+						{it.label}
+						{it.key === "profile" && updateAvailable && (
+							<span className={`absolute right-4 w-2 h-2 rounded-full ${it.active ? "bg-washi" : "bg-shu dark:bg-shu-glow"}`} aria-hidden="true" />
+						)}
+					</NavLink>
+				))}
 			</nav>
-
-			{/* Accuracy / mastered snapshot */}
-			{!isGrammar && active !== "mock" && (
-				<div className="m-5 grid grid-cols-2 gap-2">
-					<div className="rounded-lg border border-ai-line dark:border-night-line bg-washi dark:bg-night px-3 py-2 text-center">
-						<div className="text-shu dark:text-shu-glow font-mono text-base font-semibold">
-							{accuracy}%
-						</div>
-						<div className="font-bengali text-[10px] text-ink-muted dark:text-night-ink-muted">
-							{T("accuracy")}
-						</div>
-					</div>
-					<div className="rounded-lg border border-ai-line dark:border-night-line bg-washi dark:bg-night px-3 py-2 text-center">
-						<div className="text-ink dark:text-night-ink font-mono text-base font-semibold">
-							{masteredCount}/{total}
-						</div>
-						<div className="font-bengali text-[10px] text-ink-muted dark:text-night-ink-muted">
-							{T("learnedCount")}
-						</div>
-					</div>
-				</div>
-			)}
-
-			{/* Settings, pinned to the bottom */}
-			<div className="px-3 py-4 border-t border-ai-line dark:border-night-line mt-3">
-				<button
-					onClick={() => onChange("settings")}
-					className={`relative w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg font-bengali font-medium text-sm ${
-						active === "settings"
-							? "bg-shu text-washi shadow-sm"
-							: "text-ink-muted dark:text-night-ink-muted hover:bg-shu-soft dark:hover:bg-night-line hover:text-shu dark:hover:text-shu-glow"
-					}`}
-				>
-					<NavIcon name="settings" />
-					{T("tabSettings")}
-					{updateAvailable && (
-						<span
-							className={`absolute right-3 w-2 h-2 rounded-full ${
-								active === "settings"
-									? "bg-washi"
-									: "bg-shu dark:bg-shu-glow"
-							}`}
-							aria-hidden="true"
-						/>
-					)}
-				</button>
-			</div>
 		</aside>
 	);
 }

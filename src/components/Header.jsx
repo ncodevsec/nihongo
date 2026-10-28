@@ -92,7 +92,7 @@ export default function Header({
 					</button>
 
 					<div className="flex items-center gap-3 shrink-0">
-						{!isGrammar && !isSettings && !isHome && active !== "mock" && (
+						{!isGrammar && !isSettings && !isHome && active !== "mock" && active !== "profile" && (
 							<div className="hidden sm:flex items-center gap-4 font-mono text-xs">
 								<div className="text-right">
 									<div className="text-shu dark:text-shu-glow font-semibold">
