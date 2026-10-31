@@ -20,7 +20,6 @@ function ProgressInner({ moduleKey, level }) {
 	const d = useModuleData(moduleKey, level, settings, progress);
 	return (
 		<>
-			<StudyBars moduleKey={moduleKey} level={level} tab="progress" />
 			<Progress
 				key={moduleKey}
 				kanjiData={d.isGrammar ? d.grammarPoints : d.kanjiData}
@@ -33,6 +32,7 @@ function ProgressInner({ moduleKey, level }) {
 				favorites={favorites}
 				moduleKey={moduleKey}
 				level={level}
+				selector={<StudyBars moduleKey={moduleKey} level={level} tab="progress" />}
 				timeToday={todaySeconds}
 				timeWeek={weekSeconds}
 				timeTotal={totalSeconds}

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { t, pickLang } from "../lib/i18n.js";
 import { formatDuration } from "../lib/utils.js";
-import Hanko from "./Hanko.jsx";
+import MockProgress from "./progress/MockProgress.jsx";
 import StreakWidget from "./StreakWidget.jsx";
 import {
 	classifyPartOfSpeech,
@@ -31,6 +31,7 @@ export default function Progress({
 	timeWeek = 0,
 	timeTotal = 0,
 	level,
+	selector = null,
 }) {
 	const lang = settings.uiLang;
 	const T = (k) => t(lang, k);
@@ -173,88 +174,6 @@ export default function Progress({
 
 	return (
 		<div className="max-w-2xl lg:max-w-3xl mx-auto">
-			{/* Overview — four balanced stat cards */}
-			<div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
-				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
-					<Hanko label={`${stats.mastered}`} tone="take" size="sm" />
-					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
-						{T("progressMastered")}
-					</span>
-				</div>
-				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
-					<Hanko
-						label={`${stats.accuracy}%`}
-						tone="sakura"
-						size="sm"
-					/>
-					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
-						{T("progressAccuracyLabel")}
-					</span>
-				</div>
-				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
-					<Hanko label={`${stats.seen}`} tone="shu" size="sm" />
-					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
-						{T("progressAnswered")}
-					</span>
-				</div>
-				<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-3 flex flex-col items-center gap-1.5 text-center">
-					<Hanko label={`${stats.starred}`} tone="ai" size="sm" />
-					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
-						{T("progressStarred")}
-					</span>
-				</div>
-			</div>
-
-			{/* Status breakdown — New / Learning / Mastered */}
-			<h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
-				{T("progressStatusBreakdown")}
-			</h2>
-			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-4 mb-5">
-				<div className="w-full h-3 rounded-full overflow-hidden flex mb-3 bg-ai-soft dark:bg-night-line">
-					{masteredPct > 0 && (
-						<div
-							className="h-full bg-take"
-							style={{ width: `${masteredPct}%` }}
-						/>
-					)}
-					{learningPct > 0 && (
-						<div
-							className="h-full bg-sakura"
-							style={{ width: `${learningPct}%` }}
-						/>
-					)}
-					{untouchedPct > 0 && (
-						<div
-							className="h-full bg-ai-line dark:bg-night-line"
-							style={{ width: `${untouchedPct}%` }}
-						/>
-					)}
-				</div>
-				<div className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-bengali">
-					<span className="flex items-center gap-1.5 text-ink dark:text-night-ink">
-						<span className="w-2.5 h-2.5 rounded-full bg-take inline-block" />
-						{T("statusMastered")}{" "}
-						<span className="font-mono text-ink-muted dark:text-night-ink-muted">
-							({stats.mastered})
-						</span>
-					</span>
-					<span className="flex items-center gap-1.5 text-ink dark:text-night-ink">
-						<span className="w-2.5 h-2.5 rounded-full bg-sakura inline-block" />
-						{T("statusLearning")}{" "}
-						<span className="font-mono text-ink-muted dark:text-night-ink-muted">
-							({stats.learning})
-						</span>
-					</span>
-					<span className="flex items-center gap-1.5 text-ink dark:text-night-ink">
-						<span className="w-2.5 h-2.5 rounded-full bg-ai-line dark:bg-night-line inline-block" />
-						{T("statusNew")}{" "}
-						<span className="font-mono text-ink-muted dark:text-night-ink-muted">
-							({stats.untouched})
-						</span>
-					</span>
-				</div>
-			</div>
-
 			{/* Streak + monthly activity calendar */}
 			<h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
 				{T("progressActivity")}
@@ -307,6 +226,60 @@ export default function Progress({
 					</span>
 					<span className="font-bengali text-[11px] text-ink-muted dark:text-night-ink-muted leading-tight">
 						{T("timeAllTime")}
+					</span>
+				</div>
+			</div>
+
+			<MockProgress lang={lang} />
+
+			{selector && <div className="mb-5">{selector}</div>}
+
+			{/* Status breakdown — New / Learning / Mastered */}
+			<h2 className="font-bengali text-sm font-bold text-ink dark:text-shu-glow mb-2">
+				{T("progressStatusBreakdown")}
+			</h2>
+			<div className="bg-paper dark:bg-night-paper border border-ai-line dark:border-night-line rounded-lg shadow-card dark:shadow-none p-4 mb-5">
+				<div className="w-full h-3 rounded-full overflow-hidden flex mb-3 bg-ai-soft dark:bg-night-line">
+					{masteredPct > 0 && (
+						<div
+							className="h-full bg-take"
+							style={{ width: `${masteredPct}%` }}
+						/>
+					)}
+					{learningPct > 0 && (
+						<div
+							className="h-full bg-sakura"
+							style={{ width: `${learningPct}%` }}
+						/>
+					)}
+					{untouchedPct > 0 && (
+						<div
+							className="h-full bg-ai-line dark:bg-night-line"
+							style={{ width: `${untouchedPct}%` }}
+						/>
+					)}
+				</div>
+				<div className="flex flex-wrap gap-x-5 gap-y-2 text-xs font-bengali">
+					<span className="flex items-center gap-1.5 text-ink dark:text-night-ink">
+						<span className="w-2.5 h-2.5 rounded-full bg-take inline-block" />
+						{T("statusMastered")}{" "}
+						<span className="font-mono text-ink-muted dark:text-night-ink-muted">
+							({stats.mastered})
+						</span>
+					</span>
+					<span className="flex items-center gap-1.5 text-ink dark:text-night-ink">
+						<span className="w-2.5 h-2.5 rounded-full bg-sakura inline-block" />
+						{T("statusLearning")}{" "}
+						<span className="font-mono text-ink-muted dark:text-night-ink-muted">
+							({stats.learning})
+						</span>
+					</span>
+					<span className="flex items-center gap-1.5 text-ink dark:text-night-ink">
+						<span className="w-2.5 h-2.5 rounded-full bg-ai-line dark:bg-night-line inline-block" />
+						{T("statusNew")}{" "}
+						<span className="font-mono text-ink-muted dark:text-night-ink-muted">
+							({stats.untouched})
+						</span>
 					</span>
 				</div>
 			</div>
