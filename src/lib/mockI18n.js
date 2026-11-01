@@ -217,6 +217,18 @@ const D = {
 	lisStatusWait: { bn: "অপেক্ষা করুন…", en: "Please wait…" },
 	lisOpening: { bn: "শ্রবণ পরীক্ষা শুরু হচ্ছে…", en: "The listening exam is starting…" },
 	lisClosing: { bn: "শ্রবণ পরীক্ষা শেষ হচ্ছে…", en: "The listening exam is ending…" },
+	// certificate
+	certTitle: { bn: "সার্টিফিকেট", en: "Certificate" },
+	certSub: { bn: "পূর্ণাঙ্গ পরীক্ষার পর A4 (ল্যান্ডস্কেপ) PNG সার্টিফিকেট — প্রতিটি সেকশনের নম্বর, মোট ও শতকরা হারসহ। এটি অনুশীলনের সার্টিফিকেট, অফিসিয়াল ফলাফল নয়।", en: "An A4-landscape PNG certificate for your full exam, with every section's score, the total and percentages. It is a practice certificate, not an official result." },
+	certName: { bn: "সার্টিফিকেটে নাম", en: "Name on the certificate" },
+	certNamePh: { bn: "আপনার নাম লিখুন", en: "Enter your name" },
+	certMaking: { bn: "সার্টিফিকেট তৈরি হচ্ছে…", en: "Preparing your certificate…" },
+	certDownload: { bn: "PNG ডাউনলোড", en: "Download PNG" },
+	certShare: { bn: "শেয়ার করুন", en: "Share" },
+	certShareOn: { bn: "সোশ্যাল মিডিয়ায় শেয়ার (অ্যাপের লিংকসহ)", en: "Share on social media (with the app link)" },
+	certCopyLink: { bn: "লিংক কপি", en: "Copy link" },
+	certAttachHint: { bn: "ছবিটি ডাউনলোড হয়েছে — পোস্টে সেটি সংযুক্ত করুন।", en: "Image saved — attach it to your post." },
+	certShareText: { bn: "আমি NihonGo - Study Lab-এ {level} মক পরীক্ষা শেষ করেছি — মোট {pct}%!", en: "I completed a full {level} mock exam on NihonGo - Study Lab — {pct}% overall!" },
 	lisLocked: { bn: "1–4 কী বা ট্যাপ করে উত্তর দিন; পরের প্রশ্ন এলে আগেরটি লক হয়ে যাবে।", en: "Press 1–4 or tap to answer; once the next item starts this one is locked." },
 };
 

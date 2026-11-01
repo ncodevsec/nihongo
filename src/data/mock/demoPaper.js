@@ -3,20 +3,24 @@
 // follow the counts in the prompt. Answers are 0-based indexes into `choices`;
 // the app shuffles the choices itself, so the correct one may sit anywhere.
 export const DEMO_PAPER = {
-	format: "nihongo-mock-paper/1",
+	format: "nihongo-mock-paper/2",
 	title: "N5 Demo Paper",
 	level: "n5",
 	author: "demo",
-	notes: "Demo file — shows the structure only. Counts here are small on purpose.",
+	notes: "Demo file — shows the structure only. Counts here are small on purpose. kanjiReading / orthography use the real-exam pattern: a sentence with the underlined target word inside it.",
 	sections: {
 		vocab: {
+			// もんだい1: one sentence, the target word in kanji (the app underlines it); choices = hiragana readings.
 			kanjiReading: [
-				{ word: "学校", choices: ["がっこう", "がくこう", "がっこ", "かっこう"], answer: 0, explanation: "学校 = がっこう (school)" },
-				{ word: "電話", choices: ["てんわ", "でんわ", "でんは", "てんは"], answer: 1, explanation: "電話 = でんわ (telephone)" },
+				{ sentence: "リーさんの 前に いる ひとが たなかさんです。", target: "前", choices: ["まえ", "よこ", "となり", "うしろ"], answer: 0, explanation: "前 = まえ (front)" },
+				{ sentence: "あした 学校を やすみます。", target: "学校", choices: ["がくこう", "がっこう", "がっこ", "かっこう"], answer: 1, explanation: "学校 = がっこう (school)" },
+				{ sentence: "きのうは 雨が ふって いました。", target: "雨", choices: ["ゆき", "くも", "あめ", "かぜ"], answer: 2, explanation: "雨 = あめ (rain)" },
 			],
+			// もんだい2: one sentence, the target word in hiragana (underlined); choices = kanji spellings.
 			orthography: [
-				{ reading: "えき", choices: ["駅", "馬", "訳", "沢"], answer: 0, explanation: "えき = 駅 (station)" },
-				{ reading: "ともだち", choices: ["友だち", "反だち", "支だち", "友だら"], answer: 0 },
+				{ sentence: "はなの しゃしんを もらいました。", target: "はな", choices: ["花", "川", "山", "空"], answer: 0, explanation: "はな = 花 (flower)" },
+				{ sentence: "しんぶんを よみます。", target: "しんぶん", choices: ["親聞", "新分", "新聞", "親分"], answer: 2, explanation: "しんぶん = 新聞 (newspaper)" },
+				{ sentence: "この ほんは ごひゃくえんです。", target: "ごひゃくえん", choices: ["五千円", "六百円", "五万円", "五百円"], answer: 3 },
 			],
 			context: [
 				{ sentence: "のどが かわきましたから、( ) を のみたいです。", choices: ["くつ", "かさ", "みず", "とけい"], answer: 2, explanation: "Only みず (water) can be drunk." },

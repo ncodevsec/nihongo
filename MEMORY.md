@@ -25,6 +25,8 @@ Navigation: mobile bottom dock (`BottomNav`) and desktop `Sidebar` share `compon
 - All UI strings go in `src/lib/i18n.js` as `{ bn, en }` (mock-test strings in `lib/mockI18n.js`).
 - Flashcards use `components/FlipCard.jsx` (3D flip; both faces rendered, `cardKey` remounts per item).
 - Storage keys: `nihongo-progress-v2`, `-activity-v1`, `-favorites-v1`, `-settings-v1`, `-profile-v1`, `-time-v1`, `-mock-v1` (history), `-mock-session-v1`. Backup export/import list: `DATA_KEYS` in `components/Settings.jsx`.
+- Mock Test question pattern (v2.4.0): kanjiReading / orthography are real-exam style — a short sentence with the underlined target word (`q.target`), banks in `data/mock/kanjiBank.js` (`[ ]` marks the target); AI papers use format `nihongo-mock-paper/2` (`/1` still accepted). Listening "pause & replay" Player shows for any question with `q.audio || q.lis`.
+- Mock certificate: `lib/mockTest/certificate.js` draws an A4-landscape PNG (2970×2100) on canvas; UI in `components/mock/Certificate.jsx`, shown on results for full exams only (name prefilled from Profile, download + share + social links with the app URL).
 - Progress page: Study activity → Time spent → Mock Test progress → course/module selector → status + per-category.
 - Bump `package.json` version for every release (semver); `__APP_VERSION__` is shown in Settings.
 
@@ -37,3 +39,4 @@ Navigation: mobile bottom dock (`BottomNav`) and desktop `Sidebar` share `compon
 - v2.1.0 — desktop sidebar = dock items, trimmed top bars, personal-info Profile page, Settings moved to `/settings`.
 - v2.2.0 (branch `feature-progress-page`) — Progress page reorder, removed overview stat cards, Mock Test progress section, redesigned level/module selector.
 - v2.3.0 — Home: removed backup reminder; countdown card has a gear button + config panel (toggle exams, custom events, add event), JLPT shown by default (`eventsConfigured` setting); Kanji-of-the-day above hero text.
+- v2.4.0 (branch `feature-mock-test`, agent: mock-test) — real-exam kanji reading/orthography questions (sentence + underlined target, curated N5/N4 banks), paper format /2 + updated demo JSON and AI prompt, fixed missing play button in listening pause mode, A4 PNG certificate with section scores/percentages + sharing. Touches only mock-test files, `mockI18n.js`, `package.json`, this file.

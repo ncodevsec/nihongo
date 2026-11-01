@@ -3,6 +3,7 @@ import { mt } from "../../lib/mockI18n.js";
 import { PART_META, SECTIONAL } from "../../data/mock/blueprints.js";
 import Hanko from "../Hanko.jsx";
 import { Prompt, Stimulus } from "./MockExam.jsx";
+import Certificate from "./Certificate.jsx";
 
 const Card = ({ children, className = "" }) => (
 	<section className={`rounded-xl border border-ai-line dark:border-night-line bg-paper dark:bg-night-paper shadow-card dark:shadow-none ${className}`}>{children}</section>
@@ -155,6 +156,8 @@ export default function MockResults({ result, lang, onClose, onRetake, onLaunch 
 					</ul>
 				</Card>
 			)}
+
+			{test.mode === "full" && <Certificate result={result} lang={lang} />}
 
 			<div className="grid grid-cols-2 gap-2.5">
 				<button onClick={onRetake} className="font-bengali text-sm font-semibold bg-shu text-washi rounded-lg py-3 hover:brightness-110">{M("retake")}</button>

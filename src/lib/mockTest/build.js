@@ -2,6 +2,7 @@ import { N5_VOCAB } from "../../data/vocab/n5.js";
 import { N4_VOCAB } from "../../data/vocab/n4.js";
 import { N5_BANK } from "../../data/mock/n5.js";
 import { N4_BANK } from "../../data/mock/n4.js";
+import { N5_KANJI_BANK, N4_KANJI_BANK } from "../../data/mock/kanjiBank.js";
 import { BLUEPRINTS, PART_META } from "../../data/mock/blueprints.js";
 import { shuffle } from "../utils.js";
 import { parseScript } from "./speech.js";
@@ -11,6 +12,14 @@ import { parseScript } from "./speech.js";
 // sampled from the hand-written banks in data/mock/.
 
 const BANKS = { n5: N5_BANK, n4: N4_BANK };
+const KANJI_BANKS = { n5: N5_KANJI_BANK, n4: N4_KANJI_BANK };
+
+// "友だち[...]" style items: the [ ] marks the underlined target inside the sentence.
+export function splitMark(s) {
+	const m = s.match(/\[(.+?)\]/);
+	if (!m) return { sentence: s, target: "" };
+	return { sentence: s.replace(m[0], m[1]), target: m[1] };
+}
 
 // ---------- vocabulary pools ----------
 const HAS_KANJI = /[\u4e00-\u9fff]/;
@@ -73,8 +82,16 @@ const transcriptOf = (lines) => lines.map((l) => (l.who === "N" ? l.text : `${l.
 // Question factories shared by the generated/banked parts below and by the
 // AI-paper importer (paper.js). Each takes the correct answer + the wrong ones.
 export const QF = {
-	kanjiReading: ({ word, ok, bad, exp }) => ({ kind: "word", prompt: word, ...withChoices(ok, bad), exp }),
-	orthography: ({ reading, ok, bad, exp }) => ({ kind: "kana", prompt: reading, ...withChoices(ok, bad), exp }),
+	// Real-exam pattern: a sentence with the target word underlined. `sentence`/`target`
+	// may be omitted (older papers) — then the bare word is shown on its own.
+	kanjiReading: ({ sentence, target, word, ok, bad, exp }) => {
+		const t = target || word;
+		return { kind: "word", prompt: sentence || word, target: t, ...withChoices(ok, bad), exp: exp || `${t} = ${ok}` };
+	},
+	orthography: ({ sentence, target, reading, ok, bad, exp }) => {
+		const t = target || reading;
+		return { kind: "kana", prompt: sentence || reading, target: t, ...withChoices(ok, bad), exp: exp || `${t} = ${ok}` };
+	},
 	sentence: ({ sentence, ok, bad, exp }) => ({ kind: "sentence", prompt: sentence, ...withChoices(ok, bad), exp }),
 	order: ({ pre = "", parts, post = "", star, exp }) => {
 		const { choices, answer } = withChoices(parts[star - 1], parts.filter((_, i) => i !== star - 1));
@@ -94,9 +111,15 @@ const ans = (ok) => `Answer: ${ok}`;
 // ---------- part generators: (level, count, ctx) → questions ----------
 const GEN = {
 	kanjiReading(level, n, ctx) {
+		const fromBank = take(KANJI_BANKS[level].read, n).map(([raw, ok, ...bad]) => {
+			const { sentence, target } = splitMark(raw);
+			return QF.kanjiReading({ sentence, target, ok, bad, exp: `${target} = ${ok}` });
+		});
+		if (fromBank.length >= n) return fromBank;
+		n -= fromBank.length;
 		const p = ctx.pool;
 		const used = new Set();
-		return take(p, n * 3)
+		return [...fromBank, ...take(p, n * 3)
 			.filter((w) => !used.has(w.word) && used.add(w.word))
 			.slice(0, n)
 			.map((w) => {
@@ -106,12 +129,18 @@ const GEN = {
 					wrongs = [...wrongs, ...take(extra, 6).map((o) => o.reading)].filter((x, i, a) => a.indexOf(x) === i).slice(0, 3);
 				}
 				return QF.kanjiReading({ word: w.word, ok: w.reading, bad: wrongs, exp: `${w.word} = ${w.reading} (${w.meaning})` });
-			});
+			})];
 	},
 	orthography(level, n, ctx) {
+		const fromBank = take(KANJI_BANKS[level].write, n).map(([raw, ok, ...bad]) => {
+			const { sentence, target } = splitMark(raw);
+			return QF.orthography({ sentence, target, ok, bad, exp: `${target} = ${ok}` });
+		});
+		if (fromBank.length >= n) return fromBank;
+		n -= fromBank.length;
 		const p = ctx.pool;
 		const used = new Set();
-		return take(p, n * 3)
+		return [...fromBank, ...take(p, n * 3)
 			.filter((w) => !used.has(w.word) && used.add(w.word))
 			.slice(0, n)
 			.map((w) => {
@@ -119,7 +148,7 @@ const GEN = {
 				const share = same.filter((o) => [...o.word].some((c) => w.word.includes(c) && HAS_KANJI.test(c)));
 				const wrongs = [...take(share, 3), ...take(same, 6)].map((o) => o.word).filter((x, i, a) => a.indexOf(x) === i).slice(0, 3);
 				return QF.orthography({ reading: w.reading, ok: w.word, bad: wrongs, exp: `${w.reading} = ${w.word} (${w.meaning})` });
-			});
+			})];
 	},
 	context: (level, n, ctx) => take(ctx.bank.context, n).map(([s, ok, ...bad]) => QF.sentence({ sentence: s, ok, bad, exp: ans(ok) })),
 	paraphrase: (level, n, ctx) => take(ctx.bank.paraphrase, n).map(([s, ok, ...bad]) => QF.sentence({ sentence: s, ok, bad, exp: `Closest in meaning: ${ok}` })),

@@ -47,10 +47,21 @@ export function Stimulus({ s, blank }) {
 }
 
 export function Prompt({ q }) {
-	if (q.kind === "word")
-		return <div lang="ja" className="font-mincho text-4xl sm:text-5xl text-center text-ink dark:text-night-ink py-4"><span className="underline decoration-shu dark:decoration-shu-glow decoration-2 underline-offset-[10px]">{q.prompt}</span></div>;
-	if (q.kind === "kana")
-		return <div lang="ja" className="font-mincho text-3xl sm:text-4xl text-center text-ink dark:text-night-ink py-4"><span className="underline decoration-shu dark:decoration-shu-glow decoration-2 underline-offset-[10px]">{q.prompt}</span></div>;
+	// Kanji reading / orthography: the real-exam pattern — a sentence with the target underlined.
+	// A bare word (older papers) is shown large on its own.
+	if (q.kind === "word" || q.kind === "kana") {
+		const t = q.target;
+		const i = t && q.prompt !== t ? q.prompt.indexOf(t) : -1;
+		const ul = "underline decoration-shu dark:decoration-shu-glow decoration-2 underline-offset-[10px]";
+		if (i < 0) return <div lang="ja" className={`font-mincho ${q.kind === "word" ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl"} text-center text-ink dark:text-night-ink py-4`}><span className={ul}>{q.prompt}</span></div>;
+		return (
+			<div lang="ja" className="font-mincho text-xl sm:text-2xl leading-[2.4] text-ink dark:text-night-ink py-3">
+				{q.prompt.slice(0, i)}
+				<span className={`${ul} font-semibold`}>{t}</span>
+				{q.prompt.slice(i + t.length)}
+			</div>
+		);
+	}
 	if (q.kind === "order") {
 		const slots = [0, 1, 2, 3].map((i) => (i === q.order.star - 1 ? "★" : "＿＿"));
 		return (
@@ -466,7 +477,7 @@ export default function MockExam({ session, setSession, lang, isActive, onFinish
 						</button>
 					</div>
 
-					{q.audio && <Player key={q.id} q={q} plays={plays?.[q.id]} lang={lang} onPlay={() => patch({ plays: { ...plays, [q.id]: (plays?.[q.id] || 0) + 1 } })} />}
+					{(q.audio || q.lis) && <Player key={q.id} q={q} plays={plays?.[q.id]} lang={lang} onPlay={() => patch({ plays: { ...plays, [q.id]: (plays?.[q.id] || 0) + 1 } })} />}
 					<Stimulus s={stim} blank={q.blank} />
 					<Prompt q={q} />
 

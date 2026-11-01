@@ -4,7 +4,9 @@ import { parseScript } from "./speech.js";
 
 // AI question papers: validate a JSON paper, turn it into a test, and build
 // the prompt users give an AI to generate more of them. Format id:
-export const PAPER_FORMAT = "nihongo-mock-paper/1";
+export const PAPER_FORMAT = "nihongo-mock-paper/2";
+// Papers made for the first format (bare word, no sentence) are still accepted.
+const ACCEPTED_FORMATS = [PAPER_FORMAT, "nihongo-mock-paper/1"];
 
 const SECTION_PARTS = {
 	vocab: ["kanjiReading", "orthography", "context", "paraphrase"],
@@ -36,7 +38,7 @@ export function validatePaper(raw) {
 	const warnings = [];
 	const err = (p, m) => errors.push(`${p}: ${m}`);
 	if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { ok: false, errors: ["The file must contain one JSON object."], warnings, paper: null };
-	if (raw.format !== PAPER_FORMAT) err("format", `must be "${PAPER_FORMAT}"`);
+	if (!ACCEPTED_FORMATS.includes(raw.format)) err("format", `must be "${PAPER_FORMAT}"`);
 	if (!["n5", "n4"].includes(raw.level)) err("level", 'must be "n5" or "n4"');
 	if (!str(raw.title)) err("title", "must be a non-empty string");
 	if (!raw.sections || typeof raw.sections !== "object") err("sections", "missing");
@@ -66,12 +68,22 @@ export function validatePaper(raw) {
 				const p = `${sec}.${part}[${i + 1}]`;
 				if (!q || typeof q !== "object") return err(p, "must be an object");
 				const exp = str(q.explanation) ? q.explanation.trim() : undefined;
-				if (part === "kanjiReading") {
-					const c = need(q, p, "word") && choiceCheck(q, p);
-					if (c) items.push({ part, word: q.word.trim(), ...c, exp });
-				} else if (part === "orthography") {
-					const c = need(q, p, "reading") && choiceCheck(q, p);
-					if (c) items.push({ part, reading: q.reading.trim(), ...c, exp });
+				if (part === "kanjiReading" || part === "orthography") {
+					// Real-exam pattern: a sentence + the underlined `target` inside it.
+					// Old papers ({ word } / { reading }) are still read as a bare word.
+					const legacy = part === "kanjiReading" ? q.word : q.reading;
+					const sentence = str(q.sentence) ? q.sentence.trim() : str(legacy) ? legacy.trim() : "";
+					const target = str(q.target) ? q.target.trim() : str(q.sentence) ? "" : sentence;
+					if (!sentence) return err(p, '"sentence" and "target" are required (target = the underlined word, written inside the sentence)');
+					if (!target) return err(p, '"target" is required: the underlined word, copied exactly from the sentence');
+					if (!sentence.includes(target)) return err(p, `"target" ("${target}") must appear inside "sentence"`);
+					const c = choiceCheck(q, p);
+					if (c) {
+						const hasKanji = /[\u4e00-\u9fff]/;
+						if (part === "kanjiReading" && sentence !== target && !hasKanji.test(target)) warnings.push(`${p}: target should be written in kanji (choices are the hiragana readings)`);
+						if (part === "orthography" && sentence !== target && hasKanji.test(target)) warnings.push(`${p}: target should be written in hiragana (choices are the kanji spellings)`);
+						items.push({ part, sentence, target, ...c, exp });
+					}
 				} else if (["context", "paraphrase", "grammarForm"].includes(part)) {
 					const c = need(q, p, "sentence") && choiceCheck(q, p);
 					if (c) {
@@ -149,8 +161,8 @@ export function paperToTest(paper, opts) {
 			for (const part of SECTION_PARTS[s.key]) {
 				for (const it of paper.sections[s.key][part] || []) {
 					const exp = it.exp || (it.ok ? `Answer: ${it.ok}` : undefined);
-					if (part === "kanjiReading") push(part, QF.kanjiReading({ ...it, exp: it.exp || `${it.word} = ${it.ok}` }));
-					else if (part === "orthography") push(part, QF.orthography({ ...it, exp: it.exp || `${it.reading} = ${it.ok}` }));
+					if (part === "kanjiReading") push(part, QF.kanjiReading({ ...it, word: it.word, exp: it.exp || undefined }));
+					else if (part === "orthography") push(part, QF.orthography({ ...it, reading: it.reading, exp: it.exp || undefined }));
 					else if (["context", "paraphrase", "grammarForm"].includes(part)) push(part, QF.sentence({ ...it, exp }));
 					else if (part === "sentenceOrder") push(part, QF.order(it));
 					else if (part === "textGrammar") {
@@ -193,7 +205,9 @@ REQUIRED COUNTS
 - sections.listening: lisQuick ${cnt.lisQuick} (3 choices each), lisUtterance ${cnt.lisUtterance}, lisPoint ${cnt.lisPoint} (4 choices each)
 
 FORMAT RULES
-- kanjiReading: { word (with kanji), choices (4 hiragana readings), answer }. orthography: { reading (hiragana), choices (4 written forms), answer }.
+- kanjiReading (もんだい1, real-exam style): { sentence, target, choices (4 hiragana readings), answer }. "sentence" is one short natural sentence written in kana EXCEPT the target word, which is written in kanji; "target" is that kanji word copied exactly from the sentence (the app underlines it). Wrong readings must be tempting: sound-alikes (changed voicing, long vowel, small っ, one wrong mora) or words from the same group (e.g. よこ/まえ/となり/うしろ; てんき/げんき/でんき). Example: { "sentence": "リーさんの 前に いる ひとが たなかさんです。", "target": "前", "choices": ["まえ","よこ","となり","うしろ"], "answer": 0 }.
+- orthography (もんだい2, real-exam style): { sentence, target, choices (4 written forms), answer }. Same sentence style, but the target word is written in HIRAGANA and the choices are kanji spellings. Wrong choices: look-alike kanji, or compounds sharing one kanji (e.g. 川/山/田/上; 新聞/親聞/新分/親分; 八千円/八万円/六千円/六万円). Example: { "sentence": "はなの しゃしんを もらいました。", "target": "はな", "choices": ["花","川","山","空"], "answer": 0 }.
+- Never use a bare word as the whole question for kanjiReading / orthography — always a full sentence with the target inside it.
 - context / grammarForm: { sentence containing one "( )", choices (4), answer, explanation (one short English line for grammarForm) }. paraphrase: { sentence, choices (4 sentences), answer }.
 - sentenceOrder: { pre, parts (EXACTLY 4 pieces in the CORRECT order), post, star (1–4: the position of the ★ piece) } — choose pieces so only one natural order exists.
 - textGrammar: { title, text with markers (1) (2) (3) (4) (5), questions: 5 × { choices, answer } }.
