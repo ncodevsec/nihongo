@@ -36,3 +36,4 @@ Navigation: mobile bottom dock (`BottomNav`) and desktop `Sidebar` share `compon
 - v2.0.0 — routes, mobile dock, animated flashcard flip, Vercel hosting + GH Pages redirect.
 - v2.1.0 — desktop sidebar = dock items, trimmed top bars, personal-info Profile page, Settings moved to `/settings`.
 - v2.2.0 (branch `feature-progress-page`) — Progress page reorder, removed overview stat cards, Mock Test progress section, redesigned level/module selector.
+- v2.3.0 — Home: removed backup reminder; countdown card has a gear button + config panel (toggle exams, custom events, add event), JLPT shown by default (`eventsConfigured` setting); Kanji-of-the-day above hero text.

@@ -90,6 +90,17 @@ const PATHS = {
 		</>
 	),
 	refresh: <path d="M20 12a8 8 0 10-2.3 5.7M20 5v5h-5" />,
+	sliders: (
+		<>
+			<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1" />
+			<circle cx="15" cy="6" r="2" />
+			<circle cx="9" cy="12" r="2" />
+			<circle cx="17" cy="18" r="2" />
+		</>
+	),
+	pencil: <path d="M4 20h4L19 9l-4-4L4 16v4zM13.5 6.5l4 4" />,
+	trash: <path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a1 1 0 001 1h8a1 1 0 001-1l1-12M9 7V4h6v3" />,
+	plus: <path d="M12 5v14M5 12h14" />,
 	download: <path d="M12 3v12M7 11l5 5 5-5M5 21h14" />,
 };
 

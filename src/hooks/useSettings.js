@@ -19,6 +19,7 @@ const DEFAULTS = {
   showJukugo: true, // include 2-kanji compound words (熟語) in the Kanji module
   showFurigana: false, // show reading hints (ruby text) above kanji app-wide
   events: [], // Home Event countdown: learner's custom events [{ id, name, date: "YYYY-MM-DD" }]
+  eventsConfigured: false, // false = show the default (next JLPT) until the learner changes the countdown
   selectedEvents: [], // ids of developer-set events (data/events.js) the learner chose to show
 };
 

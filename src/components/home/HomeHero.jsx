@@ -83,22 +83,24 @@ export default function HomeHero({
 				日本語
 			</span>
 
-			<div className="relative grid gap-8 p-5 sm:p-8 lg:p-10 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] lg:items-center">
-				<div>
-					<div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-5 sm:mb-6">
-						<span className="inline-flex items-center gap-2 font-bengali text-[11px] sm:text-xs font-semibold text-shu dark:text-shu-glow">
-							<span className="w-2 h-2 rounded-full bg-shu dark:bg-shu-glow" aria-hidden="true" />
-							{isReturning ? T("homeGreetingBack") : T("homeGreetingNew")}
-							<span className="text-ink-muted dark:text-night-ink-muted font-normal">
-								· {T("homeEyebrow")}
-							</span>
+			<div className="relative p-5 sm:p-8 lg:p-10">
+				<div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-5 sm:mb-6">
+					<span className="inline-flex items-center gap-2 font-bengali text-[11px] sm:text-xs font-semibold text-shu dark:text-shu-glow">
+						<span className="w-2 h-2 rounded-full bg-shu dark:bg-shu-glow" aria-hidden="true" />
+						{isReturning ? T("homeGreetingBack") : T("homeGreetingNew")}
+						<span className="text-ink-muted dark:text-night-ink-muted font-normal">
+							· {T("homeEyebrow")}
 						</span>
-						<div className="flex items-center gap-2">
-							<LangToggle lang={lang} T={T} onChange={onLangChange} />
-							<ThemeToggle isDark={isDark} label={T("homeToggleTheme")} onToggle={onThemeToggle} />
-						</div>
+					</span>
+					<div className="flex items-center gap-2">
+						<LangToggle lang={lang} T={T} onChange={onLangChange} />
+						<ThemeToggle isDark={isDark} label={T("homeToggleTheme")} onToggle={onThemeToggle} />
 					</div>
+				</div>
 
+				<div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.45fr)] lg:items-center">
+					<div>{children}</div>
+					<div>
 					<h1
 						id="home-title"
 						className={`${headFont} text-3xl sm:text-4xl xl:text-[2.75rem] font-bold leading-[1.15] text-ink dark:text-night-ink`}
@@ -153,9 +155,8 @@ export default function HomeHero({
 							</li>
 						))}
 					</ul>
+					</div>
 				</div>
-
-				<div>{children}</div>
 			</div>
 		</section>
 	);

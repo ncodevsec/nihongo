@@ -78,19 +78,6 @@ export default function Home({
 
 	const isReturning = stats.hasProgress || !!lastSession;
 
-	// Nudge to back up once there's real progress worth protecting and it's
-	// been a while (or never) since the last export — browser data can be
-	// cleared at any time, and this is the only copy of that progress.
-	const showBackupReminder = useMemo(() => {
-		if (!stats.hasProgress || stats.learned < 15) return false;
-		let last = 0;
-		try {
-			last = Number(localStorage.getItem("nihongo-last-export-v1")) || 0;
-		} catch {
-			// ignore
-		}
-		return Date.now() - last > 14 * 24 * 60 * 60 * 1000;
-	}, [stats.hasProgress, stats.learned]);
 	const prefersDark =
 		typeof window !== "undefined" &&
 		!!window.matchMedia &&
@@ -118,8 +105,15 @@ export default function Home({
 				<EventCountdown
 					events={settings.events}
 					selectedEvents={settings.selectedEvents}
-					onChangeEvents={(v) => updateSetting("events", v)}
-					onChangeSelected={(v) => updateSetting("selectedEvents", v)}
+					eventsConfigured={settings.eventsConfigured}
+					onChangeEvents={(v) => {
+						updateSetting("events", v);
+						updateSetting("eventsConfigured", true);
+					}}
+					onChangeSelected={(v) => {
+						updateSetting("selectedEvents", v);
+						updateSetting("eventsConfigured", true);
+					}}
 					lang={lang}
 				/>
 			</Rise>
@@ -128,7 +122,6 @@ export default function Home({
 				T={T}
 				updateAvailable={updateAvailable}
 				canInstall={canInstall}
-				showBackupReminder={showBackupReminder}
 				onOpenSettings={onOpenSettings}
 				onInstall={promptInstall}
 			/>

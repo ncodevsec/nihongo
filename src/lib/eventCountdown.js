@@ -21,12 +21,19 @@ export function upcomingEvents(events, from = new Date()) {
 		.sort((a, b) => a.days - b.days);
 }
 
-// What the card shows and what the picker offers.
-//   shown   = ticked predefined events + the learner's custom events, upcoming only
-//   options = upcoming predefined events not ticked yet
-export function resolveEvents(predefined, selectedIds, custom, from = new Date()) {
-	const picked = new Set(selectedIds || []);
+// What the card shows and what the config panel offers.
+//   configured = the learner has changed the event settings at least once. Until then the
+//                next upcoming JLPT event is shown by default.
+//   shown      = picked predefined events + the learner's custom events, upcoming only
+//   official   = every upcoming predefined event (picked or not) for the config panel
+//   pickedIds  = ids of the predefined events currently ticked (incl. the default one)
+export function resolveEvents(predefined, selectedIds, custom, configured = true, from = new Date()) {
 	const upcomingPredefined = upcomingEvents(predefined, from);
+	const defaultIds = configured
+		? []
+		: [upcomingPredefined.find((e) => e.name === "JLPT")?.id].filter(Boolean);
+	const pickedIds = configured ? selectedIds || [] : defaultIds;
+	const picked = new Set(pickedIds);
 	const shown = upcomingEvents(
 		[
 			...upcomingPredefined.filter((e) => picked.has(e.id)),
@@ -37,6 +44,8 @@ export function resolveEvents(predefined, selectedIds, custom, from = new Date()
 	return {
 		main: shown[0] ?? null,
 		others: shown.slice(1),
-		options: upcomingPredefined.filter((e) => !picked.has(e.id)),
+		official: upcomingPredefined,
+		custom: upcomingEvents((custom || []).map((e) => ({ ...e, custom: true })), from),
+		pickedIds,
 	};
 }
